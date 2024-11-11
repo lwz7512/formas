@@ -1,0 +1,21 @@
+{
+  "type": "object",
+  "column": 3,
+  "labelWidth": 120,
+  "displayType": "row",
+  "properties": {
+    "number_a": {
+      "title": "Var1",
+      "type": "number"
+    },
+    "number_b": {
+      "title": "Var2",
+      "type": "number"
+    },
+    "number_sum": {
+      "title": "Equals",
+      "type": "number",
+      "dependencies": ["number_a", "number_b"]
+    }
+  }
+}

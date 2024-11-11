@@ -1,0 +1,77 @@
+{
+  "type": "object",
+  "column": 3,
+  "labelWidth": 120,
+  "displayType": "row",
+  "properties": {
+    "number_a": {
+      "title": "Var1",
+      "type": "number",
+      "required": true
+    },
+    "number_b": {
+      "title": "Var2",
+      "type": "number",
+      "required": true
+    },
+    "number_sum": {
+      "title": "Equals",
+      "type": "number",
+      "dependencies": ["number_a", "number_b"]
+    },
+    "select_time": {
+      "title": "时间段",
+      "type": "string",
+      "enum": [],
+      "enumNames": [],
+      "widget": "select",
+      "default": "请选择时间",
+      "dataview": "1"
+    },
+    "select_hour": {
+      "title": "小时",
+      "type": "string",
+      "enum": [],
+      "enumNames": [],
+      "widget": "select",
+      "default": "请选择小时",
+      "dependencies": ["select_time"],
+      "dataview": "2"
+    },
+    "select_min": {
+      "title": "分钟",
+      "type": "string",
+      "enum": [],
+      "enumNames": [],
+      "widget": "select",
+      "default": "请选择分钟",
+      "dependencies": ["select_hour"],
+      "dataview": "3"
+    },
+    "date_begin": {
+      "title": "开始日期",
+      "type": "string",
+      "format": "date",
+      "required": true
+    },
+    "date_end": {
+      "title": "结束日期",
+      "type": "string",
+      "format": "date",
+      "required": true,
+      "rules": [
+        {
+          "validator": [
+            "function (_, value, { form }) {",
+            " if (value && value > form.getValueByPath('date_begin')) {",
+            "   return true;",
+            " }",
+            " return false;",
+            "}"
+          ],
+          "message": "开始日期必须小于结束日期！"
+        }
+      ]
+    }
+  }
+}

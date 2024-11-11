@@ -1,0 +1,62 @@
+{
+  "name": "@formas/chart-render",
+  "version": "1.0.0-alpha.3",
+  "keywords": [
+    "Chart",
+    "ChartRender",
+    "Render",
+    "XRender",
+    "React",
+    "Json Schema",
+    "Ant Design"
+  ],
+  "homepage": "https://xrender.fun/chart-render",
+  "bugs": {
+    "url": "https://github.com/alibaba/x-render/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:alibaba/x-render.git"
+  },
+  "license": "MIT",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "typings": "dist/index.d.ts",
+  "scripts": {
+    "beta": "npm publish --tag beta",
+    "build": "father-build",
+    "prepare": "npm run build",
+    "prettier": "prettier --write \"**/*.{js,jsx,tsx,ts,less,md,json}\"",
+    "postpublish": "git push --tags",
+    "test": "umi-test",
+    "test:coverage": "umi-test --coverage"
+  },
+  "lint-staged": {
+    "*.{js,jsx,less,md,json}": [
+      "prettier --write"
+    ],
+    "*.ts?(x)": [
+      "prettier --parser=typescript --write"
+    ]
+  },
+  "dependencies": {
+    "@ant-design/icons": "^5.x",
+    "@ant-design/plots": "latest",
+    "ahooks": "^3.4.1",
+    "classnames": "^2.3.1",
+    "@formas/form-render": "workspace:*",
+    "react": ">=16.8.0",
+    "zustand": "^4.0.0-rc.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.1"
+  },
+  "peerDependencies": {
+    "antd": "^4.24.16",
+    "react": ">=16.8.0"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "type": "object",
+  "displayType": "row",
+  "properties": {
+    "input1": {
+      "title": "正则表达式",
+      "type": "string",
+      "required": true,
+      "rules": [
+        {
+          "pattern": "^[\u4E00-\u9FA5]+$",
+          "message": "请输入中文！"
+        }
+      ]
+    },
+    "input2": {
+      "title": "自定义校验",
+      "type": "string",
+      "rules": [
+        {
+          "validator": [
+            "function (_, value) {",
+            " const pattern = '^[\u4E00-\u9FA5]+$';",
+            " const result = new RegExp(pattern).test(value);",
+            " return result;",
+            "}"
+          ],
+          "message": "请输入中文！"
+        }
+      ]
+    }
+  }
+}

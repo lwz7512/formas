@@ -1,0 +1,25 @@
+{
+  "type": "object",
+  "column": 3,
+  "labelWidth": 120,
+  "displayType": "row",
+  "properties": {
+    "select_time": {
+      "title": "单选",
+      "type": "string",
+      "enum": [],
+      "enumNames": [],
+      "widget": "select",
+      "default": "Select Time"
+    },
+    "select_hour": {
+      "title": "单选",
+      "type": "string",
+      "enum": [],
+      "enumNames": [],
+      "widget": "DynaOptionSelect",
+      "default": "Select Hour",
+      "dependencies": ["select_time"]
+    }
+  }
+}

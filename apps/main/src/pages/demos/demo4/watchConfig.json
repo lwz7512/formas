@@ -1,0 +1,4 @@
+{
+  "number_a": "const elm_b = form.getValues(); const val_b = elm_b.number_b || 0; form.setValueByPath('number_sum', val + val_b);",
+  "number_b": "const elm_a = form.getValues(); const val_a = elm_a.number_a || 0; form.setValueByPath('number_sum', val + val_a);"
+}
