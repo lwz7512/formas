@@ -19,10 +19,12 @@ A form driven low-code development platform
 
 ```
 pnpm install
+pnpm build
 pnpm dev
 ```
 
 - `pnpm install` used to install all the modules to a central place of user direction.
+- `pnpm build` used to build packages library when they are changed or fixed.
 - `pnpm dev` used to run `dev` task inside of apps/main.
 
 
