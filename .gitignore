@@ -11,7 +11,7 @@
 
 # turbo
 */*/.turbo
-./turbo
+.turbo
 
 # production
 /dist
