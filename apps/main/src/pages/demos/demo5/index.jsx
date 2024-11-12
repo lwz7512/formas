@@ -5,7 +5,7 @@ export const Demo = () => {
   const form = useForm();
   const [schema, setSchema] = useState({
     type: 'object',
-    column: 3,
+    column: 2,
     displayType: 'row',
     properties: {
       // ...其他字段

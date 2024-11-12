@@ -1,6 +1,6 @@
 {
   "type": "object",
-  "column": 3,
+  "column": 2,
   "labelWidth": 120,
   "displayType": "row",
   "properties": {
@@ -16,7 +16,7 @@
       "title": "Equals",
       "type": "number",
       "dependencies": ["number_a", "number_b"],
-      "widget": "ReadOnlySumInput"
+      "widget": "roInput"
     }
   }
 }

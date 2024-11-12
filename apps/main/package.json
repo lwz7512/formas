@@ -8,8 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prettier:write": "prettier . --write",
-    "prepare": "husky install"
+    "prettier:write": "prettier . --write"
   },
   "dependencies": {
     "@ant-design/charts": "^1.4.2",
@@ -24,7 +23,6 @@
     "@miragon/camunda-web-modeler": "^0.1.1",
     "@reduxjs/toolkit": "^2.2.3",
     "@tanem/react-nprogress": "^5.0.51",
-    "@xrenders/schema-builder": "^1.0.0-alpha.19",
     "antd": "^4.24.16",
     "codemirror": "^6.0.1",
     "dayjs": "^1.11.9",
@@ -47,7 +45,7 @@
   "devDependencies": {
     "@eslint/js": "^9.13.0",
     "@types/lodash": "^4.14.197",
-    "@types/react": "^18.3.11",
+    "@types/react": "~18.2.0",
     "@types/react-dom": "^18.3.1",
     "@types/react-router-dom": "^5.3.3",
     "@types/react-transition-group": "^4.4.7",

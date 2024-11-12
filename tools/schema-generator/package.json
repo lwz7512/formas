@@ -22,6 +22,8 @@
     ]
   },
   "dependencies": {
+    "@ant-design/icons": "^5.x",
+    "classnames": "^2.3.1",
     "clone": "^2.1.2",
     "copy-text-to-clipboard": "^2.2.0",
     "@formas/form-render": "workspace:*",
@@ -30,7 +32,7 @@
     "nanoid": "^3.1.22",
     "randombytes": "2.1.0",
     "rc-color-picker": "^1.2.6",
-    "react-dnd": "^14.0.2",
+    "react-dnd": "14.0.2",
     "react-dnd-html5-backend": "^14.0.0",
     "react-i18next": "^11.17.2",
     "react-sortable-hoc": "^2.0.0"

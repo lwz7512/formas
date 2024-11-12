@@ -57,7 +57,7 @@ const ListWithModal = props => {
         <Modal
           className="fr-wrapper"
           title={(schema && schema.title) || '子配置'}
-          visible={show}
+          open={show}
           onClose={toggle}
           footerActions={['ok']}
           onOk={toggle}

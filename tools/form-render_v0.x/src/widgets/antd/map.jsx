@@ -17,7 +17,7 @@ const MapWithModal = props => {
         </a>
         <Modal
           title={(schema && schema.title) || '子配置'}
-          visible={show}
+          open={show}
           onCancel={toggle}
           footer={null}
           width="80%"
@@ -39,7 +39,7 @@ const MapWithModal = props => {
         </a>
         <Drawer
           title={(schema && schema.title) || '子配置'}
-          visible={show}
+          open={show}
           onClose={toggle}
           width="80%"
           {...config}

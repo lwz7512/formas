@@ -1,13 +1,11 @@
 import { RightOutlined } from '@ant-design/icons';
-import { Tabs } from 'antd';
+import { Tabs, Tab } from 'antd';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSet, useStore } from '../../utils/hooks';
 import GlobalSettings from './GlobalSettings';
 import './index.less';
 import ItemSettings from './ItemSettings';
-
-const { TabPane } = Tabs;
 
 export default function Settings({ widgets }) {
   const { t } = useTranslation();
@@ -27,7 +25,7 @@ export default function Settings({ widgets }) {
       style={{ height: 30, width: 30, padding: '8px 0 0 8px' }}
       onClick={toggleRight}
     >
-      <RightOutlined style={{color: '#666'}} />
+      <RightOutlined style={{ color: '#666' }} />
     </div>
   );
 
@@ -52,22 +50,31 @@ export default function Settings({ widgets }) {
   const globalSettingHide =
     userProps.globalSettings === null ||
     (userProps.globalSettings && !Object.keys(userProps.globalSettings).length);
-
+  // FIXME: use items instead of `TabPan`
+  // @2024/11/11
+  const tabs = [];
+  if (showItemSettings) {
+    tabs.push({
+      label: t('组件配置'),
+      key: 'itemSettings',
+      children: <ItemSettings widgets={widgets} />,
+    });
+  }
+  if (!globalSettingHide) {
+    tabs.push({
+      label: '表单配置',
+      key: 'globalSettings',
+      children: <GlobalSettings widgets={widgets} />,
+    });
+  }
   return showRight ? (
     <div className="right-layout relative pl2">
       <ToggleIcon />
-      <Tabs activeKey={tabsKey} onChange={key => setState({ tabsKey: key })}>
-        {showItemSettings && (
-          <TabPane tab={t("组件配置")} key="itemSettings">
-            <ItemSettings widgets={widgets} />
-          </TabPane>
-        )}
-        {!globalSettingHide && (
-          <TabPane tab="表单配置" key="globalSettings">
-            <GlobalSettings widgets={widgets} />
-          </TabPane>
-        )}
-      </Tabs>
+      <Tabs
+        activeKey={tabsKey}
+        onChange={key => setState({ tabsKey: key })}
+        items={tabs}
+      />
     </div>
   ) : (
     <HideRightArrow />

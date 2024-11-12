@@ -8,7 +8,11 @@ export const Demo = () => {
   return (
     <div className="block">
       <h1>Demo 1:</h1>
-      <FormRender schema={schema} form={form} widgets={{ ReadOnlySumInput }} />
+      <FormRender
+        schema={schema}
+        form={form}
+        widgets={{ roInput: ReadOnlySumInput }}
+      />
     </div>
   );
 };

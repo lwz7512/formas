@@ -1,5 +1,14 @@
-// import React from 'react';
-import SchemaBuilder from '@xrenders/schema-builder';
+import Generator from '@formas/fr-generator';
+
+const defaultValue = {
+  type: 'object',
+  properties: {
+    inputName: {
+      title: '简单输入框',
+      type: 'string',
+    },
+  },
+};
 
 /**
  * FIXME: waiting for formal official release!
@@ -9,7 +18,7 @@ import SchemaBuilder from '@xrenders/schema-builder';
 export const FormDesigner = () => {
   return (
     <div style={{ height: '80vh' }}>
-      <SchemaBuilder importBtn={true} exportBtn={true} pubBtn={false} />
+      <Generator defaultValue={defaultValue} />
     </div>
   );
 };

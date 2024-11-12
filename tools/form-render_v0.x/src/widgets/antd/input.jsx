@@ -10,7 +10,7 @@ const PreviewNode = ({ format, value, showPop, setShowPop }) => {
       content={previewContent(format, value)}
       className="fr-preview"
       placement="bottom"
-      visible={showPop}
+      open={showPop}
     >
       <PictureOutlined
         onMouseEnter={() => setShowPop(true)}

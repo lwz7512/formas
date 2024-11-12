@@ -1,6 +1,6 @@
 import { TableProps } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
-import { FRProps } from 'form-render';
+import { FRProps } from '@formas/form-render';
 
 export interface TableContext<RecordType> {
   tableState?: TableState<RecordType>;
