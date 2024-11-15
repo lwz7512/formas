@@ -13,10 +13,13 @@ const usePostData = (url, params) => {
 
   const postData = useCallback(async () => {
     try {
+      // 从localStorage获取token
+      const token = localStorage.getItem('formas.jwt');
       const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
         },
         body: JSON.stringify(params),
       });

@@ -13,10 +13,13 @@ const usePutData = (url, params) => {
 
   const putData = useCallback(async () => {
     try {
+      // 从localStorage获取token
+      const token = localStorage.getItem('formas.jwt');
       const response = await fetch(url, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
         },
         body: JSON.stringify(params),
       });

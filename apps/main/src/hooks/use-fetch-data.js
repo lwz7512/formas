@@ -10,9 +10,20 @@ const useFetchData = (url, params = {}) => {
     try {
       // 将参数对象转换为查询字符串
       const queryString = new URLSearchParams(params).toString();
+
+      // 从localStorage获取token
+      const token = localStorage.getItem('formas.jwt');
+      // 设置请求的配置对象，包括headers
+      const config = {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json', // 确保内容类型为JSON
+          Authorization: 'Bearer ' + token,
+        },
+      };
+
       // 拼接完整的请求 URL
-      const requestUrl = `${url}?${queryString}`;
-      const response = await fetch(requestUrl);
+      const response = await fetch(`${url}?${queryString}`, config);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

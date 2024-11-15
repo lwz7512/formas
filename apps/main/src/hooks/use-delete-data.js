@@ -7,10 +7,22 @@ const useDeleteData = (url, params) => {
     try {
       // 将参数对象转换为查询字符串
       const queryString = new URLSearchParams(params).toString();
-      const response = await fetch(`${url}?${queryString}`, {
+
+      // 从localStorage获取token
+      const token = localStorage.getItem('formas.jwt');
+      // 设置请求的配置对象，包括headers
+      const config = {
         method: 'DELETE',
-      });
-      setData(response.ok ? { message: 'Resource deleted successfully' } : null);
+        headers: {
+          'Content-Type': 'application/json', // 确保内容类型为JSON
+          Authorization: 'Bearer ' + token,
+        },
+      };
+
+      const response = await fetch(`${url}?${queryString}`, config);
+      setData(
+        response.ok ? { message: 'Resource deleted successfully' } : null
+      );
     } catch (error) {
       setError(error);
     } finally {
