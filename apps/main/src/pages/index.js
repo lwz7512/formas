@@ -3,6 +3,7 @@ export * from './auth/sign-up';
 export * from './auth/welcome';
 export * from './errors';
 export * from './dashboard/default';
+export * from './designer';
 export { Demo as Demo1 } from './demos/demo1';
 export { Demo as Demo2 } from './demos/demo2';
 export { Demo as Demo3 } from './demos/demo3';
@@ -17,4 +18,6 @@ export { Demo as Demo11 } from './demos/demo11';
 export { Demo as Demo12 } from './demos/demo12';
 export { Demo as Demo13 } from './demos/demo13';
 export { LogicFlowPage } from './demos/demo14';
-export * from './designer';
+
+export { UserProfileDetailsPage } from './user/details';
+export { AboutPage } from './about';

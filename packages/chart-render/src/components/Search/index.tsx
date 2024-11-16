@@ -90,9 +90,10 @@ const Search: FC<Partial<ISearchProps>> = props => {
     hidden = false,
     ...restProps
   } = props;
-
-  const loading = useChart(state => state.loading);
-  const setChart = useChart(state => state.setChart);
+  // FIXME: fixed to adapt for v3.7.2
+  // @2024/11/16
+  const loading = useChart(state => state.getState().loading);
+  const setChart = useChart(state => state.getState().setChart);
 
   const form = useForm();
 

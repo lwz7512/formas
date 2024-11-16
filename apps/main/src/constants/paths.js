@@ -5,7 +5,7 @@ function path(root, sublink) {
 const ROOTS_LANDING = '/';
 const ROOTS_DASHBOARD = '/dashboards';
 const ROOTS_SITEMAP = '/sitemap';
-const ROOTS_LAYOUT = '/layouts';
+// const ROOTS_LAYOUT = '/layouts';
 const ROOTS_CORPORATE = '/corporate';
 const ROOTS_PROFILE = '/user-profile';
 const ROOTS_SOCIAL = '/social';
@@ -13,14 +13,14 @@ const ROOTS_BLOG = '/blog';
 const ROOTS_CAREERS = '/careers';
 const ROOTS_ACCOUNT = '/account';
 const ROOTS_AUTH = '/auth';
-const ROOTS_PROJECTS = '/projects';
-const ROOTS_CONTACTS = '/contacts';
-const ROOTS_USER_MGMT = '/user-management';
-const ROOTS_SUBSCRIPTION = '/subscription';
-const ROOTS_INVOICE = '/invoice';
-const ROOTS_FILE_MGMT = '/file-manager';
-const ROOTS_INBOX = '/inbox';
-const ROOTS_CALENDAR = '/calendar';
+// const ROOTS_PROJECTS = '/projects';
+// const ROOTS_CONTACTS = '/contacts';
+// const ROOTS_USER_MGMT = '/user-management';
+// const ROOTS_SUBSCRIPTION = '/subscription';
+// const ROOTS_INVOICE = '/invoice';
+// const ROOTS_FILE_MGMT = '/file-manager';
+// const ROOTS_INBOX = '/inbox';
+// const ROOTS_CALENDAR = '/calendar';
 const ROOTS_ERRORS = '/errors';
 const ROOTS_ABOUT = '/about';
 
@@ -193,7 +193,7 @@ export const PATH_SOCIAL = {
 
 export const PATH_BLOG = {
   root: ROOTS_BLOG,
-  details: (id) => path(ROOTS_BLOG, `/view/${id}`),
+  details: id => path(ROOTS_BLOG, `/view/${id}`),
 };
 
 export const PATH_CAREERS = {

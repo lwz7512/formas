@@ -1,7 +1,8 @@
 {
   "name": "@formas/main",
+  "description": "Developer console of formas platform",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,7 +14,7 @@
   "dependencies": {
     "@ant-design/charts": "^1.4.2",
     "@ant-design/colors": "^7.0.2",
-    "@ant-design/icons": "^5.x",
+    "@ant-design/icons": "^5.5.1",
     "@formas/form-render": "workspace:*",
     "@formas/fr-generator": "workspace:*",
     "@formas/table-render": "workspace:*",

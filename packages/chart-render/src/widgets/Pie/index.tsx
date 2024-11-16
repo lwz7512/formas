@@ -8,8 +8,8 @@ import { useChart } from '../../utils/store';
 export interface IPieProps extends Omit<Partial<PieConfig>, 'data'> {}
 
 const Pie: FC<IPieProps> = ({ className, style, ...props }) => {
-  const loading = useChart(state => state.loading);
-  const { meta, data } = useChart(state => state.dataSource) || {};
+  const loading = useChart(state => state.getState().loading);
+  const { meta, data } = useChart(state => state.getState().dataSource) || {};
 
   const { metaDim, metaInd } = splitMeta(meta);
   const colorField = metaDim[0]?.id;

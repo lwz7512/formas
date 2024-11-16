@@ -26,7 +26,7 @@ import { useMediaQuery } from 'react-responsive';
 
 import { Logo, NProgress } from '@/components';
 import {
-  DEMO_PATHS,
+  PATH_AUTH,
   PATH_DASHBOARD,
   PATH_DOCS,
   PATH_GITHUB,
@@ -68,7 +68,7 @@ export const GuestLayout = () => {
         className="layout"
         style={{
           minHeight: '100vh',
-          // backgroundColor: 'white',
+          backgroundColor: 'white',
         }}
       >
         <Header
@@ -90,17 +90,17 @@ export const GuestLayout = () => {
           {!isMobile ? (
             <>
               <div className="flex gap-1">
-                <Link to={PATH_LANDING.root}>
+                <Link to={PATH_AUTH.signin}>
                   <Button
-                    icon={<ProductOutlined />}
+                    icon={<LoginOutlined />}
                     type="link"
                     color="default"
                     variant="solid"
                   >
-                    Product Preview
+                    Log in
                   </Button>
                 </Link>
-                <Link to={DEMO_PATHS.default}>
+                {/* <Link to={DEMO_PATHS.default}>
                   <Button
                     icon={<AppstoreAddOutlined />}
                     type="link"
@@ -109,7 +109,7 @@ export const GuestLayout = () => {
                   >
                     Demos
                   </Button>
-                </Link>
+                </Link> */}
                 {/* <Link to={PATH_GITHUB.repo} target="_blank">
                   <Button icon={<GithubOutlined />} type="link">
                     Give us a star

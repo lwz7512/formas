@@ -8,11 +8,6 @@
     "branch": "master",
     "platform": "github"
   },
-  "workspaces": [
-    "packages/*",
-    "tools/schema-generator",
-    "tools/form-render-excel"
-  ],
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",

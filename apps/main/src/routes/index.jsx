@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 
-import { GuestLayout, DashboardLayout } from '@/layouts';
+import { GuestLayout, DashboardLayout, UserAccountLayout } from '@/layouts';
 import {
   ErrorPage,
   Error400Page,
@@ -27,6 +27,8 @@ import {
   Demo13,
   LogicFlowPage,
   FormDesigner,
+  UserProfileDetailsPage,
+  AboutPage,
 } from '@/pages';
 
 import { ScrollToTop } from './scroll-top';
@@ -192,112 +194,36 @@ export const Routers = createBrowserRouter(
           path: 'demo14',
           element: <LogicFlowPage />,
         },
+      ],
+    },
+    {
+      path: '/user-profile',
+      element: <PageWrapper children={<UserAccountLayout />} />,
+      errorElement: <ErrorPage />,
+      children: [
+        {
+          index: true,
+          path: 'details',
+          element: <UserProfileDetailsPage />,
+        },
         // {
-        //   path: 'learning',
-        //   element: <LearningDashboardPage />,
-        // },
-        // {
-        //   path: 'logistics',
-        //   element: <LogisticsDashboardPage />,
+        //   path: 'preferences',
+        //   element: <UserProfilePreferencesPage />,
         // },
       ],
     },
-    // {
-    //   path: '/sitemap',
-    //   element: <PageWrapper children={<DashboardLayout />} />,
-    //   errorElement: <ErrorPage />,
-    //   children: [
-    //     {
-    //       index: true,
-    //       path: '',
-    //       element: <SitemapPage />,
-    //     },
-    //   ],
-    // },
-    // {
-    //   path: '/corporate',
-    //   element: <PageWrapper children={<CorporateLayout />} />,
-    //   errorElement: <ErrorPage />,
-    //   children: [
-    //     {
-    //       index: true,
-    //       path: 'about',
-    //       element: <CorporateAboutPage />,
-    //     },
-    //     {
-    //       path: 'team',
-    //       element: <CorporateTeamPage />,
-    //     },
-    //     {
-    //       path: 'faqs',
-    //       element: <CorporateFaqPage />,
-    //     },
-    //     {
-    //       path: 'contact',
-    //       element: <CorporateContactPage />,
-    //     },
-    //     {
-    //       path: 'pricing',
-    //       element: <CorporatePricingPage />,
-    //     },
-    //     {
-    //       path: 'license',
-    //       element: <CorporateLicensePage />,
-    //     },
-    //   ],
-    // },
-    // {
-    //   path: '/user-profile',
-    //   element: <PageWrapper children={<UserAccountLayout />} />,
-    //   errorElement: <ErrorPage />,
-    //   children: [
-    //     {
-    //       index: true,
-    //       path: 'details',
-    //       element: <UserProfileDetailsPage />,
-    //     },
-    //     {
-    //       path: 'preferences',
-    //       element: <UserProfilePreferencesPage />,
-    //     },
-    //     {
-    //       path: 'information',
-    //       element: <UserProfileInformationPage />,
-    //     },
-    //     {
-    //       path: 'security',
-    //       element: <UserProfileSecurityPage />,
-    //     },
-    //     {
-    //       path: 'activity',
-    //       element: <UserProfileActivityPage />,
-    //     },
-    //     {
-    //       path: 'actions',
-    //       element: <UserProfileActionsPage />,
-    //     },
-    //     {
-    //       path: 'help',
-    //       element: <UserProfileHelpPage />,
-    //     },
-    //     {
-    //       path: 'feedback',
-    //       element: <UserProfileFeedbackPage />,
-    //     },
-    //   ],
-    // },
-    // {
-    //   path: '/about',
-    //   element: <PageWrapper children={<DashboardLayout />} />,
-    //   errorElement: <ErrorPage />,
-    //   children: [
-    //     {
-    //       index: true,
-    //       path: '',
-    //       element: <AboutPage />,
-    //     },
-    //   ],
-    // },
+    {
+      path: '/about',
+      element: <PageWrapper children={<DashboardLayout />} />,
+      errorElement: <ErrorPage />,
+      children: [
+        {
+          index: true,
+          path: '',
+          element: <AboutPage />,
+        },
+      ],
+    },
   ],
   options
 );

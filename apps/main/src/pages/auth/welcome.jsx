@@ -1,7 +1,6 @@
 import { Typography } from 'antd';
 import { Link } from 'react-router-dom';
 
-import { Logo } from '@/components';
 import { PATH_DASHBOARD } from '@/constants';
 
 export const WelcomePage = () => {
@@ -10,10 +9,9 @@ export const WelcomePage = () => {
       className="flex flex-col gap-6 justify-center items-center"
       style={{ height: '80vh' }}
     >
-      <Typography.Title className="m-0">Welcome to Antd</Typography.Title>
+      <Typography.Title className="m-0">Welcome to Formas</Typography.Title>
       <Typography.Text style={{ fontSize: 18 }}>
-        A dynamic and versatile multipurpose dashboard utilizing Ant Design,
-        React, TypeScript, and Vite.
+        Formas - a flexible low-code platform for lazy developers!
       </Typography.Text>
       <Link to={PATH_DASHBOARD.default}>
         {/* <Button type="primary" size="middle">

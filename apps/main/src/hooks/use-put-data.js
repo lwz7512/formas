@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from 'react';
  * @param {Object} params - The parameters to be sent with the PUT request
  * @returns
  */
-const usePutData = (url, params) => {
+export const usePutData = (url, params) => {
   const [data, setData] = useState();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -39,5 +39,3 @@ const usePutData = (url, params) => {
 
   return { data, error, loading };
 };
-
-export default usePutData;

@@ -1,4 +1,4 @@
-import { Typography, theme } from 'antd';
+import { Typography } from 'antd';
 import { Link } from 'react-router-dom';
 // import { CSSProperties } from 'react';
 
@@ -23,7 +23,7 @@ export const Logo = ({ asLink, color, href, imgSize, bgColor, ...others }) => {
           src="/logo-no-background.png"
           alt="design sparx logo"
           height={imgSize?.h || 48}
-          width={imgSize?.h || 48}
+          width={imgSize?.h || 36}
         />
         <Typography.Title
           level={5}
@@ -36,7 +36,7 @@ export const Logo = ({ asLink, color, href, imgSize, bgColor, ...others }) => {
             borderRadius: 1,
           }}
         >
-          Oh my Forms
+          Formas - DevTool
         </Typography.Title>
       </div>
     </Link>

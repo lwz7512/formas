@@ -11,7 +11,6 @@ import {
   Input,
   message,
   Row,
-  theme,
   Typography,
 } from 'antd';
 import {
@@ -21,7 +20,7 @@ import {
 } from '@ant-design/icons';
 
 import { Logo } from '@/components';
-import { PATH_AUTH, PATH_DASHBOARD } from '@/constants';
+import { PATH_AUTH, DEMO_PATHS } from '@/constants';
 
 const { Title, Text, Link } = Typography;
 
@@ -30,7 +29,7 @@ const { Title, Text, Link } = Typography;
 //   password?: string;
 //   remember?: boolean;
 // };
-
+// TODO: add login logic ....
 export const SignInPage = () => {
   const isMobile = useMediaQuery({ maxWidth: 769 });
   const navigate = useNavigate();
@@ -46,7 +45,8 @@ export const SignInPage = () => {
     });
 
     setTimeout(() => {
-      navigate(PATH_DASHBOARD.default);
+      // to: /demos/default
+      navigate(DEMO_PATHS.default);
     }, 5000);
   };
 
@@ -63,11 +63,10 @@ export const SignInPage = () => {
         >
           <Logo color="white" />
           <Title level={2} className="text-white">
-            Welcome back to Antd Admin
+            Welcome back to Formas Console
           </Title>
           <Text className="text-white" style={{ fontSize: 18 }}>
-            A dynamic and versatile multipurpose dashboard utilizing Ant Design,
-            React, TypeScript, and Vite.
+            A flexible low-code platform for lazy developers
           </Text>
         </div>
       </Col>

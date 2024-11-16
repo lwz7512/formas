@@ -1,8 +1,8 @@
-import { FormInstance } from '@formas/form-render';
-import { create, StoreApi } from 'zustand';
-
-// @deprecated!
+import create, { StoreApi } from 'zustand';
+// available in v3.7.2
 import createContext from 'zustand/context';
+
+import { FormInstance } from '@formas/form-render';
 import { DataSource } from './type';
 export interface IStore {
   /** 修改全局状态的工具函数 */
@@ -24,9 +24,15 @@ export interface IStore {
 export const { Provider, useStore: useChart } =
   createContext<StoreApi<IStore>>();
 
+/**
+ * FIXME: re-implemented with zustand v3.7.2
+ * @date 2024/11/16
+ * @returns
+ */
 export const createStore = () =>
-  create<IStore>(setChart => ({
-    setChart,
+  create<IStore>(set => ({
     loading: false,
     dataSource: { meta: [], data: [] },
+    setChart: (store: Partial<IStore>) =>
+      set(state => ({ ...state, ...store })),
   }));

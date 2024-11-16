@@ -1,4 +1,6 @@
-const useDeleteData = (url, params) => {
+import { useCallback, useEffect, useState } from 'react';
+
+export const useDeleteData = (url, params) => {
   const [data, setData] = useState();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -36,5 +38,3 @@ const useDeleteData = (url, params) => {
 
   return { data, error, loading };
 };
-
-export default useDeleteData;

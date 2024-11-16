@@ -1,7 +1,7 @@
-import useFetchData from './useFetchData';
-import usePostData from './usePostData';
-import usePutData from './usePutData';
-import useDeleteData from './useDeleteData';
+import { useFetchData } from './use-fetch-data';
+import { usePostData } from './use-post-data';
+import { usePutData } from './use-put-data';
+import { useDeleteData } from './use-delete-data';
 
 /**
  * 查询账号列表
@@ -11,7 +11,7 @@ import useDeleteData from './useDeleteData';
  * @param {*} searchs 过滤条件，数组[{'column':'name', 'op':'eq', 'value':'系统字典'}]
  * @returns {*} {currPage:当前页, pageSize:每页记录数, totalNum:总记录数, totalPage:总页数, datas:数组[{每条记录为字典},{}]}
  */
-export const fetchAccountList = (page, size, orders, searchs) => {
+export const useFetchAccountList = (page, size, orders, searchs) => {
   const { data, error, loading } = usePostData(`/api/auth/v5/accounts/filter`, {
     page: page,
     size: size,
@@ -27,7 +27,7 @@ export const fetchAccountList = (page, size, orders, searchs) => {
  * @param {*} username
  * @returns
  */
-export const createAccount = (loginName, username) => {
+export const useCreateAccount = (loginName, username) => {
   const { data, error, loading } = usePostData(`/api/auth/v5/accounts`, {
     loginName: loginName,
     username: username,
@@ -40,7 +40,7 @@ export const createAccount = (loginName, username) => {
  * @param {*} id
  * @returns {*} {data:{返回结果记录为字典}}
  */
-export const fetchAccount = (accountId) => {
+export const useFetchAccount = accountId => {
   const { data, error, loading } = useFetchData(
     `/api/auth/v5/accounts/${accountId}`
   );
@@ -52,7 +52,7 @@ export const fetchAccount = (accountId) => {
  * @param {*} id
  * @returns {*} {datas:数组[{返回结果记录为字典}]}
  */
-export const fetchAccountRoles = (accountId) => {
+export const useFetchAccountRoles = accountId => {
   const { data, error, loading } = useFetchData(
     `/api/auth/v5/accounts/${accountId}/roles`
   );
@@ -62,7 +62,7 @@ export const fetchAccountRoles = (accountId) => {
 /**
  * 锁定账号
  */
-export const lockAccount = (accountId) => {
+export const useLockAccount = accountId => {
   const { data, error, loading } = usePutData(
     `/api/auth/v5/accounts/${accountId}/lock`,
     {}
@@ -73,7 +73,7 @@ export const lockAccount = (accountId) => {
 /**
  * 解锁账号
  */
-export const unlockAccount = (accountId) => {
+export const useUnlockAccount = accountId => {
   const { data, error, loading } = usePutData(
     `/api/auth/v5/accounts/${accountId}/unlock`,
     {}
@@ -83,28 +83,28 @@ export const unlockAccount = (accountId) => {
 
 /**
  * 授权角色给账号
- * @param {*} accountId 
+ * @param {*} accountId
  * @param {*} roleIds 字符串数组[roleId, roleId2]
- * @returns 
+ * @returns
  */
-export const grantRolesToAccount = (accountId, roleIds) => {
+export const useGrantRolesToAccount = (accountId, roleIds) => {
   const { data, error, loading } = usePutData(
     `/api/auth/v5/accounts/${accountId}/roles`,
-    {roleIds: roleIds}
+    { roleIds: roleIds }
   );
   return { data, error, loading };
 };
 
 /**
  * 撤销账号角色
- * @param {*} accountId 
+ * @param {*} accountId
  * @param {*} roleIds 字符串数组[roleId, roleId2]
- * @returns 
+ * @returns
  */
-export const revokeRolesFromAccount = (accountId, roleIds) => {
+export const useRevokeRolesFromAccount = (accountId, roleIds) => {
   const { data, error, loading } = useDeleteData(
     `/api/auth/v5/accounts/${accountId}/roles`,
-    {roleIds: roleIds}
+    { roleIds: roleIds }
   );
   return { data, error, loading };
 };
@@ -114,7 +114,7 @@ export const revokeRolesFromAccount = (accountId, roleIds) => {
  * @param {*} id
  * @returns {*} {datas:数组[{返回结果记录为字典}]}
  */
-export const fetchAccountGroups = (accountId) => {
+export const useFetchAccountGroups = accountId => {
   const { data, error, loading } = useFetchData(
     `/api/auth/v5/accounts/${accountId}/groups`
   );
@@ -123,28 +123,28 @@ export const fetchAccountGroups = (accountId) => {
 
 /**
  * 授权部门给账号
- * @param {*} accountId 
+ * @param {*} accountId
  * @param {*} roleIds 字符串数组[groupId, groupId2]
- * @returns 
+ * @returns
  */
-export const grantGroupsToAccount = (accountId, groupIds) => {
+export const useGrantGroupsToAccount = (accountId, groupIds) => {
   const { data, error, loading } = usePutData(
     `/api/auth/v5/accounts/${accountId}/groups`,
-    {groupIds: groupIds}
+    { groupIds: groupIds }
   );
   return { data, error, loading };
 };
 
 /**
  * 撤销账号部门
- * @param {*} accountId 
+ * @param {*} accountId
  * @param {*} groupIds 字符串数组[groupId, groupId2]
- * @returns 
+ * @returns
  */
-export const revokeGroupsFromAccount = (accountId, groupIds) => {
+export const useRevokeGroupsFromAccount = (accountId, groupIds) => {
   const { data, error, loading } = useDeleteData(
     `/api/auth/v5/accounts/${accountId}/groups`,
-    {groupIds: groupIds}
+    { groupIds: groupIds }
   );
   return { data, error, loading };
 };

@@ -104,8 +104,9 @@ const Column: React.FC<IColumnProps> = ({
   inverted,
   ...props
 }) => {
-  const loading = useChart(state => state.loading);
-  const { meta = [], data = [] } = useChart(state => state.dataSource) || {};
+  const loading = useChart(state => state.getState().loading);
+  const { meta = [], data = [] } =
+    useChart(state => state.getState().dataSource) || {};
   const { xField, yField, ...otherConfig } = generateConfig(meta, data);
 
   return (

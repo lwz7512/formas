@@ -40,13 +40,13 @@
     ]
   },
   "dependencies": {
-    "@ant-design/icons": "^5.x",
+    "@ant-design/icons": "^5.5.1",
     "@ant-design/plots": "latest",
     "ahooks": "^3.4.1",
     "classnames": "^2.3.1",
     "@formas/form-render": "workspace:*",
     "react": ">=16.8.0",
-    "zustand": "^4.0.0-rc.1"
+    "zustand": "^3.7.2"
   },
   "devDependencies": {
     "@types/react": "~18.2.0",

@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from 'react';
  * @param {Object} params - The parameters to be sent with the POST request
  * @returns
  */
-const usePostData = (url, params) => {
+export const usePostData = (url, params) => {
   const [data, setData] = useState();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -39,5 +39,3 @@ const usePostData = (url, params) => {
 
   return { data, error, loading };
 };
-
-export default usePostData;
