@@ -22,6 +22,8 @@ import {
 import { Logo } from '@/components';
 import { PATH_AUTH, DEMO_PATHS } from '@/constants';
 
+import { useLogin } from '@/hooks/api-auth';
+
 const { Title, Text, Link } = Typography;
 
 // type FieldType = {
@@ -29,25 +31,46 @@ const { Title, Text, Link } = Typography;
 //   password?: string;
 //   remember?: boolean;
 // };
-// TODO: add login logic ....
 export const SignInPage = () => {
   const isMobile = useMediaQuery({ maxWidth: 769 });
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
 
-  const onFinish = values => {
-    console.log('Success:', values);
-    setLoading(true);
+  // to get uername and password from `onFormChange`
+  const [username, setUsername] = useState('dev');
+  const [password, setPassword] = useState('123456');
 
+  // == api hook can only be used in direct root of component!! ==
+  // hard-coded for now:
+  // @2024/11/17
+  const { error, loading, send } = useLogin(username, password);
+
+  // get realtime username & password
+  const onFormChange = (_, allFields) => {
+    const emailField = allFields[0];
+    const pswdField = allFields[1];
+    // const rembField = allFields[2];
+    setUsername(emailField.value);
+    setPassword(pswdField.value);
+  };
+
+  const onFinish = async () => {
+    // console.log('sending:', values);
+    const result = await send();
+    // console.log(result);
+    // got error!
+    if (result.errCode > 200) {
+      return message.error(result.errMsg);
+    }
+    // got exception
+    if (error || !result) {
+      return message.error('Ops, login failed!');
+    }
+    // to: /demos/default
+    navigate(DEMO_PATHS.default, { replace: true });
     message.open({
       type: 'success',
       content: 'Login successful',
     });
-
-    setTimeout(() => {
-      // to: /demos/default
-      navigate(DEMO_PATHS.default);
-    }, 5000);
   };
 
   const onFinishFailed = errorInfo => {
@@ -86,10 +109,11 @@ export const SignInPage = () => {
             labelCol={{ span: 24 }}
             wrapperCol={{ span: 24 }}
             initialValues={{
-              email: 'demo@email.com',
-              password: 'demo123',
+              email: 'dev',
+              password: '123456',
               remember: true,
             }}
+            onFieldsChange={onFormChange}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
@@ -98,7 +122,7 @@ export const SignInPage = () => {
             <Row gutter={[8, 0]}>
               <Col xs={24}>
                 <Form.Item
-                  label="Email"
+                  label="User"
                   name="email"
                   rules={[
                     { required: true, message: 'Please input your email' },
@@ -132,7 +156,7 @@ export const SignInPage = () => {
                   size="middle"
                   loading={loading}
                 >
-                  Continue
+                  Log In
                 </Button>
                 <Link href={PATH_AUTH.passwordReset}>Forgot password?</Link>
               </div>

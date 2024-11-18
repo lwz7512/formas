@@ -1,7 +1,4 @@
-import { useFetchData } from './use-fetch-data';
-import { usePostData } from './use-post-data';
-import { usePutData } from './use-put-data';
-import { useDeleteData } from './use-delete-data';
+import { useFetchData, usePostData, usePutData, useDeleteData } from '.';
 
 /**
  * 查询账号列表

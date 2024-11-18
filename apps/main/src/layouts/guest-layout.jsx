@@ -1,3 +1,6 @@
+import { Link, Outlet, useLocation } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+// import { useNavigate } from "react-router-dom";
 import {
   Button,
   Drawer,
@@ -12,8 +15,6 @@ import {
   SwitchTransition,
   TransitionGroup,
 } from 'react-transition-group';
-import { Link, Outlet, useLocation } from 'react-router-dom';
-import { useEffect, useRef, useState } from 'react';
 import {
   AppstoreAddOutlined,
   GithubOutlined,
@@ -42,6 +43,8 @@ export const GuestLayout = () => {
   const nodeRef = useRef(null);
   const [navFill, setNavFill] = useState(false);
   const [open, setOpen] = useState(false);
+
+  // const navigate = useNavigate();
 
   const showDrawer = () => {
     setOpen(true);

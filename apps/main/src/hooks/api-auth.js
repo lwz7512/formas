@@ -1,21 +1,27 @@
-// import { useFetchData } from './use-fetch-data';
-import { usePostData } from './use-post-data';
-// import { usePutData } from './use-put-data';
-import { useDeleteData } from './use-delete-data';
+import { md5 } from 'js-md5';
 
+import { usePostData, useDeleteData, SERVICE_HOST_POST as host } from '.';
 /**
  * 登录
- * @param {*} loginName
- * @param {*} password 请使用md5(pwd)加密后传入此参数
+ * @param {string} loginName
+ * @param {string} password normal password to encrypt with MD5
  * @returns
  */
 export const useLogin = (loginName, password) => {
-  const { data, error, loading } = usePostData(`/api/auth/v5/login`, {
-    username: loginName,
-    password: password,
-  });
-  localStorage.setItem('formas.jwt', data);
-  return { data, error, loading };
+  const md5pwd = md5(password);
+  const { data, error, loading, trigger } = usePostData(
+    `${host}/api/auth/v5/login`,
+    {
+      loginName,
+      md5pwd, // 请使用md5(pwd)加密后传入此参数
+    }
+  );
+  const send = async () => {
+    const result = await trigger();
+    localStorage.setItem('formas.jwt', result);
+    return result;
+  };
+  return { data, error, loading, send };
 };
 
 /**

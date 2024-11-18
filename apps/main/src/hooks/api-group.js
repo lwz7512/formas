@@ -1,12 +1,8 @@
-import useFetchData from './useFetchData';
-import usePostData from './usePostData';
-import usePutData from './usePutData';
-import useDeleteData from './useDeleteData';
-
+import { useFetchData, usePostData, usePutData, useDeleteData } from '.';
 /**
  * 查询部门列表
  */
-export const fetchGroupList = (groupId) => {
+export const useFetchGroupList = groupId => {
   const { data, error, loading } = usePostData(
     `/api/auth/v5/groups/${groupId}/table`,
     {}
@@ -17,7 +13,7 @@ export const fetchGroupList = (groupId) => {
 /**
  * 查询部门列表, 以树状结构返回
  */
-export const fetchGroupTree = (groupId) => {
+export const useFetchGroupTree = groupId => {
   const { data, error, loading } = usePostData(
     `/api/auth/v5/groups/${groupId}/tree`,
     {}
@@ -28,7 +24,7 @@ export const fetchGroupTree = (groupId) => {
 /**
  * 创建部门
  */
-export const createGroup = (pid, title) => {
+export const useCreateGroup = (pid, title) => {
   const { data, error, loading } = usePostData(`/api/auth/v5/groups`, {
     pid: pid,
     title: title,
@@ -39,7 +35,7 @@ export const createGroup = (pid, title) => {
 /**
  * 修改部门
  */
-export const modifyGroup = (id, title) => {
+export const useModifyGroup = (id, title) => {
   const { data, error, loading } = usePutData(`/api/auth/v5/groups/${id}`, {
     title: title,
   });
@@ -51,7 +47,7 @@ export const modifyGroup = (id, title) => {
  * @param {*} id
  * @returns {*} {data:{返回结果记录为字典}}
  */
-export const fetchGroup = (id) => {
+export const useFetchGroup = id => {
   const { data, error, loading } = useFetchData(`/api/auth/v5/groups/${id}`);
   return { data, error, loading };
 };
@@ -59,7 +55,7 @@ export const fetchGroup = (id) => {
 /**
  * 删除部门
  */
-export const removeGroup = (id) => {
+export const useRemoveGroup = id => {
   const { data, error, loading } = useDeleteData(`/api/auth/v5/groups/${id}`);
   return { data, error, loading };
 };
@@ -69,7 +65,7 @@ export const removeGroup = (id) => {
  * @param {*} id
  * @returns {*} {datas:数组[{返回结果记录为字典}]}
  */
-export const fetchGroupAccounts = (groupId) => {
+export const useFetchGroupAccounts = groupId => {
   const { data, error, loading } = useFetchData(
     `/api/auth/v5/groups/${groupId}/accounts`
   );
@@ -78,28 +74,28 @@ export const fetchGroupAccounts = (groupId) => {
 
 /**
  * 授权账号给部门
- * @param {*} groupId 
+ * @param {*} groupId
  * @param {*} accountIds 字符串数组[accountId, accountId2]
- * @returns 
+ * @returns
  */
-export const grantAccountsToGroup = (groupId, accountIds) => {
+export const useGrantAccountsToGroup = (groupId, accountIds) => {
   const { data, error, loading } = usePutData(
     `/api/auth/v5/groups/${groupId}/accounts`,
-    {accountIds: accountIds}
+    { accountIds: accountIds }
   );
   return { data, error, loading };
 };
 
 /**
  * 撤销部门账号
- * @param {*} groupId 
+ * @param {*} groupId
  * @param {*} accountIds 字符串数组[accountId, accountId2]
- * @returns 
+ * @returns
  */
-export const revokeAccountsFromGroup = (groupId, accountIds) => {
+export const useRevokeAccountsFromGroup = (groupId, accountIds) => {
   const { data, error, loading } = useDeleteData(
     `/api/auth/v5/groups/${groupId}/accounts`,
-    {accountIds: accountIds}
+    { accountIds: accountIds }
   );
   return { data, error, loading };
 };
@@ -110,14 +106,17 @@ export const revokeAccountsFromGroup = (groupId, accountIds) => {
  * @param {*} objId 目标节点ID
  * @param {*} place 位置: before, after
  * @param {*} relation 关系：child, brother
- * @returns 
+ * @returns
  */
-export const moveGroup = (groupId, objId, place, relation) => {
-  const { data, error, loading } = usePutData(`/api/auth/v5/groups/${groupId}/move`, {
-    srcId: srcId,
-    objId: objId,
-    place: place,
-    relation: relation,
-  });
+export const useMoveGroup = (groupId, objId, place, relation) => {
+  const { data, error, loading } = usePutData(
+    `/api/auth/v5/groups/${groupId}/move`,
+    {
+      srcId: groupId,
+      objId: objId,
+      place: place,
+      relation: relation,
+    }
+  );
   return { data, error, loading };
 };

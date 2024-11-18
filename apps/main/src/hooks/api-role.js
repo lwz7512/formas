@@ -1,8 +1,4 @@
-import useFetchData from './useFetchData';
-import usePostData from './usePostData';
-import usePutData from './usePutData';
-import useDeleteData from './useDeleteData';
-
+import { useFetchData, usePostData, usePutData, useDeleteData } from '.';
 /**
  * 查询角色列表
  * @param {*} page 当前页
@@ -11,7 +7,7 @@ import useDeleteData from './useDeleteData';
  * @param {*} searchs 过滤条件，数组[{'column':'name', 'op':'eq', 'value':'系统字典'}]
  * @returns {*} {currPage:当前页, pageSize:每页记录数, totalNum:总记录数, totalPage:总页数, datas:数组[{每条记录为字典},{}]}
  */
-export const fetchRoleList = (page, size, orders, searchs) => {
+export const useFetchRoleList = (page, size, orders, searchs) => {
   const { data, error, loading } = usePostData(`/api/auth/v5/roles/filter`, {
     page: page,
     size: size,
@@ -24,7 +20,7 @@ export const fetchRoleList = (page, size, orders, searchs) => {
 /**
  * 创建角色
  */
-export const createRole = (name) => {
+export const useCreateRole = name => {
   const { data, error, loading } = usePostData(`/api/auth/v5/roles`, {
     name: name,
   });
@@ -34,7 +30,7 @@ export const createRole = (name) => {
 /**
  * 修改角色
  */
-export const modifyRole = (id, name) => {
+export const useModifyRole = (id, name) => {
   const { data, error, loading } = usePutData(`/api/auth/v5/roles/${id}`, {
     name: name,
   });
@@ -46,7 +42,7 @@ export const modifyRole = (id, name) => {
  * @param {*} id
  * @returns {*} {data:{返回结果记录为字典}}
  */
-export const fetchRole = (id) => {
+export const useFetchRole = id => {
   const { data, error, loading } = useFetchData(`/api/auth/v5/roles/${id}`);
   return { data, error, loading };
 };
@@ -54,7 +50,7 @@ export const fetchRole = (id) => {
 /**
  * 删除角色
  */
-export const removeRole = (id) => {
+export const useRemoveRole = id => {
   const { data, error, loading } = useDeleteData(`/api/auth/v5/roles/${id}`);
   return { data, error, loading };
 };
@@ -64,7 +60,7 @@ export const removeRole = (id) => {
  * @param {*} id
  * @returns {*} {datas:数组[{返回结果记录为字典}]}
  */
-export const fetchRoleAccounts = (roleId) => {
+export const useFetchRoleAccounts = roleId => {
   const { data, error, loading } = useFetchData(
     `/api/auth/v5/roles/${roleId}/accounts`
   );
@@ -73,56 +69,56 @@ export const fetchRoleAccounts = (roleId) => {
 
 /**
  * 授权账号给角色
- * @param {*} roleId 
+ * @param {*} roleId
  * @param {*} accountIds 字符串数组[accountId, accountId2]
- * @returns 
+ * @returns
  */
-export const grantAccountsToRole = (roleId, accountIds) => {
+export const useGrantAccountsToRole = (roleId, accountIds) => {
   const { data, error, loading } = usePutData(
     `/api/auth/v5/roles/${roleId}/accounts`,
-    {accountIds: accountIds}
+    { accountIds: accountIds }
   );
   return { data, error, loading };
 };
 
 /**
  * 撤销角色账号
- * @param {*} roleId 
+ * @param {*} roleId
  * @param {*} accountIds 字符串数组[accountId, accountId2]
- * @returns 
+ * @returns
  */
-export const revokeAccountsFromRole = (roleId, accountIds) => {
+export const useRevokeAccountsFromRole = (roleId, accountIds) => {
   const { data, error, loading } = useDeleteData(
     `/api/auth/v5/roles/${roleId}/accounts`,
-    {accountIds: accountIds}
+    { accountIds: accountIds }
   );
   return { data, error, loading };
 };
 
 /**
  * 授权菜单给角色
- * @param {*} roleId 
+ * @param {*} roleId
  * @param {*} menuIds 字符串数组[menuId, menuId2]
- * @returns 
+ * @returns
  */
-export const grantMenusToRole = (roleId, menuIds) => {
+export const useGrantMenusToRole = (roleId, menuIds) => {
   const { data, error, loading } = usePutData(
     `/api/auth/v5/roles/${roleId}/menus`,
-    {menuIds: menuIds}
+    { menuIds: menuIds }
   );
   return { data, error, loading };
 };
 
 /**
  * 撤销角色菜单
- * @param {*} roleId 
+ * @param {*} roleId
  * @param {*} menuIds 字符串数组[menuId, menuId2]
- * @returns 
+ * @returns
  */
-export const revokeMenusFromRole = (roleId, menuIds) => {
+export const useRevokeMenusFromRole = (roleId, menuIds) => {
   const { data, error, loading } = useDeleteData(
     `/api/auth/v5/roles/${roleId}/menus`,
-    {menuIds: menuIds}
+    { menuIds: menuIds }
   );
   return { data, error, loading };
 };

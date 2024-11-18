@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { fetchDataviewList } from './api';
+import { useState, useEffect } from 'react';
+import { fetchDataviewList } from './api-dataview';
 
 const DataviewList = () => {
   // 定义状态变量
@@ -12,16 +12,18 @@ const DataviewList = () => {
     setIsLoading(true);
 
     // 调用业务API获取数据
-    fetchDataviewList(1, 10, 'asc', 'keyword').then(({ data, error, loading }) => {
-      // 更新状态变量
-      setDataviews(data);
-      setError(error);
-      setIsLoading(loading);
-    }).catch((error) => {
-      // 处理错误
-      setError(error);
-      setIsLoading(false);
-    });
+    fetchDataviewList(1, 10, 'asc', 'keyword')
+      .then(({ data, error, loading }) => {
+        // 更新状态变量
+        setDataviews(data);
+        setError(error);
+        setIsLoading(loading);
+      })
+      .catch(error => {
+        // 处理错误
+        setError(error);
+        setIsLoading(false);
+      });
   }, []); // 空依赖数组表示只在组件挂载时执行
 
   // 根据状态渲染组件
