@@ -18,7 +18,6 @@
     "@formas/form-render": "workspace:*",
     "@formas/fr-generator": "workspace:*",
     "@formas/table-render": "workspace:*",
-    "@formas/chart-render": "workspace:*",
     "@logicflow/core": "^2.0.6",
     "@logicflow/extension": "^2.0.10",
     "@miragon/camunda-web-modeler": "^0.1.1",
