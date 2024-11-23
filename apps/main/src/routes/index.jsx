@@ -24,7 +24,7 @@ import {
   Demo10,
   Demo11,
   Demo12,
-  Demo13,
+  // Demo13,
   LogicFlowPage,
   FormDesigner,
   UserProfileDetailsPage,
@@ -186,10 +186,10 @@ export const Routers = createBrowserRouter(
           path: 'demo12',
           element: <Demo12 />,
         },
-        {
-          path: 'demo13',
-          element: <Demo13 />,
-        },
+        // {
+        //   path: 'demo13',
+        //   element: <Demo13 />,
+        // },
         {
           path: 'demo14',
           element: <LogicFlowPage />,

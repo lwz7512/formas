@@ -16,7 +16,7 @@ export { Demo as Demo9 } from './demos/demo9';
 export { Demo as Demo10 } from './demos/demo10';
 export { Demo as Demo11 } from './demos/demo11';
 export { Demo as Demo12 } from './demos/demo12';
-export { Demo as Demo13 } from './demos/demo13';
+// export { Demo as Demo13 } from './demos/demo13';
 export { LogicFlowPage } from './demos/demo14';
 
 export { UserProfileDetailsPage } from './user/details';
