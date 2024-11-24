@@ -26,7 +26,6 @@
     "antd": "^4.24.16",
     "codemirror": "^6.0.1",
     "dayjs": "^1.11.9",
-    "firebase": "^10.8.0",
     "interactjs": "^1.10.18",
     "js-md5": "0.8.3",
     "lodash": "^4.17.21",

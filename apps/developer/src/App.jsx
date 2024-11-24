@@ -1,14 +1,43 @@
-import React from 'react';
-import { Button, Typography } from 'antd';
+import { RouterProvider } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 
-const { Title, Paragraph, Text, Link } = Typography;
+import { ConfigProvider } from 'antd';
 
-const App = () => (
-  <div className="App">
-    <Title level={2}>Formas - developer portal</Title>
-    <Button type="primary">Lets Go!</Button>
-    <h1 className="text-3xl font-bold underline">Hello Formas Developers!</h1>
-  </div>
-);
+import { StylesContext } from './context';
+import { Routers } from './routes';
+
+import './App.css';
+
+function App() {
+  return (
+    <HelmetProvider>
+      <ConfigProvider>
+        <StylesContext.Provider
+          value={{
+            rowProps: {
+              gutter: [
+                { xs: 8, sm: 16, md: 24, lg: 32 },
+                { xs: 8, sm: 16, md: 24, lg: 32 },
+              ],
+            },
+            carouselProps: {
+              autoplay: true,
+              dots: true,
+              dotPosition: 'bottom',
+              infinite: true,
+              slidesToShow: 3,
+              slidesToScroll: 1,
+            },
+          }}
+        >
+          <RouterProvider
+            router={Routers}
+            future={{ v7_startTransition: true }}
+          />
+        </StylesContext.Provider>
+      </ConfigProvider>
+    </HelmetProvider>
+  );
+}
 
 export default App;
