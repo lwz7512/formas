@@ -83,10 +83,10 @@ export const UserAccountLayout = () => {
   };
 
   useEffect(() => {
-    console.log(location);
+    // console.log(location);
     const k = TAB_ITEMS.find(d => location.pathname.includes(d.key))?.key || '';
 
-    console.log(k);
+    // console.log(k);
     setActiveKey(k);
   }, [location]);
 

@@ -125,6 +125,7 @@ export const AppLayout = ({ children }) => {
           collapsed={collapsed}
           onCollapse={value => setCollapsed(value)}
           style={{
+            paddingLeft: 8,
             overflow: 'auto',
             position: 'fixed',
             left: 0,
@@ -192,7 +193,7 @@ export const AppLayout = ({ children }) => {
               </Tooltip>
               <Tooltip title="Theme">
                 <Switch
-                  className=" hidden sm:inline py-1"
+                  className="hidden sm:inline"
                   checkedChildren={<MoonOutlined />}
                   unCheckedChildren={<SunOutlined />}
                   checked={mytheme === 'light' ? true : false}

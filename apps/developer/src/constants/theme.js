@@ -1,4 +1,4 @@
-// import { theme as antdTheme } from 'antd';
+import { theme as antdTheme } from 'antd';
 
 import { COLOR } from '.';
 
@@ -62,4 +62,6 @@ export const adjustableTheme = mytheme => ({
       linkHoverDecoration: 'underline',
     },
   },
+  algorithm:
+    mytheme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
 });

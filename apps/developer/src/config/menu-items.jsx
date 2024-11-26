@@ -32,15 +32,15 @@ const getItem = (label, key, icon = null, children, type = 'group') => {
 /**
  * menu data from dashboard demos
  */
-export const mockTreeItems = [
+export const devloperMenuItems = [
   {
     label: 'Default Page',
-    key: '/demos/default',
+    key: '/auth/welcome',
     icon: <AppstoreOutlined />,
   },
   {
-    label: 'Form Designer',
-    key: '/designer',
+    label: 'Dictionary',
+    key: '/dictionary/index',
     icon: <BranchesOutlined />,
   },
 ];

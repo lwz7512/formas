@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { COLOR, PATH_LANDING } from '@/constants';
 
-import { mockTreeItems } from '@/config/menu-items';
+import { devloperMenuItems } from '@/config/menu-items';
 
 const { Sider } = Layout;
 
@@ -54,7 +54,7 @@ const SideNav = ({ ...others }) => {
       >
         <Menu
           mode="inline"
-          items={mockTreeItems}
+          items={devloperMenuItems}
           onClick={onClick}
           selectedKeys={[current]}
           defaultOpenKeys={['demos']}

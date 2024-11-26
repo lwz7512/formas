@@ -4,6 +4,7 @@ import { GuestLayout, DashboardLayout } from '@/layouts';
 
 import { ErrorPage } from '../pages/errors/error-x';
 import { WelcomePage } from '../pages/auth/welcome';
+import { DictionaryManager } from '../pages/dictionary';
 
 const options = {
   future: {
@@ -20,7 +21,7 @@ export const Routers = createBrowserRouter(
   [
     {
       path: '/',
-      element: <GuestLayout />,
+      element: <DashboardLayout />,
       errorElement: <ErrorPage />,
       children: [
         {
@@ -30,18 +31,30 @@ export const Routers = createBrowserRouter(
         },
       ],
     },
-    // {
-    //   path: '/dictionaries',
-    //   element: <DashboardLayout />,
-    //   errorElement: <ErrorPage />,
-    //   children: [
-    //     {
-    //       index: true,
-    //       path: '',
-    //       element: <DictionaryManager />,
-    //     },
-    //   ],
-    // },
+    {
+      path: '/auth/welcome',
+      element: <DashboardLayout />,
+      errorElement: <ErrorPage />,
+      children: [
+        {
+          index: true,
+          path: '',
+          element: <WelcomePage />,
+        },
+      ],
+    },
+    {
+      path: '/dictionary/index',
+      element: <DashboardLayout />,
+      errorElement: <ErrorPage />,
+      children: [
+        {
+          index: true,
+          path: '',
+          element: <DictionaryManager />,
+        },
+      ],
+    },
   ],
   options
 );
