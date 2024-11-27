@@ -1,14 +1,14 @@
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
 import {
   BranchesOutlined,
-  InfoCircleOutlined,
-  PieChartOutlined,
+  // InfoCircleOutlined,
+  // PieChartOutlined,
   AppstoreOutlined,
-  SettingOutlined,
+  // SettingOutlined,
 } from '@ant-design/icons';
 
-import { PATH_ABOUT, PATH_SITEMAP } from '@/constants';
+// import { PATH_ABOUT, PATH_SITEMAP } from '@/constants';
 
 /**
  * Compose an item
@@ -39,7 +39,7 @@ export const devloperMenuItems = [
     icon: <AppstoreOutlined />,
   },
   {
-    label: 'Dictionary',
+    label: 'Dictionary Config',
     key: '/dictionary/index',
     icon: <BranchesOutlined />,
   },

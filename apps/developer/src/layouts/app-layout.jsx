@@ -125,7 +125,6 @@ export const AppLayout = ({ children }) => {
           collapsed={collapsed}
           onCollapse={value => setCollapsed(value)}
           style={{
-            paddingLeft: 8,
             overflow: 'auto',
             position: 'fixed',
             left: 0,
