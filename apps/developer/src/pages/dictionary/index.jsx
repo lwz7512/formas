@@ -21,7 +21,7 @@ export const DictionaryManager = () => {
         Dictionary Config
       </Typography.Title>
       <NewDictionaryForm onFinish={onFinish} onFinishFailed={onFinishFailed} />
-      <Table dataSource={dataSource} columns={columns} />;
+      <Table dataSource={dataSource} columns={columns} size="small" />;
     </div>
   );
 };
