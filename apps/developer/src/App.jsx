@@ -8,8 +8,6 @@ import { adjustableTheme } from './constants';
 import { StylesContext } from './context';
 import { Routers } from './routes';
 
-import './App.css';
-
 function App() {
   const { mytheme } = useSelector(state => state.theme);
 

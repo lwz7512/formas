@@ -1,7 +1,7 @@
-import { Table, Typography } from 'antd';
+import { Typography } from 'antd';
 
-import { dataSource, columns } from './columns';
 import { NewDictionaryForm } from './forms';
+import { EdiTable } from './editable';
 
 /**
  * Dictionary Config Page
@@ -16,12 +16,13 @@ export const DictionaryManager = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6 " style={{ height: '80vh' }}>
+    <div className="flex flex-col gap-6 " style={{ minHeight: '100vh' }}>
       <Typography.Title className="m-0 text-center">
         Dictionary Config
       </Typography.Title>
       <NewDictionaryForm onFinish={onFinish} onFinishFailed={onFinishFailed} />
-      <Table dataSource={dataSource} columns={columns} size="small" />;
+      {/* <Table dataSource={dataSource} columns={columns} size="small" />; */}
+      <EdiTable />
     </div>
   );
 };
