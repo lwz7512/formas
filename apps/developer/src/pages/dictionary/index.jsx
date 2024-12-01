@@ -1,5 +1,3 @@
-import { useState, useEffect, useCallback } from 'react';
-
 import { Typography, message } from 'antd';
 
 import { EdiTable } from './editable';
@@ -22,7 +20,7 @@ export const DictionaryPage = () => {
     memRefreshDictionaryItems();
   };
   const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo);
+    // console.log('Failed:', errorInfo);
     message.error(`Dictionary item addition failed!`);
   };
 

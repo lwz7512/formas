@@ -1,19 +1,8 @@
 import { useState, useEffect } from 'react';
 
-import { Form, Space, Button, Typography, Popconfirm } from 'antd';
+import { Form, Typography, Popconfirm } from 'antd';
 
-/**
- * mocke data for table
- */
-const originData = Array.from({
-  length: 100,
-}).map((_, i) => ({
-  key: i.toString(),
-  category: 'Employee',
-  label: `Edward ${i}`,
-  value: `London Park no. ${i}`,
-  sequence: `${i}`,
-}));
+import { updateDictionaryItem, removeDictionary } from '@/hooks';
 
 export const useEditableColumns = list => {
   const [form] = Form.useForm();
@@ -41,6 +30,9 @@ export const useEditableColumns = list => {
         });
         setData(newData);
         setEditingKey('');
+        // delete from backend
+        const payload = { ...row, key: item.key };
+        await updateDictionaryItem(payload);
       } else {
         newData.push(row);
         setData(newData);
@@ -55,8 +47,15 @@ export const useEditableColumns = list => {
     setEditingKey('');
   };
 
-  const deleteRowHandler = () => {
-    console.log(`## row deleted!`);
+  const deleteRowHandler = async record => {
+    const newData = [...data];
+    const index = newData.findIndex(item => record.key === item.key);
+    if (index > -1) {
+      newData.splice(index, 1);
+      setData(newData);
+    }
+    // update from backend
+    await removeDictionary(record.key);
   };
 
   const editRowHandler = record => {
@@ -101,7 +100,7 @@ export const useEditableColumns = list => {
       render: (_, record) => {
         const editable = isEditing(record);
         return editable ? (
-          <span>
+          <span data-key={record.key}>
             <Typography.Link
               onClick={() => saveRowHandler(record.key)}
               style={{
@@ -120,7 +119,7 @@ export const useEditableColumns = list => {
             </Typography.Link>
           </span>
         ) : (
-          <span>
+          <span data-key={record.key}>
             <Typography.Link
               disabled={editingKey !== ''}
               onClick={() => editRowHandler(record)}
@@ -130,7 +129,10 @@ export const useEditableColumns = list => {
             >
               Edit
             </Typography.Link>
-            <Popconfirm title="Sure to Delete?" onConfirm={deleteRowHandler}>
+            <Popconfirm
+              title="Sure to Delete?"
+              onConfirm={() => deleteRowHandler(record)}
+            >
               <a>Delete</a>
             </Popconfirm>
           </span>

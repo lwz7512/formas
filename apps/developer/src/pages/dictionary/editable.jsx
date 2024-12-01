@@ -1,47 +1,7 @@
-import React, { useState } from 'react';
-import { Form, Input, InputNumber, Popconfirm, Table, Typography } from 'antd';
+import { Form, Table } from 'antd';
 
+import { EditableCell } from './cell';
 import { useEditableColumns } from './columns';
-
-/**
- * Editable Cell
- * @param {*} param0
- * @returns
- */
-const EditableCell = ({
-  editing,
-  dataIndex,
-  title,
-  inputType,
-  record,
-  index,
-  children,
-  ...restProps
-}) => {
-  const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
-  return (
-    <td {...restProps}>
-      {editing ? (
-        <Form.Item
-          name={dataIndex}
-          style={{
-            margin: 0,
-          }}
-          rules={[
-            {
-              required: true,
-              message: `Please Input ${title}!`,
-            },
-          ]}
-        >
-          {inputNode}
-        </Form.Item>
-      ) : (
-        children
-      )}
-    </td>
-  );
-};
 
 /**
  * Editable Tabel

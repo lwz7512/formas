@@ -1,59 +1,20 @@
 import { useState, useCallback, useEffect } from 'react';
 
-import {
-  useFetchData,
-  usePostData,
-  usePutData,
-  useDeleteData,
-  vanillaPostData,
-} from '.';
+import { vanillaPutData, vanillaDeleteData, vanillaPostData } from '.';
 
 import { SERVICE_HOST_POST as host } from '@/config';
 
-export const useDictionaryList = () => {
-  const [dicItems, setDicItems] = useState([]);
-  /**
-   * Memorized fecthing method to avoid dead loop fetching!
-   */
-  const memRefreshDictionaryItems = useCallback(async () => {
-    const result = await fetchDictionaryList();
-    const { datas } = result;
-    if (!datas) return console.warn(`## no data for dictionarly!`);
-    const rowItems = datas.map((item, i) => ({
-      key: i.toString(),
-      category: item.category,
-      label: item.name,
-      value: item.value,
-      sequence: item.seq,
-    }));
-    setDicItems(rowItems);
-  }, []);
-
-  useEffect(() => {
-    memRefreshDictionaryItems();
-  }, [memRefreshDictionaryItems]);
-
-  return {
-    dicItems,
-    memRefreshDictionaryItems,
-  };
-};
-
 /**
  * 查询数据字典列表
- * @param {*} page 当前页
- * @param {*} size 每页记录数
- * @param {*} orders 排序，数组[{'column':'name', 'dir':'asc'},{'column':'title', 'dir':'desc'}]
- * @param {*} searchs 过滤条件，数组[{'column':'name', 'op':'eq', 'value':'系统字典'}]
- *
+ * @returns {Promise} dictinary list
  */
-export const fetchDictionaryList = async () => {
+export const fetchDictionaryList = async (orderColumn = 'category') => {
   const params = {
     currPage: 1,
     pageSize: 100,
     orders: [
       {
-        column: 'name',
+        column: orderColumn,
         dir: 'asc',
       },
     ],
@@ -64,18 +25,6 @@ export const fetchDictionaryList = async () => {
     params
   );
   return result;
-};
-
-/**
- * 查询数据字典
- * @param {*} id
- * @returns {*} {data:{返回结果记录为字典}}
- */
-export const useFetchDictionary = id => {
-  const { data, error, loading } = useFetchData(
-    `${host}/api/sys/dictionaries/${id}`
-  );
-  return { data, error, loading };
 };
 
 /**
@@ -96,24 +45,57 @@ export const createDictionaryItem = async item => {
 /**
  * 修改数据字典
  */
-export const useModifyDictionary = (id, category, seq, value) => {
-  const { data, error, loading } = usePutData(
-    `${host}/api/sys/dictionaries/${id}`,
+export const updateDictionaryItem = async item => {
+  const result = await vanillaPutData(
+    `${host}/api/sys/dictionaries/${item.key}`,
     {
-      category: category,
-      seq: seq,
-      value: value,
+      category: item.category,
+      name: item.label,
+      seq: item.sequence,
+      value: item.value,
     }
   );
-  return { data, error, loading };
+  return result;
 };
 
 /**
  * 删除数据字典
+ * @param {string} key dictionary id
  */
-export const useRemoveDictionary = id => {
-  const { data, error, loading } = useDeleteData(
-    `${host}/api/sys/dictionaries/${id}`
-  );
-  return { data, error, loading };
+export const removeDictionary = async key => {
+  const result = await vanillaDeleteData(`${host}/api/sys/dictionaries/${key}`);
+  return result;
+};
+
+/**
+ * Refreshable dictinary list hook
+ * @returns
+ */
+export const useDictionaryList = () => {
+  const [dicItems, setDicItems] = useState([]);
+  /**
+   * Memorized fecthing method to avoid dead loop fetching!
+   */
+  const memRefreshDictionaryItems = useCallback(async () => {
+    const result = await fetchDictionaryList();
+    const { datas } = result;
+    if (!datas) return console.warn(`## no data for dictionarly!`);
+    const rowItems = datas.map(item => ({
+      key: item.id,
+      category: item.category,
+      label: item.name,
+      value: item.value,
+      sequence: item.seq,
+    }));
+    setDicItems(rowItems);
+  }, []);
+
+  useEffect(() => {
+    memRefreshDictionaryItems();
+  }, [memRefreshDictionaryItems]);
+
+  return {
+    dicItems,
+    memRefreshDictionaryItems,
+  };
 };

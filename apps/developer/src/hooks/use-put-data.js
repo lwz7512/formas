@@ -29,7 +29,6 @@ export const vanillaPutData = async (
     });
     const json = await response.json();
     onSuccess && onSuccess(json);
-    // return response:
     return json;
   } catch (error) {
     onError && onError(error);
@@ -40,6 +39,7 @@ export const vanillaPutData = async (
 
 /**
  * put data hook
+ * @deprecated NO LOGNER IN USE
  * @param {string} url
  * @param {Object} params - The parameters to be sent with the PUT request
  * @returns
