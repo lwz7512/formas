@@ -5,7 +5,6 @@ function path(root, sublink) {
 const ROOTS_LANDING = '/';
 const ROOTS_DASHBOARD = '/dashboards';
 const ROOTS_SITEMAP = '/sitemap';
-// const ROOTS_LAYOUT = '/layouts';
 const ROOTS_CORPORATE = '/corporate';
 const ROOTS_PROFILE = '/user-profile';
 const ROOTS_SOCIAL = '/social';
@@ -13,32 +12,10 @@ const ROOTS_BLOG = '/blog';
 const ROOTS_CAREERS = '/careers';
 const ROOTS_ACCOUNT = '/account';
 const ROOTS_AUTH = '/auth';
-// const ROOTS_PROJECTS = '/projects';
-// const ROOTS_CONTACTS = '/contacts';
-// const ROOTS_USER_MGMT = '/user-management';
-// const ROOTS_SUBSCRIPTION = '/subscription';
-// const ROOTS_INVOICE = '/invoice';
-// const ROOTS_FILE_MGMT = '/file-manager';
-// const ROOTS_INBOX = '/inbox';
-// const ROOTS_CALENDAR = '/calendar';
 const ROOTS_ERRORS = '/errors';
 const ROOTS_ABOUT = '/about';
 
-export const DEMO_PATHS = {
-  default: '/demos/default',
-  demo1: '/demos/demo1',
-  demo2: '/demos/demo2',
-  demo3: '/demos/demo3',
-  demo4: '/demos/demo4',
-  demo5: '/demos/demo5',
-  demo6: '/demos/demo6',
-  demo7: '/demos/demo7',
-  demo8: '/demos/demo8',
-  demo9: '/demos/demo9',
-  demo10: '/demos/demo10',
-  demo11: '/demos/demo11',
-  demo12: '/demos/demo12',
-};
+export const DICTIONARY_PATH = '/dictionary/index';
 
 export const PATH_ERROR = {
   root: ROOTS_ERRORS,

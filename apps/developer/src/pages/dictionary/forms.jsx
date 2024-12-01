@@ -5,11 +5,12 @@ export const NewDictionaryForm = ({ onFinish, onFinishFailed }) => {
     <Form
       name="basic"
       layout="vertical"
-      initialValues={
-        {
-          // remember: true,
-        }
-      }
+      initialValues={{
+        category: '',
+        label: '',
+        value: '',
+        sequence: 0,
+      }}
       style={{
         display: 'flex',
         gap: '12px',

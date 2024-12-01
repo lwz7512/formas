@@ -17,7 +17,7 @@ const SideNav = ({ ...others }) => {
   // const { pathname } = useLocation();
   const navigate = useNavigate();
   // save current menum item
-  const [current, setCurrent] = useState('default');
+  const [current, setCurrent] = useState('/dictionary/index');
 
   /**
    * Not working for `Link`
@@ -58,7 +58,6 @@ const SideNav = ({ ...others }) => {
           onClick={onClick}
           selectedKeys={[current]}
           defaultOpenKeys={['demos']}
-          style={{ border: 'none' }}
         />
       </ConfigProvider>
     </Sider>

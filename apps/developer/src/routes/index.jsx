@@ -2,9 +2,9 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import { GuestLayout, DashboardLayout } from '@/layouts';
 
+import { WelcomePage, SignInPage, SignUpPage } from '../pages/auth';
 import { ErrorPage } from '../pages/errors/error-x';
-import { WelcomePage } from '../pages/auth/welcome';
-import { DictionaryManager } from '../pages/dictionary';
+import { DictionaryPage } from '../pages/dictionary';
 
 const options = {
   future: {
@@ -21,13 +21,27 @@ export const Routers = createBrowserRouter(
   [
     {
       path: '/',
-      element: <DashboardLayout />,
+      element: <GuestLayout />,
       errorElement: <ErrorPage />,
       children: [
         {
           index: true,
           path: '',
           element: <WelcomePage />,
+        },
+      ],
+    },
+    {
+      path: '/auth',
+      errorElement: <ErrorPage />,
+      children: [
+        {
+          path: 'signup',
+          element: <SignUpPage />,
+        },
+        {
+          path: 'signin',
+          element: <SignInPage />,
         },
       ],
     },
@@ -51,7 +65,7 @@ export const Routers = createBrowserRouter(
         {
           index: true,
           path: '',
-          element: <DictionaryManager />,
+          element: <DictionaryPage />,
         },
       ],
     },

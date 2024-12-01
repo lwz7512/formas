@@ -20,7 +20,7 @@ import {
 } from '@ant-design/icons';
 
 import { Logo } from '@/components';
-import { PATH_AUTH, DEMO_PATHS } from '@/constants';
+import { PATH_AUTH, DICTIONARY_PATH } from '@/constants';
 
 import { useLogin } from '@/hooks/api-auth';
 
@@ -65,8 +65,10 @@ export const SignInPage = () => {
     if (error || !result) {
       return message.error('Ops, login failed!');
     }
-    // to: /demos/default
-    navigate(DEMO_PATHS.default, { replace: true });
+    // open dictionary page:
+    // @2024/12/01
+    navigate(DICTIONARY_PATH, { replace: true });
+
     message.open({
       type: 'success',
       content: 'Login successful',

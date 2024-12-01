@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { Form, Space, Button, Typography, Popconfirm } from 'antd';
 
@@ -15,11 +15,16 @@ const originData = Array.from({
   sequence: `${i}`,
 }));
 
-export const useEditableColumns = () => {
+export const useEditableColumns = list => {
   const [form] = Form.useForm();
 
-  const [data, setData] = useState(originData, form);
+  const [data, setData] = useState([], form);
   const [editingKey, setEditingKey] = useState('');
+
+  useEffect(() => {
+    if (!list) return;
+    setData(list);
+  }, [list]);
 
   const isEditing = record => record.key === editingKey;
 

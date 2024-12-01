@@ -47,9 +47,9 @@ const EditableCell = ({
  * Editable Tabel
  * @returns
  */
-export const EdiTable = () => {
+export const EdiTable = ({ list }) => {
   const { data, mergedColumns, form, cancelChangeHandler } =
-    useEditableColumns();
+    useEditableColumns(list);
 
   return (
     <Form form={form} component={false}>
