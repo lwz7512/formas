@@ -15,7 +15,7 @@ export const useFetchData = (url, params = {}) => {
       const token = localStorage.getItem('formas.jwt');
       // 设置请求的配置对象，包括headers
       const config = {
-        method: 'DELETE',
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json', // 确保内容类型为JSON
           Authorization: 'Bearer ' + token,

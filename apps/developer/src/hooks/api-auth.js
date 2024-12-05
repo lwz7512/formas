@@ -5,7 +5,9 @@ import { usePostData, useDeleteData } from '.';
 import { SERVICE_HOST_POST as host } from '@/config';
 
 /**
- * 登录
+ * ========= WORKING =============
+ *            登录
+ * ===========HOOK================
  * @param {string} loginName
  * @param {string} password normal password to encrypt with MD5
  * @returns
@@ -34,6 +36,8 @@ export const useLogin = (loginName, password) => {
 };
 
 /**
+ * FIXME: use a right vanilla post function!
+ * @date 2024/12/04
  * 登出
  */
 export const useLogout = () => {
@@ -42,6 +46,8 @@ export const useLogout = () => {
 };
 
 /**
+ * FIXME: use a right vanilla post function!
+ * @date 2024/12/04
  * 修改密码
  * @param {*} oldPwd 请使用md5(pwd)加密后传入此参数
  * @param {*} newPwd 请使用md5(pwd)加密后传入此参数
@@ -59,6 +65,8 @@ export const useChangePassword = (oldPwd, newPwd) => {
 };
 
 /**
+ * FIXME: use a right vanilla post function!
+ * @date 2024/12/04
  * 发送注册账号验证码
  * @param {*} loginName
  * @param {*} type 类型: phone,email
@@ -76,6 +84,8 @@ export const useSendSignupCaptcha = (loginName, type) => {
 };
 
 /**
+ * FIXME: use a right vanilla post function!
+ * @date 2024/12/04
  * 注册账号
  * @param {*} loginName
  * @param {*} type 类型: username,phone,email,wx,dingtalk
@@ -94,6 +104,8 @@ export const useSignup = (loginName, type, code, password) => {
 };
 
 /**
+ * FIXME: use a right vanilla post function!
+ * @date 2024/12/04
  * 发送丢失密码验证码
  * @param {*} loginName
  * @param {*} type 类型: phone,email
@@ -111,6 +123,8 @@ export const useSendLostpwdCaptcha = (loginName, type) => {
 };
 
 /**
+ * FIXME: use a right vanilla post function!
+ * @date 2024/12/04
  * 丢失密码，重置密码
  * @param {*} loginName
  * @param {*} type 类型: phone,email
