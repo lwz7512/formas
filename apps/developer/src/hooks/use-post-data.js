@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 
 /**
@@ -40,27 +41,59 @@ export const vanillaPostData = async (
 
 /**
  * post data hook, trigger request manually!
- *
- * @param {string} url
- * @param {Object} params - The parameters to be sent with the POST request
+ * to expose `postData` function, status of request, and result of request.
+ * @param {string} url post url, optional
+ * @param {object} params request params object, optional
  * @returns
  */
-export const usePostData = (url, params) => {
+export const usePostData = (url = '', params = {}) => {
   const [data, setData] = useState();
   const [error, setError] = useState(null);
   // not sending request by default
   const [loading, setLoading] = useState(false);
 
-  const postData = useCallback(async () => {
-    const onFinish = () => setLoading(false);
-    return await vanillaPostData(url, params, setData, setError, onFinish);
+  // request repetition locker
+  const requestLocker = useRef(false);
+
+  // update request url & payload
+  const urlRef = useRef('');
+  const paramsRef = useRef(null);
+  useEffect(() => {
+    urlRef.current = url;
+    paramsRef.current = params;
   }, [url, params]);
 
-  const trigger = useCallback(async () => {
-    if (loading) return;
-    setLoading(true);
-    return await postData();
-  }, [loading, postData]);
+  /**
+   * Memorized `post` method with `url` & `params` required
+   */
+  const mPostData = useCallback(async (url, params) => {
+    if (requestLocker.current) return;
 
-  return { data, error, loading, trigger };
+    setLoading(true);
+    requestLocker.current = true;
+
+    const onFinish = () => {
+      setLoading(false);
+      requestLocker.current = false;
+    };
+    return await vanillaPostData(url, params, setData, setError, onFinish);
+  }, []);
+
+  /**
+   * Memorized `post` method without `url` & `params`
+   */
+  const mTrigger = useCallback(async () => {
+    const url = urlRef.current;
+    const params = paramsRef.current;
+    if (!url || !params) return;
+    return await mPostData(url, params);
+  }, [mPostData]);
+
+  return {
+    data,
+    error,
+    loading,
+    trigger: mTrigger,
+    postData: mPostData,
+  };
 };
