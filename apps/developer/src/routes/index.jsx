@@ -1,10 +1,12 @@
 import { createBrowserRouter } from 'react-router-dom';
 
+import { DICTIONARY_PATH, BIZTREE_PATH } from '@/constants';
 import { GuestLayout, DashboardLayout } from '@/layouts';
 
 import { WelcomePage, SignInPage, SignUpPage } from '../pages/auth';
 import { ErrorPage } from '../pages/errors/error-x';
 import { DictionaryPage } from '../pages/dictionary';
+import { BizTreeConfigPage } from '../pages/biztree';
 
 const options = {
   future: {
@@ -58,7 +60,7 @@ export const Routers = createBrowserRouter(
       ],
     },
     {
-      path: '/dictionary/index',
+      path: DICTIONARY_PATH,
       element: <DashboardLayout />,
       errorElement: <ErrorPage />,
       children: [
@@ -66,6 +68,18 @@ export const Routers = createBrowserRouter(
           index: true,
           path: '',
           element: <DictionaryPage />,
+        },
+      ],
+    },
+    {
+      path: BIZTREE_PATH,
+      element: <DashboardLayout />,
+      errorElement: <ErrorPage />,
+      children: [
+        {
+          index: true,
+          path: '',
+          element: <BizTreeConfigPage />,
         },
       ],
     },
