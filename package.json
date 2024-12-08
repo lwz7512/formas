@@ -1,6 +1,6 @@
 {
   "name": "formas",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "private": true,
   "repository": {
     "type": "git",
@@ -11,8 +11,6 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
-    "changelog": "lerna-changelog",
-    "clean": "lerna clean -y",
     "predeploy": "npm run build && npm run doc",
     "deploy": "gh-pages -d docs-dist",
     "doc": "dumi build",
@@ -37,7 +35,7 @@
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
     "@jest/types": "^27.5.1",
-    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/jest-dom": "^6.1.4",
     "@testing-library/react": "^14.0.0",
     "@testing-library/react-hooks": "^8.0.1",
     "@types/enzyme": "^3.10.11",
@@ -59,8 +57,6 @@
     "jest": "^27.4.4",
     "jsdom": "^19.0.0",
     "jsdom-global": "^3.0.2",
-    "lerna": "^3.22.1",
-    "lerna-changelog": "^1.0.1",
     "lint-staged": "^10.0.7",
     "monaco-editor-webpack-plugin": "^4.1.1",
     "prettier": "^2.6.0",

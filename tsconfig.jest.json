@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES5",
-    "types": ["jest", "jest-enzyme"],
+    "types": ["jest", "jest-enzyme", "@testing-library/jest-dom"],
     "allowJs": true,
     "skipLibCheck": false,
     "esModuleInterop": true,

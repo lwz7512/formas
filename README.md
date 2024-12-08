@@ -28,6 +28,6 @@ pnpm dev
 - `pnpm dev` used to run `dev` task inside of apps/main.
 
 
-## Visit main app
+## Visit developer app
 
 > http://localhost:5173

@@ -1,8 +1,8 @@
-import { useState, useCallback, useEffect } from 'react';
-
-import { vanillaPutData, vanillaDeleteData, vanillaPostData } from '.';
+import { useEffect } from 'react';
+import { useAsyncFn } from 'react-use';
 
 import { SERVICE_HOST_POST as host } from '@/config';
+import { vanillaPutData, vanillaDeleteData, vanillaPostData } from '.';
 
 /**
  * 查询数据字典列表
@@ -68,34 +68,41 @@ export const removeDictionary = async key => {
 };
 
 /**
+ * Convert dict item from DB to front-end structure
+ * @param {*} dictItems
+ * @returns
+ */
+const rowItems = dictItems =>
+  dictItems.map(item => ({
+    key: item.id,
+    category: item.category,
+    label: item.name,
+    value: item.value,
+    sequence: item.seq,
+  }));
+
+/**
  * Refreshable dictinary list hook
  * @returns
  */
 export const useDictionaryList = () => {
-  const [dicItems, setDicItems] = useState([]);
-  /**
-   * Memorized fecthing method to avoid dead loop fetching!
-   */
-  const memRefreshDictionaryItems = useCallback(async () => {
+  const [state, doFetch] = useAsyncFn(async () => {
     const result = await fetchDictionaryList();
     const { datas } = result;
-    if (!datas) return console.warn(`## no data for dictionarly!`);
-    const rowItems = datas.map(item => ({
-      key: item.id,
-      category: item.category,
-      label: item.name,
-      value: item.value,
-      sequence: item.seq,
-    }));
-    setDicItems(rowItems);
+    if (!datas) {
+      console.warn(`## No result for dictionary definition!`);
+      return null;
+    }
+    return rowItems(datas);
   }, []);
 
   useEffect(() => {
-    memRefreshDictionaryItems();
-  }, [memRefreshDictionaryItems]);
+    doFetch();
+  }, [doFetch]);
 
   return {
-    dicItems,
-    memRefreshDictionaryItems,
+    loading: state.loading,
+    dicItems: state.value,
+    memRefreshDictionaryItems: doFetch,
   };
 };

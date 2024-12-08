@@ -12,7 +12,7 @@ import { createDictionaryItem, useDictionaryList } from '@/hooks';
 export const DictionaryPage = () => {
   const { dicItems, memRefreshDictionaryItems } = useDictionaryList();
 
-  const onFinish = async values => {
+  const onItemCreate = async values => {
     // console.log('Save Dictionary:', values);
     await createDictionaryItem(values);
     message.success(`Dictionary item added!`);
@@ -20,7 +20,7 @@ export const DictionaryPage = () => {
     memRefreshDictionaryItems();
   };
   const onFinishFailed = errorInfo => {
-    // console.log('Failed:', errorInfo);
+    console.log('Failed:', errorInfo);
     message.error(`Dictionary item addition failed!`);
   };
 
@@ -30,7 +30,10 @@ export const DictionaryPage = () => {
         Dictionary Config
       </Typography.Title>
       {/* new dictionary item */}
-      <NewDictionaryForm onFinish={onFinish} onFinishFailed={onFinishFailed} />
+      <NewDictionaryForm
+        onFinish={onItemCreate}
+        onFinishFailed={onFinishFailed}
+      />
       {/* dictionaly table */}
       <EdiTable list={dicItems} />
     </div>

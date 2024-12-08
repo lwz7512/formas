@@ -1,6 +1,8 @@
 import { useRef } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 
+import { useAsyncFn } from 'react-use';
+
 /**
  * General post request function using browser vanilla `fetch` API
  *
@@ -37,6 +39,27 @@ export const vanillaPostData = async (
   } finally {
     onFinish && onFinish();
   }
+};
+
+/**
+ * Sent post request
+ *
+ * @param {string} url post url
+ * @param {object} params post payload
+ */
+export const useAsyncPost = (url, params) => {
+  const [state, doFetch] = useAsyncFn(async () => {
+    return await vanillaPostData(url, params);
+  }, [url, params]);
+
+  const { loading, error, value } = state;
+
+  return {
+    error,
+    loading,
+    value,
+    doFetch,
+  };
 };
 
 /**
