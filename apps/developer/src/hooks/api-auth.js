@@ -24,7 +24,7 @@ export const useLogin = (loginName, password) => {
   const send = async () => {
     const result = await trigger();
     const { data } = result;
-    // got token:
+    // got token and cache it for authentication in later request!
     if (data) {
       localStorage.setItem('formas.jwt', data);
     } else {
@@ -41,8 +41,10 @@ export const useLogin = (loginName, password) => {
  * 登出
  */
 export const useLogout = () => {
-  const { data, error, loading } = useDeleteData(`${host}/api/auth/v5/logout`);
-  return { data, error, loading };
+  const { data, error, loading, doDelete } = useDeleteData(
+    `${host}/api/auth/v5/logout`
+  );
+  return { data, error, loading, logout: doDelete };
 };
 
 /**

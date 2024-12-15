@@ -1,46 +1,71 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useEffect, useRef } from 'react';
+import { useAsyncFn } from 'react-use';
 
-export const useFetchData = (url, params = {}) => {
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+/**
+ * General post request function using browser vanilla `fetch` API
+ *
+ * @param {string} url request url string
+ * @param {Object} params request parameters in object format
+ * @param {Function} onSuccess success callback
+ * @param {Funcion} onError failure callback
+ * @param {Function} onFinish finally callback
+ */
+export const vanillaGetData = async (
+  url,
+  params,
+  onSuccess,
+  onError,
+  onFinish
+) => {
+  try {
+    // 从localStorage获取token
+    const token = localStorage.getItem('formas.jwt');
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      },
+      body: JSON.stringify(params),
+    });
+    const json = await response.json();
+    onSuccess && onSuccess(json);
+    // return response:
+    return json;
+  } catch (error) {
+    onError && onError(error);
+  } finally {
+    onFinish && onFinish();
+  }
+};
 
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    try {
-      // 将参数对象转换为查询字符串
-      const queryString = new URLSearchParams(params).toString();
+/**
+ * Simple data fetching hook
+ * @param {string} url request url for fetching something
+ * @returns
+ */
+export const useFetchData = url => {
+  const [state, doFetch] = useAsyncFn(async (url, params) => {
+    return await vanillaGetData(url, params);
+  }, []);
+  // prevent repetitive request!
+  const requestLocker = useRef(false);
 
-      // 从localStorage获取token
-      const token = localStorage.getItem('formas.jwt');
-      // 设置请求的配置对象，包括headers
-      const config = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json', // 确保内容类型为JSON
-          Authorization: 'Bearer ' + token,
-        },
-      };
-
-      // 拼接完整的请求 URL
-      const response = await fetch(`${url}?${queryString}`, config);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const jsonData = await response.json();
-      setData(jsonData);
-      setError(null);
-    } catch (e) {
-      setError(e);
-      setData(null);
-    } finally {
-      setLoading(false);
-    }
-  }, [url, params]);
+  const { loading, error, value } = state;
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    if (!url) return console.warn(`## NO url provided for data fetching!`);
+    if (requestLocker.current) return;
+    requestLocker.current = true;
+    doFetch(url).then(() => {
+      requestLocker.current = false;
+    });
+  }, [doFetch, url]);
 
-  return { data, error, loading };
+  return {
+    error,
+    loading,
+    ...value,
+    refresh: () => doFetch(url),
+  };
 };

@@ -1,8 +1,8 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { ConfigProvider, Layout, Menu } from 'antd';
 
 import { Logo } from '@/components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import { COLOR, PATH_LANDING } from '@/constants';
 
@@ -14,10 +14,15 @@ const { Sider } = Layout;
 
 const SideNav = ({ ...others }) => {
   const nodeRef = useRef(null);
-  // const { pathname } = useLocation();
+  const { pathname } = useLocation();
   const navigate = useNavigate();
   // save current menum item
-  const [current, setCurrent] = useState('/dictionary/index');
+  const [current, setCurrent] = useState();
+
+  // select the menu if user refreshed
+  useEffect(() => {
+    setCurrent(pathname);
+  }, [pathname]);
 
   /**
    * Not working for `Link`

@@ -1,13 +1,16 @@
 import { Flex, Typography, Button, List, Divider, Tree } from 'antd';
 
-import { listData } from './list-data';
+// import { listData } from './list-data';
 import { treeData } from './tree-data';
+
+import { useBizTreeRoots } from '@/hooks/api-biztree';
 
 /**
  * Business Tree Configuaration
  * @date 2024/12/07
  */
 export const BizTreeConfigPage = () => {
+  const { list } = useBizTreeRoots();
   const onSelect = (selectedKeys, info) => {
     console.log('selected', selectedKeys, info);
   };
@@ -30,16 +33,16 @@ export const BizTreeConfigPage = () => {
               Root Node Creation:
             </Divider>
             <Button className="mb-4" type="primary">
-              Add Root Node
+              Add Custom Node
             </Button>
             <List
-              header={<div>Header</div>}
-              footer={<div>Footer</div>}
+              header={<div>Start of system nodes:</div>}
+              footer={<div>End of system nodes</div>}
               bordered
-              dataSource={listData}
+              dataSource={list}
               renderItem={item => (
                 <List.Item>
-                  <Typography.Text mark>[Root]</Typography.Text> {item}
+                  <Typography.Text mark></Typography.Text> {item.title}
                 </List.Item>
               )}
             />
