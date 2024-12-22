@@ -24,6 +24,7 @@
     "@reduxjs/toolkit": "^2.2.3",
     "@tanem/react-nprogress": "^5.0.51",
     "antd": "^4.24.16",
+    "clsx": "2.1.1",
     "codemirror": "^6.0.1",
     "dayjs": "^1.11.9",
     "interactjs": "^1.10.18",

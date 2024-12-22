@@ -44,19 +44,20 @@ export const vanillaPostData = async (
  *
  * @param {string} url post url
  * @param {object} params post payload
+ * @returns {object} results
  */
-export const useAsyncPost = (url, params) => {
-  const [state, doFetch] = useAsyncFn(async () => {
+export const useAsyncPost = () => {
+  const [state, doFetch] = useAsyncFn(async (url, params) => {
     return await vanillaPostData(url, params);
-  }, [url, params]);
+  }, []); // do not add deps here!!
 
   const { loading, error, value } = state;
 
   return {
     error,
     loading,
-    value,
-    doFetch,
+    ...value,
+    doPost: doFetch,
   };
 };
 
