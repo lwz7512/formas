@@ -1,0 +1,4 @@
+.ant-tree-title {
+  display: flex;
+  justify-content: space-between;
+}

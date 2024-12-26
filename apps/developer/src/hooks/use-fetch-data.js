@@ -10,13 +10,7 @@ import { useAsyncFn } from 'react-use';
  * @param {Funcion} onError failure callback
  * @param {Function} onFinish finally callback
  */
-export const vanillaGetData = async (
-  url,
-  params,
-  onSuccess,
-  onError,
-  onFinish
-) => {
+export const vanillaGetData = async (url, onSuccess, onError, onFinish) => {
   try {
     // 从localStorage获取token
     const token = localStorage.getItem('formas.jwt');
@@ -26,7 +20,6 @@ export const vanillaGetData = async (
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
       },
-      body: JSON.stringify(params),
     });
     const json = await response.json();
     onSuccess && onSuccess(json);
@@ -45,8 +38,9 @@ export const vanillaGetData = async (
  * @returns
  */
 export const useFetchData = url => {
-  const [state, doFetch] = useAsyncFn(async (url, params) => {
-    return await vanillaGetData(url, params);
+  const [state, doFetch] = useAsyncFn(async url => {
+    const onError = () => console.error(error);
+    return await vanillaGetData(url, undefined, onError);
   }, []);
   // prevent repetitive request!
   const requestLocker = useRef(false);
@@ -67,5 +61,21 @@ export const useFetchData = url => {
     loading,
     ...value,
     refresh: () => doFetch(url),
+  };
+};
+
+/**
+ * Fetch data by dynamic url
+ * @returns
+ */
+export const useOnDemandFetch = () => {
+  const [state, doFetch] = useAsyncFn(async url => {
+    console.log(`>>>>> async fetch: ${url}`);
+    return await vanillaGetData(url);
+  }, []);
+
+  return {
+    ...state,
+    doFetch,
   };
 };

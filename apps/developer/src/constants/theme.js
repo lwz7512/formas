@@ -55,6 +55,10 @@ export const adjustableTheme = mytheme => ({
     Timeline: {
       dotBg: 'none',
     },
+    Tree: {
+      /* here is your component tokens */
+      titleHeight: 32,
+    },
     Typography: {
       colorLink: COLOR['500'],
       colorLinkActive: COLOR['700'],

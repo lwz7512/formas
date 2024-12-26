@@ -3,20 +3,30 @@ import {
   Flex,
   Typography,
   Button,
-  Input,
   List,
   Divider,
   Tree,
-  Modal,
   message,
+  Dropdown,
+  Space,
 } from 'antd';
 
-import { treeData } from './tree-data';
+{
+  /* <DeleteOutlined /> */
+}
+import {
+  MoreOutlined,
+  PlusOutlined,
+  EditOutlined,
+  DeleteOutlined,
+} from '@ant-design/icons';
 
+import { rootNodeMenuitems } from '@/config';
 import { useBizTreeRoots } from '@/hooks/api-biztree';
 import { useBizTreeState } from '@/hooks/use-biztree';
 
-const { TextArea } = Input;
+// import { treeData } from './tree-data';
+import { AddRootNodeModal, AddChildNodeModal } from './modals';
 
 /**
  * Business Tree Configuaration
@@ -28,27 +38,32 @@ export const BizTreeConfigPage = () => {
   const onRootNodeSuccess = () => {
     message.success('New Root Node Added to system!');
   };
+
+  const onChildNodeSuccess = () => {
+    message.success('A child node added to selected node!');
+  };
+
   const {
     currentRoot,
     isRootModalOpen,
+    isChildNodeModalOpen,
     newRootNode,
+    newChildNode,
+    subTreeStruc,
     showRootModal,
+    onRootNodeMenuClick,
+    closeCurrentModal,
     itemClickHandler,
     handleRootCreation,
-    handleRootModalClose,
-    handleNewRootNodeChange,
-  } = useBizTreeState(refresh, onRootNodeSuccess);
+    handleChildCreation,
+    onRootNodeNameChange,
+    onRootNodeDescChange,
+    onChildNodeNameChange,
+    onChildNodeDescChange,
+  } = useBizTreeState(refresh, onRootNodeSuccess, onChildNodeSuccess);
 
-  const onSelect = (selectedKeys, info) => {
-    console.log('selected', selectedKeys, info);
-  };
-
-  const onRootNodeNameChange = event => {
-    handleNewRootNodeChange('title', event.target.value);
-  };
-
-  const onRootNodeDescChange = event => {
-    handleNewRootNodeChange('description', event.target.value);
+  const onTreeNodeSelect = (selectedKeys, info) => {
+    // console.log('selected', selectedKeys, info);
   };
 
   return (
@@ -80,12 +95,33 @@ export const BizTreeConfigPage = () => {
                 renderItem={item => (
                   <List.Item
                     className={clsx(
-                      'select-none',
+                      'select-none flex justify-between',
                       currentRoot == item.id ? 'bg-blue-100' : ''
                     )}
                     onClick={() => itemClickHandler(item)}
                   >
-                    <Typography.Text></Typography.Text> {item.title}
+                    <Space>
+                      <Typography.Text>{item.title}</Typography.Text>
+                    </Space>
+                    <Dropdown
+                      menu={{
+                        items: rootNodeMenuitems,
+                        onClick: onRootNodeMenuClick,
+                      }}
+                      trigger={['click']}
+                      placement="bottomRight"
+                    >
+                      <a
+                        onClick={e => {
+                          e.preventDefault();
+                          // e.stopPropagation();
+                        }}
+                      >
+                        <Space>
+                          <MoreOutlined className=" text-2xl" />
+                        </Space>
+                      </a>
+                    </Dropdown>
                   </List.Item>
                 )}
               />
@@ -102,43 +138,52 @@ export const BizTreeConfigPage = () => {
                 Tree Nodes Creation:
               </Divider>
               <Tree
+                blockNode
                 showLine={{
                   showLeafIcon: true,
                 }}
                 showIcon={false}
-                onSelect={onSelect}
-                treeData={treeData}
+                onSelect={onTreeNodeSelect}
+                treeData={subTreeStruc}
+                titleRender={nodeData => (
+                  <>
+                    <span className="inline-block">{nodeData.title}</span>
+                    <span className="inline-block opacity-10 hover:opacity-100">
+                      <button type="button">
+                        <PlusOutlined className="text-base mr-2" />
+                      </button>
+                      <button type="button">
+                        <EditOutlined className="text-base mr-2" />
+                      </button>
+                      <button type="button">
+                        <DeleteOutlined className="text-base mr-2" />
+                      </button>
+                    </span>
+                  </>
+                )}
               />
             </div>
           </Flex>
         </Flex>
       </Flex>
       {/* === Add root node modal === */}
-      <Modal
-        title="Add Root Node"
-        width={350}
-        open={isRootModalOpen}
-        onOk={handleRootCreation}
-        onCancel={handleRootModalClose}
-      >
-        <h2>Node Name:</h2>
-        <Input
-          placeholder="New Node label"
-          className=" mb-2"
-          value={newRootNode.title}
-          onChange={onRootNodeNameChange}
-        />
-        <h2>Node Description(optional)</h2>
-        <TextArea
-          placeholder="New Node description"
-          autoSize={{
-            minRows: 2,
-            maxRows: 6,
-          }}
-          value={newRootNode.description}
-          onChange={onRootNodeDescChange}
-        />
-      </Modal>
+      <AddRootNodeModal
+        isRootModalOpen={isRootModalOpen}
+        newRootNode={newRootNode}
+        handleRootCreation={handleRootCreation}
+        handleRootModalClose={closeCurrentModal}
+        onRootNodeNameChange={onRootNodeNameChange}
+        onRootNodeDescChange={onRootNodeDescChange}
+      />
+      {/* === Add Child Node === */}
+      <AddChildNodeModal
+        isChildNodeModalOpen={isChildNodeModalOpen}
+        newChildNode={newChildNode}
+        handleChildNodeCreation={handleChildCreation}
+        onChildNodeNameChange={onChildNodeNameChange}
+        onChildNodeDescChange={onChildNodeDescChange}
+        handleChildNodeModalClose={closeCurrentModal}
+      />
     </>
   );
 };

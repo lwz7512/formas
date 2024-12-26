@@ -1,5 +1,6 @@
 @import './assets/styles/app.css';
 @import './assets/styles/table.css';
+@import './assets/styles/tree.css';
 
 @tailwind base;
 @tailwind components;
