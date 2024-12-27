@@ -19,27 +19,25 @@ export const useBizTreeState = (
   const { loadTreeBy, subTreeStruc } = useBizTreeQuery();
 
   // tree node interations
-  const [currentRoot, setCurrentRoot] = useState('');
-  // modal open|close state
+  const [currentRoot, setCurrentRoot] = useState({}); // object
+  // modal open|close state switching
   const [currentModalName, setCurrentModalName] = useState('');
-
   const [newRootNode, setNewRootNode] = useState({
     title: '',
     description: '',
   });
-
   const [newChildNode, setNewChildNode] = useState({
-    pid: '', // ??
+    pid: '', // to set by node select
     title: '',
     description: '',
   });
 
   // == root node item click handler ==
-  const itemClickHandler = item => {
-    // save root id
-    setCurrentRoot(item.id);
-    // save parent id by root id
-    setNewRootNode({ ...newRootNode, pid: item.id });
+  const rootItemClickHandler = item => {
+    // save root object
+    setCurrentRoot(item);
+    // save `parent id` as root node selected
+    setNewChildNode({ ...newChildNode, pid: item.id });
     // load tree
     loadTreeBy(item.id, item.title);
   };
@@ -56,13 +54,38 @@ export const useBizTreeState = (
     setCurrentModalName(MDL.NEW_CHILD);
   };
 
-  // TODO: popup more modals....
-  const onRootNodeMenuClick = ({ key }) => {
-    // message.info(`Click on item ${key}`);
-    if (key == 'add_child_node') {
+  /**
+   * handle root node menu click
+   * @param {object} event drop down item click event
+   * @param {*} rootId root id from item
+   */
+  const onRootNodeMenuClick = (event, rootId) => {
+    // save `parent id` as drop-down menu item selected
+    setNewChildNode({ ...newChildNode, pid: rootId });
+
+    if (event.key == 'add_child_node') {
       showChildModal();
     }
+    // TODO: 'rename_root_node'
+
+    // TODO: 'delete_root_node'
   };
+
+  /**
+   * Sub tree node select handler
+   * exclude root-node of the sub-tree
+   * @param {array} selectedKeys
+   * @param {object} info
+   */
+  const onTreeNodeSelect = (selectedKeys, { node }) => {
+    if (!node.depth) return; // root node
+    // console.log(node);
+    const [pid] = selectedKeys;
+    // console.log(`>>> node clicked: ${nodeId}`);
+    // remember selected parent node
+    setNewChildNode({ ...newChildNode, pid });
+  };
+
   /**
    * Add Root Node to backend
    */
@@ -74,19 +97,19 @@ export const useBizTreeState = (
   };
 
   /**
-   * Add Child Node to backend
+   * Add First Level Child Node to root
    * need to select root id: `pid`
    */
   const handleChildCreation = async () => {
     closeCurrentModal();
-    console.log(newChildNode);
-    const { title, description } = newChildNode;
-    console.log(`>>>> currentRoot: ${currentRoot}`);
-    if (!currentRoot) return console.warn(`## no root node!`);
-
-    await doChildNodeAdd(currentRoot, title, description);
-    // TODO: refresh one tree root?
-    // if (rootNodesRefresh) rootNodesRefresh();
+    const { title, description, pid } = newChildNode;
+    if (!pid) return console.warn(`## no parent node to create child node!`);
+    if (!title) return console.warn(`## no title field for child node!`);
+    // save new child
+    await doChildNodeAdd(pid, title, description || '...');
+    console.log(`>>> refresh tree by: ${currentRoot.id}`);
+    // refresh tree by root id
+    loadTreeBy(currentRoot.id, currentRoot.title);
   };
 
   /**
@@ -94,7 +117,7 @@ export const useBizTreeState = (
    * @param {string} field new root node field: title | description
    * @param {string} value input value
    */
-  const handleNewRootNodeChange = (field, value) => {
+  const handleRootNodeChange = (field, value) => {
     setNewRootNode({ ...newRootNode, [field]: value });
   };
 
@@ -108,11 +131,11 @@ export const useBizTreeState = (
   };
 
   const onRootNodeNameChange = event => {
-    handleNewRootNodeChange('title', event.target.value);
+    handleRootNodeChange('title', event.target.value);
   };
 
   const onRootNodeDescChange = event => {
-    handleNewRootNodeChange('description', event.target.value);
+    handleRootNodeChange('description', event.target.value);
   };
 
   const onChildNodeNameChange = event => {
@@ -130,11 +153,12 @@ export const useBizTreeState = (
     newRootNode,
     newChildNode,
     subTreeStruc,
-    itemClickHandler,
+    rootItemClickHandler,
     showRootModal,
     showChildModal,
     closeCurrentModal,
     handleRootCreation,
+    onTreeNodeSelect,
     onRootNodeNameChange,
     onRootNodeDescChange,
     onChildNodeNameChange,

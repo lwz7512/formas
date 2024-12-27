@@ -33,6 +33,10 @@ const recursiveTreeNode = (srcNode, destNode) => {
   //
 };
 
+/**
+ * fetch root nodes in the left tree
+ * @returns
+ */
 export const useBizTreeRoots = () => {
   const rootsState = useFetchData(`${host}/api/sys/trees/roots-table`);
   const { error, datas, loading, refresh } = rootsState;
@@ -60,6 +64,7 @@ export const useBizTreeQuery = () => {
       // construct root node:
       setSubTreeStruc([
         {
+          depth: 0, // root node level
           key: rootId,
           title,
           children: [], // to fill with later in fetching result

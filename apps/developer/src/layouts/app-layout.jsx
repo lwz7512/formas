@@ -1,4 +1,5 @@
 import {
+  App,
   Button,
   Dropdown,
   Input,
@@ -111,7 +112,7 @@ export const AppLayout = ({ children }) => {
   }, []);
 
   return (
-    <>
+    <App>
       <NProgress isAnimating={isLoading} key={location.key} />
       <Layout
         style={{
@@ -259,6 +260,6 @@ export const AppLayout = ({ children }) => {
           />
         </Layout>
       </Layout>
-    </>
+    </App>
   );
 };

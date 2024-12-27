@@ -1,12 +1,12 @@
 import clsx from 'clsx';
 import {
+  App,
   Flex,
   Typography,
   Button,
   List,
   Divider,
   Tree,
-  message,
   Dropdown,
   Space,
 } from 'antd';
@@ -33,6 +33,7 @@ import { AddRootNodeModal, AddChildNodeModal } from './modals';
  * @date 2024/12/07
  */
 export const BizTreeConfigPage = () => {
+  const { message } = App.useApp();
   const { list, refresh } = useBizTreeRoots();
 
   const onRootNodeSuccess = () => {
@@ -44,27 +45,27 @@ export const BizTreeConfigPage = () => {
   };
 
   const {
+    /** root node object */
     currentRoot,
     isRootModalOpen,
+    /** child node object */
+    newChildNode,
     isChildNodeModalOpen,
     newRootNode,
-    newChildNode,
     subTreeStruc,
     showRootModal,
+    showChildModal,
     onRootNodeMenuClick,
     closeCurrentModal,
-    itemClickHandler,
+    rootItemClickHandler,
     handleRootCreation,
     handleChildCreation,
+    onTreeNodeSelect,
     onRootNodeNameChange,
     onRootNodeDescChange,
     onChildNodeNameChange,
     onChildNodeDescChange,
   } = useBizTreeState(refresh, onRootNodeSuccess, onChildNodeSuccess);
-
-  const onTreeNodeSelect = (selectedKeys, info) => {
-    // console.log('selected', selectedKeys, info);
-  };
 
   return (
     <>
@@ -96,9 +97,9 @@ export const BizTreeConfigPage = () => {
                   <List.Item
                     className={clsx(
                       'select-none flex justify-between',
-                      currentRoot == item.id ? 'bg-blue-100' : ''
+                      currentRoot.id == item.id ? 'bg-blue-100' : ''
                     )}
-                    onClick={() => itemClickHandler(item)}
+                    onClick={() => rootItemClickHandler(item)}
                   >
                     <Space>
                       <Typography.Text>{item.title}</Typography.Text>
@@ -106,7 +107,7 @@ export const BizTreeConfigPage = () => {
                     <Dropdown
                       menu={{
                         items: rootNodeMenuitems,
-                        onClick: onRootNodeMenuClick,
+                        onClick: event => onRootNodeMenuClick(event, item.id),
                       }}
                       trigger={['click']}
                       placement="bottomRight"
@@ -114,8 +115,10 @@ export const BizTreeConfigPage = () => {
                       <a
                         onClick={e => {
                           e.preventDefault();
-                          // e.stopPropagation();
+                          // NOTE: prevent click event propagate to parent item
+                          e.stopPropagation();
                         }}
+                        className="hover:bg-white"
                       >
                         <Space>
                           <MoreOutlined className=" text-2xl" />
@@ -145,22 +148,41 @@ export const BizTreeConfigPage = () => {
                 showIcon={false}
                 onSelect={onTreeNodeSelect}
                 treeData={subTreeStruc}
-                titleRender={nodeData => (
-                  <>
-                    <span className="inline-block">{nodeData.title}</span>
-                    <span className="inline-block opacity-10 hover:opacity-100">
-                      <button type="button">
-                        <PlusOutlined className="text-base mr-2" />
-                      </button>
-                      <button type="button">
-                        <EditOutlined className="text-base mr-2" />
-                      </button>
-                      <button type="button">
-                        <DeleteOutlined className="text-base mr-2" />
-                      </button>
-                    </span>
-                  </>
-                )}
+                titleRender={nodeData => {
+                  // console.log(`>>> node data:`);
+                  // console.log(nodeData);
+                  return (
+                    <>
+                      <span className="inline-block">{nodeData.title}</span>
+                      <span
+                        className={clsx(
+                          'opacity-10 hover:opacity-100',
+                          nodeData.depth > 0 ? 'inline-block' : 'hidden'
+                        )}
+                      >
+                        <button
+                          type="button"
+                          className="px-2 hover:bg-blue-200 mr-2"
+                          onClick={showChildModal}
+                        >
+                          <PlusOutlined className="text-base" />
+                        </button>
+                        <button
+                          type="button"
+                          className="px-2 hover:bg-blue-200 mr-2"
+                        >
+                          <EditOutlined className="text-base " />
+                        </button>
+                        <button
+                          type="button"
+                          className="px-2 hover:bg-blue-200 mr-2"
+                        >
+                          <DeleteOutlined className="text-base " />
+                        </button>
+                      </span>
+                    </>
+                  );
+                }}
               />
             </div>
           </Flex>
@@ -175,7 +197,7 @@ export const BizTreeConfigPage = () => {
         onRootNodeNameChange={onRootNodeNameChange}
         onRootNodeDescChange={onRootNodeDescChange}
       />
-      {/* === Add Child Node === */}
+      {/* === Add Child Node of parent node === */}
       <AddChildNodeModal
         isChildNodeModalOpen={isChildNodeModalOpen}
         newChildNode={newChildNode}

@@ -49,7 +49,7 @@ export const AddChildNodeModal = ({
     title="Add Child Node"
     width={350}
     open={isChildNodeModalOpen}
-    onOk={handleChildNodeCreation}
+    onOk={() => handleChildNodeCreation(newChildNode.pid)}
     onCancel={handleChildNodeModalClose}
   >
     <h2>Node Name:</h2>

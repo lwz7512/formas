@@ -39,7 +39,7 @@ export const vanillaGetData = async (url, onSuccess, onError, onFinish) => {
  */
 export const useFetchData = url => {
   const [state, doFetch] = useAsyncFn(async url => {
-    const onError = () => console.error(error);
+    const onError = err => console.error(err);
     return await vanillaGetData(url, undefined, onError);
   }, []);
   // prevent repetitive request!
@@ -70,8 +70,8 @@ export const useFetchData = url => {
  */
 export const useOnDemandFetch = () => {
   const [state, doFetch] = useAsyncFn(async url => {
-    console.log(`>>>>> async fetch: ${url}`);
-    return await vanillaGetData(url);
+    const onError = err => console.error(err);
+    return await vanillaGetData(url, undefined, onError);
   }, []);
 
   return {
