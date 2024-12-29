@@ -1,11 +1,16 @@
 import { SERVICE_HOST_POST as host } from '@/config';
-import { vanillaPostData, vanillaDeleteData, vanillaPutData, vanillaGetData } from '.';
+import {
+  vanillaPostData,
+  vanillaDeleteData,
+  vanillaPutData,
+  vanillaGetData,
+} from '.';
 
 /**
  * 查询数据视图定义列表
  * @returns {Promise} form list
  */
-export const fetchDataviewList = async () => {
+export const fetchDataviewList = async sequence => {
   const params = {
     currPage: 1,
     pageSize: 100,
@@ -24,13 +29,12 @@ export const fetchDataviewList = async () => {
   return result;
 };
 
-
 /**
  * 创建数据视图定义
  * @param {{moduleId: string, formDefineId: string, title: string, note: string, sequence:string}} item
  */
 export const createDataview = async item => {
-  const { moduleId, title, note, sequence } = item;
+  const { moduleId, formDefineId, title, note, sequence } = item;
   const result = await vanillaPostData(`${host}/api/formas/dataviews`, {
     moduleId: moduleId,
     formDefineId: formDefineId,
@@ -40,7 +44,6 @@ export const createDataview = async item => {
   });
   return result;
 };
-
 
 /**
  * 修改数据视图定义
@@ -57,7 +60,6 @@ export const updateDataview = async item => {
   return result;
 };
 
-
 /**
  * 删除数据视图定义
  * @param {string} key dataview id
@@ -66,7 +68,6 @@ export const removeDataview = async key => {
   const result = await vanillaDeleteData(`${host}/api/formas/dataviews/${key}`);
   return result;
 };
-
 
 /**
  * 修改数据视图定义状态
@@ -81,7 +82,6 @@ export const updateDataviewStatus = async item => {
   return result;
 };
 
-
 /**
  * 修改数据视图定义模块
  */
@@ -94,7 +94,6 @@ export const updateDataviewModule = async item => {
   );
   return result;
 };
-
 
 /**
  * 修改数据视图定义SQL配置信息

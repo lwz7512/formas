@@ -48,7 +48,8 @@ export const vanillaPostData = async (
  */
 export const useAsyncPost = () => {
   const [state, doFetch] = useAsyncFn(async (url, params) => {
-    return await vanillaPostData(url, params);
+    const onError = err => console.error(err);
+    return await vanillaPostData(url, params, undefined, onError);
   }, []); // do not add deps here!!
 
   const { loading, error, value } = state;

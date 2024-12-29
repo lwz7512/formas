@@ -32,6 +32,7 @@ export const vanillaPutData = async (
     return json;
   } catch (error) {
     onError && onError(error);
+    !onError && console.error(error);
   } finally {
     onFinish && onFinish();
   }
