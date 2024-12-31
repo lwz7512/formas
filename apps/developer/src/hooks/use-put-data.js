@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
+import { useAsyncFn } from 'react-use';
+
 /**
  * General post request function using browser vanilla `fetch` API
  *
@@ -36,6 +38,29 @@ export const vanillaPutData = async (
   } finally {
     onFinish && onFinish();
   }
+};
+
+/**
+ * Sent put request
+ *
+ * @param {string} url put url
+ * @param {object} params put payload
+ * @returns {object} results
+ */
+export const useAsyncPut = () => {
+  const [state, doFetch] = useAsyncFn(async (url, params) => {
+    const onError = err => console.error(err);
+    return await vanillaPutData(url, params, undefined, onError);
+  }, []); // do not add deps here!!
+
+  const { loading, error, value } = state;
+
+  return {
+    error,
+    loading,
+    ...value,
+    doPut: doFetch,
+  };
 };
 
 /**

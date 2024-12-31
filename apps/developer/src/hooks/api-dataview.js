@@ -3,20 +3,20 @@ import {
   vanillaPostData,
   vanillaDeleteData,
   vanillaPutData,
-  vanillaGetData,
+  // vanillaGetData,
 } from '.';
 
 /**
- * 查询数据视图定义列表
+ * 查询数据视图定义列表 with `post` method
  * @returns {Promise} form list
  */
-export const fetchDataviewList = async sequence => {
+export const fetchDataviewList = async () => {
   const params = {
     currPage: 1,
     pageSize: 100,
     orders: [
       {
-        column: sequence,
+        column: 'sequence',
         dir: 'asc',
       },
     ],

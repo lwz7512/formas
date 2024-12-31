@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useAsyncFn } from 'react-use';
 
 /**
- * General post request function using browser vanilla `fetch` API
+ * General GET request function using browser vanilla `fetch` API
  *
  * @param {string} url request url string
  * @param {Object} params request parameters in object format

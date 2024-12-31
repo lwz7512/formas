@@ -1,8 +1,13 @@
 import { SERVICE_HOST_POST as host } from '@/config';
-import { vanillaPostData, vanillaDeleteData, vanillaPutData, vanillaGetData } from '.';
+import {
+  vanillaPostData,
+  vanillaDeleteData,
+  vanillaPutData,
+  // vanillaGetData,
+} from '.';
 
 /**
- * 查询表单定义列表
+ * 查询表单定义列表 with `post` method
  * @returns {Promise} form list
  */
 export const fetchFormDefineList = async () => {
@@ -11,7 +16,7 @@ export const fetchFormDefineList = async () => {
     pageSize: 100,
     orders: [
       {
-        column: sequence,
+        column: 'sequence',
         dir: 'asc',
       },
     ],
@@ -23,7 +28,6 @@ export const fetchFormDefineList = async () => {
   );
   return result;
 };
-
 
 /**
  * 创建表单定义
@@ -40,7 +44,6 @@ export const createFormDefine = async item => {
   return result;
 };
 
-
 /**
  * 修改表单定义
  */
@@ -56,16 +59,16 @@ export const updateFormDefine = async item => {
   return result;
 };
 
-
 /**
  * 删除表单定义
  * @param {string} key formDefine id
  */
 export const removeFormDefine = async key => {
-  const result = await vanillaDeleteData(`${host}/api/formas/form_defines/${key}`);
+  const result = await vanillaDeleteData(
+    `${host}/api/formas/form_defines/${key}`
+  );
   return result;
 };
-
 
 /**
  * 修改表单定义状态
@@ -80,7 +83,6 @@ export const updateFormDefineStatus = async item => {
   return result;
 };
 
-
 /**
  * 修改表单定义模块
  */
@@ -93,7 +95,6 @@ export const updateFormDefineModule = async item => {
   );
   return result;
 };
-
 
 /**
  * 修改表单定义配置信息
