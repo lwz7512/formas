@@ -1,4 +1,4 @@
-export const SERVICE_HOST_POST = 'http://localhost:8800';
+export const SERVICE_GATE_API = 'http://localhost:8800';
 
 export const MODAL_NAMES = {
   NEW_ROOT: 'add_root_node',

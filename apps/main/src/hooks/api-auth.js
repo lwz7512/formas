@@ -1,6 +1,6 @@
 import { md5 } from 'js-md5';
 
-import { usePostData, useDeleteData, SERVICE_HOST_POST as host } from '.';
+import { usePostData, useDeleteData, SERVICE_GATE_API as host } from '.';
 
 /**
  * 登录

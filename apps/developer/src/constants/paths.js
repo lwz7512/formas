@@ -19,6 +19,8 @@ const ROOTS_ABOUT = '/about';
 export const DICTIONARY_PATH = '/dictionary/index';
 /** @date 2024/12/07 */
 export const BIZTREE_PATH = '/biztree/index';
+/** @date 2024/12/31 */
+export const FORM_DEFINE_PATH = '/formdefine/index';
 
 export const PATH_ERROR = {
   root: ROOTS_ERRORS,

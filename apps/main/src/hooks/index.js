@@ -1,4 +1,4 @@
-export const SERVICE_HOST_POST = 'http://localhost:8801';
+export const SERVICE_GATE_API = 'http://localhost:8800';
 
 export * from './use-fetch-data';
 export * from './use-page-context';

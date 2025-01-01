@@ -2,7 +2,7 @@ import { md5 } from 'js-md5';
 
 import { usePostData, useDeleteData } from '.';
 
-import { SERVICE_HOST_POST as host } from '@/config';
+import { SERVICE_GATE_API as host } from '@/config';
 
 /**
  * ========= WORKING =============
@@ -23,6 +23,10 @@ export const useLogin = (loginName, password) => {
   );
   const send = async () => {
     const result = await trigger();
+    if (!result) {
+      console.error('## login failed!');
+      return null;
+    }
     const { data } = result;
     // got token and cache it for authentication in later request!
     if (data) {

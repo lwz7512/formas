@@ -56,6 +56,7 @@ export const SignInPage = () => {
   const onFinish = async () => {
     // console.log('sending:', values);
     const result = await send();
+    if (!result) return message.error('Ops, login failed!');
     // console.log(result);
     // got error!
     if (result.errCode > 200) {

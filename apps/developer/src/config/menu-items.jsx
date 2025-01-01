@@ -4,12 +4,13 @@ import {
   AppstoreOutlined,
   BranchesOutlined,
   ClusterOutlined,
+  FormOutlined,
   // InfoCircleOutlined,
   // PieChartOutlined,
   // SettingOutlined,
 } from '@ant-design/icons';
 
-import { DICTIONARY_PATH, BIZTREE_PATH } from '@/constants';
+import { DICTIONARY_PATH, BIZTREE_PATH, FORM_DEFINE_PATH } from '@/constants';
 
 /**
  * menu data from dashboard demos
@@ -21,13 +22,18 @@ export const devloperMenuItems = [
     icon: <AppstoreOutlined />,
   },
   {
-    label: 'Dictionary Config',
+    label: 'Dictionary',
     key: DICTIONARY_PATH,
     icon: <BranchesOutlined />,
   },
   {
-    label: 'BizTree Config',
+    label: 'BizTree',
     key: BIZTREE_PATH,
     icon: <ClusterOutlined />,
+  },
+  {
+    label: 'Form Define',
+    key: FORM_DEFINE_PATH,
+    icon: <FormOutlined />,
   },
 ];
