@@ -27,8 +27,8 @@ import { useAsyncPost } from './use-post-data';
  *   ...rawNode,
  *   value: id,
  * }
+ * @deprecated
  * @param {object} srcNode
- *
  * @returns destNode cloned tree structure with additional property
  */
 const recursiveTreeNode = srcNode => {
@@ -43,6 +43,30 @@ const recursiveTreeNode = srcNode => {
   };
   iterator(cloneTree);
   return [cloneTree];
+};
+
+/**
+ * rebuild new tree in simple structure
+ * @param {object} srcNode
+ * @returns
+ */
+const rebuildSimpleTree = srcNode => {
+  if (!srcNode) return [];
+  const traversor = (sn, dn) => {
+    dn.value = sn.id;
+    dn.title = sn.title;
+    if (sn.children) {
+      dn.children = [];
+      sn.children.forEach(c => {
+        const nc = {};
+        dn.children.push(nc);
+        traversor(c, nc);
+      });
+    }
+  };
+  const newTreeRoot = {};
+  traversor(srcNode, newTreeRoot);
+  return [newTreeRoot];
 };
 
 /**
@@ -71,7 +95,7 @@ export const useBizTreeQuery = () => {
   const [subTreeStruc, setSubTreeStruc] = useState([]);
 
   // transform to data-structure of `TreeSelect`:
-  const treeSelectData = recursiveTreeNode(subTreeStruc[0]);
+  const treeSelectData = rebuildSimpleTree(subTreeStruc[0]);
 
   return {
     subTreeStruc,

@@ -26,7 +26,7 @@ export const dataSource = [
 
 export const columns = [
   {
-    title: 'Form Tile',
+    title: 'Form Name',
     dataIndex: 'title',
     key: 'title',
   },

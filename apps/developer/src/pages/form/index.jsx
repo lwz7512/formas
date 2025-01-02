@@ -1,6 +1,6 @@
-import { Button, Divider, Typography, Table } from 'antd';
+import { App, Button, Divider, Typography, Table } from 'antd';
 
-import { dataSource, columns } from './columns';
+import { columns } from './columns';
 import { AddNewFormModal } from './modals';
 
 import { useFormCRUD } from '@/hooks/use-form';
@@ -10,13 +10,24 @@ import { useFormCRUD } from '@/hooks/use-form';
  * @returns
  */
 export const FormDefinePage = () => {
+  const { message } = App.useApp();
+
+  const onFormCreatSuccess = () => {
+    message.success('New form created!');
+  };
+
+  const onFormCreatFailure = () => {
+    message.error('New form failed!');
+  };
+
   const {
+    forms,
     isNewFormOpen,
+    rootBizSystems,
     openNewFormModal,
     closeFormModal,
     createNewForm,
-    rootBizSystems,
-  } = useFormCRUD();
+  } = useFormCRUD(onFormCreatSuccess, onFormCreatFailure);
 
   return (
     <>
@@ -37,7 +48,7 @@ export const FormDefinePage = () => {
         </Divider>
 
         {/* Form list */}
-        <Table bordered dataSource={dataSource} columns={columns} />
+        <Table bordered dataSource={forms} columns={columns} />
       </div>
       {/* === New Form Modal === */}
       <AddNewFormModal

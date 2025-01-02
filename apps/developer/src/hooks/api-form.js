@@ -1,3 +1,7 @@
+import { useEffect } from 'react';
+
+import { useAsyncFn } from 'react-use';
+
 import { SERVICE_GATE_API as host } from '@/config';
 import {
   vanillaPostData,
@@ -5,6 +9,33 @@ import {
   vanillaPutData,
   // vanillaGetData,
 } from '.';
+
+const tableRowGenerator = form => ({
+  ...form,
+  key: form.id,
+});
+
+export const useFormList = () => {
+  const [state, doFetch] = useAsyncFn(async () => {
+    const result = await fetchFormDefineList();
+    const { datas } = result;
+    if (!datas) {
+      console.warn(`## No result for dictionary definition!`);
+      return null;
+    }
+    return datas.map(tableRowGenerator);
+  }, []);
+
+  useEffect(() => {
+    doFetch();
+  }, [doFetch]);
+
+  return {
+    loading: state.loading,
+    forms: state.value,
+    refreshForms: doFetch,
+  };
+};
 
 /**
  * 查询表单定义列表 with `post` method
@@ -48,14 +79,11 @@ export const createFormDefine = async item => {
  * 修改表单定义
  */
 export const updateFormDefine = async item => {
-  const result = await vanillaPutData(
-    `${host}/api/formas/forms/${item.key}`,
-    {
-      title: item.title,
-      note: item.note,
-      sequence: item.sequence,
-    }
-  );
+  const result = await vanillaPutData(`${host}/api/formas/forms/${item.key}`, {
+    title: item.title,
+    note: item.note,
+    sequence: item.sequence,
+  });
   return result;
 };
 
@@ -64,9 +92,7 @@ export const updateFormDefine = async item => {
  * @param {string} key formDefine id
  */
 export const removeFormDefine = async key => {
-  const result = await vanillaDeleteData(
-    `${host}/api/formas/forms/${key}`
-  );
+  const result = await vanillaDeleteData(`${host}/api/formas/forms/${key}`);
   return result;
 };
 

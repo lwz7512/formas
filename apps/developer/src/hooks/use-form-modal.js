@@ -19,12 +19,13 @@ export const useFormModal = rootBizSystems => {
    * Tree Node Select
    * @param {string} newValue
    */
-  const onTreeSelectChange = newValue => {
-    setModuleValue(newValue);
+  const onTreeSelectChange = nodeValue => {
+    setModuleValue(nodeValue);
+    setFormObject({ ...newFormObject, moduleId: nodeValue });
   };
 
   const onPopupScroll = e => {
-    console.log('onPopupScroll', e);
+    // console.log('onPopupScroll', e);
   };
 
   /**
@@ -44,8 +45,9 @@ export const useFormModal = rootBizSystems => {
     handleFormInputChange('note', event.target.value);
   };
 
-  const onFormSequenceChange = event => {
-    handleFormInputChange('sequence', event.target.value);
+  const onFormSequenceChange = value => {
+    if (!value) return;
+    handleFormInputChange('sequence', value);
   };
 
   /**
@@ -54,8 +56,10 @@ export const useFormModal = rootBizSystems => {
    */
   const handleRootModuleSelectChange = value => {
     const sysNode = rootBizSystems.find(node => node.id == value);
-    console.log(`select item: ${sysNode.title}`);
+    // console.log(`select item: ${sysNode.title}`);
     loadTreeBy(value, sysNode.title);
+    // clear selected module previously
+    setModuleValue('');
   };
 
   return {

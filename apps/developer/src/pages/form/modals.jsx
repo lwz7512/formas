@@ -18,7 +18,10 @@ export const AddNewFormModal = ({
       title="Add New Form"
       width={350}
       open={isFormModalOpen}
-      onOk={() => handleFormCreation(newFormObject)}
+      onOk={() => {
+        handleFormCreation(newFormObject);
+        handleFormModalClose();
+      }}
       onCancel={handleFormModalClose}
     >
       <h2>Form Name(English only):</h2>
@@ -31,7 +34,7 @@ export const AddNewFormModal = ({
       {/* === Business Module Root Selection === */}
       <h2>Select Business System:</h2>
       <Select
-        placeholder="Select a person"
+        placeholder="Select a system"
         className="w-full"
         onChange={handlers.handleRootModuleSelectChange}
         options={rootBizSystems.map(node => ({
