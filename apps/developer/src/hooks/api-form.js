@@ -23,7 +23,7 @@ export const fetchFormDefineList = async () => {
     searchs: [],
   };
   const result = await vanillaPostData(
-    `${host}/api/formas/form_defines/filter`,
+    `${host}/api/formas/forms/filter`,
     params
   );
   return result;
@@ -35,7 +35,7 @@ export const fetchFormDefineList = async () => {
  */
 export const createFormDefine = async item => {
   const { moduleId, title, note, sequence } = item;
-  const result = await vanillaPostData(`${host}/api/formas/form_defines`, {
+  const result = await vanillaPostData(`${host}/api/formas/forms`, {
     moduleId: moduleId,
     title: title,
     note: note,
@@ -49,7 +49,7 @@ export const createFormDefine = async item => {
  */
 export const updateFormDefine = async item => {
   const result = await vanillaPutData(
-    `${host}/api/formas/form_defines/${item.key}`,
+    `${host}/api/formas/forms/${item.key}`,
     {
       title: item.title,
       note: item.note,
@@ -65,7 +65,7 @@ export const updateFormDefine = async item => {
  */
 export const removeFormDefine = async key => {
   const result = await vanillaDeleteData(
-    `${host}/api/formas/form_defines/${key}`
+    `${host}/api/formas/forms/${key}`
   );
   return result;
 };
@@ -75,7 +75,7 @@ export const removeFormDefine = async key => {
  */
 export const updateFormDefineStatus = async item => {
   const result = await vanillaPutData(
-    `${host}/api/formas/form_defines/${item.key}/status`,
+    `${host}/api/formas/forms/${item.key}/status`,
     {
       status: item.status,
     }
@@ -88,7 +88,7 @@ export const updateFormDefineStatus = async item => {
  */
 export const updateFormDefineModule = async item => {
   const result = await vanillaPutData(
-    `${host}/api/formas/form_defines/${item.key}/module`,
+    `${host}/api/formas/forms/${item.key}/module`,
     {
       moduleId: item.moduleId,
     }
@@ -101,7 +101,7 @@ export const updateFormDefineModule = async item => {
  */
 export const updateFormDefineSchema = async item => {
   const result = await vanillaPutData(
-    `${host}/api/formas/form_defines/${item.key}/schema`,
+    `${host}/api/formas/forms/${item.key}/schema`,
     {
       schema: item.schema,
     }
