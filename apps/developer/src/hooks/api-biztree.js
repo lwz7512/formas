@@ -24,13 +24,25 @@ import { useAsyncPost } from './use-post-data';
  * }
  * === destination node structure: ===
  * {
- *
+ *   ...rawNode,
+ *   value: id,
  * }
- * @param {*} srcNode
- * @param {*} destNode
+ * @param {object} srcNode
+ *
+ * @returns destNode cloned tree structure with additional property
  */
-const recursiveTreeNode = (srcNode, destNode) => {
-  //
+const recursiveTreeNode = srcNode => {
+  if (!srcNode) return [];
+  const cloneTree = JSON.parse(JSON.stringify(srcNode));
+  const iterator = node => {
+    // add new property `value`:
+    node.value = node.id;
+    const children = node.children;
+    if (!children) return;
+    children.forEach(c => iterator(c));
+  };
+  iterator(cloneTree);
+  return [cloneTree];
 };
 
 /**
@@ -43,7 +55,7 @@ export const useBizTreeRoots = () => {
   return {
     error,
     loading,
-    list: datas,
+    list: datas || [],
     refresh,
   };
 };
@@ -58,14 +70,19 @@ export const useBizTreeQuery = () => {
 
   const [subTreeStruc, setSubTreeStruc] = useState([]);
 
+  // transform to data-structure of `TreeSelect`:
+  const treeSelectData = recursiveTreeNode(subTreeStruc[0]);
+
   return {
     subTreeStruc,
+    treeSelectData,
     loadTreeBy: async (rootId, title) => {
       // construct root node:
       setSubTreeStruc([
         {
           depth: 0, // root node level
           key: rootId,
+          id: rootId,
           title,
           children: [], // to fill with later in fetching result
         },
@@ -79,6 +96,7 @@ export const useBizTreeQuery = () => {
         setSubTreeStruc([
           {
             key: rootId,
+            id: rootId,
             title,
             children: nodes,
           },

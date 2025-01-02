@@ -10,8 +10,13 @@ import { useFormCRUD } from '@/hooks/use-form';
  * @returns
  */
 export const FormDefinePage = () => {
-  const { isNewFormOpen, openNewFormModal, closeFormModal, createNewForm } =
-    useFormCRUD();
+  const {
+    isNewFormOpen,
+    openNewFormModal,
+    closeFormModal,
+    createNewForm,
+    rootBizSystems,
+  } = useFormCRUD();
 
   return (
     <>
@@ -37,6 +42,7 @@ export const FormDefinePage = () => {
       {/* === New Form Modal === */}
       <AddNewFormModal
         isFormModalOpen={isNewFormOpen}
+        rootBizSystems={rootBizSystems}
         handleFormModalClose={closeFormModal}
         handleFormCreation={createNewForm}
       />
