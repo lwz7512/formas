@@ -8,6 +8,9 @@ import { useFormCRUD } from '@/hooks/use-form';
 import { useEditableColumns } from './columns';
 import { AddNewFormModal } from './modals';
 
+// == shortcut of designer page! ==
+export { FormSchemaDesigner } from './designer';
+
 /**
  * Form meta-data definition page
  * @returns

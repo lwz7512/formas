@@ -129,6 +129,10 @@ export const Routers = createBrowserRouter(
       ],
     },
     {
+      path: '/just-form-designer',
+      element: <FormDesigner />,
+    },
+    {
       path: '/demos',
       element: <PageWrapper children={<DashboardLayout />} />,
       errorElement: <ErrorPage />,

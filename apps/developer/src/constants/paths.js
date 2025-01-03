@@ -21,6 +21,8 @@ export const DICTIONARY_PATH = '/dictionary/index';
 export const BIZTREE_PATH = '/biztree/index';
 /** @date 2024/12/31 */
 export const FORM_DEFINE_PATH = '/formdefine/index';
+/** @date 2025/01/03 */
+export const FORM_DEFINE_DESIGNER = '/formdefine/external-designer';
 
 export const PATH_ERROR = {
   root: ROOTS_ERRORS,

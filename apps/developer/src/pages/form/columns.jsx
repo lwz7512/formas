@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { Button, Form, Popconfirm, Typography } from 'antd';
 
+import { FORM_DEFINE_PATH } from '@/constants';
 import { removeFormDefine, updateFormDefine } from '@/hooks/api-form';
 
 /**
@@ -10,6 +12,11 @@ import { removeFormDefine, updateFormDefine } from '@/hooks/api-form';
  */
 export const useEditableColumns = refreshForms => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
+
+  const openFormDesigner = key => {
+    navigate(`${FORM_DEFINE_PATH}/designer?formid=${key}`);
+  };
 
   const [editingKey, setEditingKey] = useState('');
   const isEditing = record => record.key === editingKey;
@@ -30,8 +37,7 @@ export const useEditableColumns = refreshForms => {
     await refreshForms();
   };
 
-  // TODO: update form ....
-  const saveRowHandler = async key => {
+  const updateFormRowHandler = async key => {
     const row = await form.validateFields();
     // console.log(row);
     setEditingKey(''); // close edit state
@@ -78,7 +84,7 @@ export const useEditableColumns = refreshForms => {
         return editable ? (
           <span data-key={record.key}>
             <Typography.Link
-              onClick={() => saveRowHandler(record.key)}
+              onClick={() => updateFormRowHandler(record.key)}
               style={{
                 marginInlineEnd: 8,
               }}
@@ -112,7 +118,7 @@ export const useEditableColumns = refreshForms => {
               variant="dashed"
               className="mr-2"
               disabled={editingKey !== ''}
-              onClick={() => console.log(`design edit panel`)}
+              onClick={() => openFormDesigner(record.key)}
             >
               Design Schema
             </Button>

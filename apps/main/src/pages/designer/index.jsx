@@ -10,6 +10,8 @@ const defaultValue = {
   },
 };
 
+const extraButtons = [{ text: 'Save Schema', type: 'primary', danger: true }];
+
 /**
  * FIXME: waiting for formal official release!
  * @date 2024/11/05
@@ -17,8 +19,8 @@ const defaultValue = {
  */
 export const FormDesigner = () => {
   return (
-    <div style={{ height: '80vh' }}>
-      <Generator defaultValue={defaultValue} />
+    <div style={{ height: '99vh' }}>
+      <Generator defaultValue={defaultValue} extraButtons={extraButtons} />
     </div>
   );
 };

@@ -203,10 +203,14 @@ function Wrapper({ $id, item, inside = false, children, style }) {
       zIndex: 1,
     };
   }
+  // * FIXME: fix the `column` setting affected the stage width unexpectedly *
+  // @2025/01/03
   if (style && typeof style === 'object') {
+    const isStage = $id === '#';
+    const { width, ...stageStl } = style;
     overwriteStyle = {
       ...overwriteStyle,
-      ...style,
+      ...(isStage ? stageStl : style),
     };
   }
 
