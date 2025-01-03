@@ -1,5 +1,166 @@
-import { Button, Typography } from 'antd';
+import { useState } from 'react';
 
+import { Button, Form, Popconfirm, Typography } from 'antd';
+
+import { removeFormDefine, updateFormDefine } from '@/hooks/api-form';
+
+/**
+ * Manage form CRUD operations
+ * @returns
+ */
+export const useEditableColumns = refreshForms => {
+  const [form] = Form.useForm();
+
+  const [editingKey, setEditingKey] = useState('');
+  const isEditing = record => record.key === editingKey;
+
+  const editRowHandler = record => {
+    form.setFieldsValue({
+      moduleId: '',
+      title: '',
+      note: '',
+      sequence: 0,
+      ...record, // reset existing fields
+    });
+    setEditingKey(record.key);
+  };
+
+  const deleteRowHandler = async record => {
+    await removeFormDefine(record.key);
+    await refreshForms();
+  };
+
+  // TODO: update form ....
+  const saveRowHandler = async key => {
+    const row = await form.validateFields();
+    // console.log(row);
+    setEditingKey(''); // close edit state
+    await updateFormDefine({ key, ...row });
+    await refreshForms();
+  };
+
+  const cancelChangeHandler = () => {
+    setEditingKey('');
+  };
+
+  const editableColumns = [
+    {
+      title: 'Form Name',
+      dataIndex: 'title',
+      key: 'title',
+      editable: true,
+    },
+    {
+      title: 'Module ID',
+      dataIndex: 'moduleId',
+      key: 'moduleId',
+      width: '20%',
+    },
+    {
+      title: 'Seqence',
+      dataIndex: 'sequence',
+      key: 'sequence',
+      editable: true,
+      width: '4%',
+    },
+    {
+      title: 'Note',
+      dataIndex: 'note',
+      key: 'title',
+      editable: true,
+    },
+    {
+      title: 'Operation',
+      dataIndex: 'actions',
+      width: '25%',
+      render: (_, record) => {
+        const editable = isEditing(record);
+        return editable ? (
+          <span data-key={record.key}>
+            <Typography.Link
+              onClick={() => saveRowHandler(record.key)}
+              style={{
+                marginInlineEnd: 8,
+              }}
+            >
+              Save
+            </Typography.Link>
+            <Typography.Link
+              onClick={cancelChangeHandler}
+              style={{
+                marginInlineEnd: 8,
+              }}
+            >
+              Cancel
+            </Typography.Link>
+          </span>
+        ) : (
+          <span data-key={record.key}>
+            <Button
+              size="small"
+              color="primary"
+              variant="dashed"
+              className="mr-2"
+              disabled={editingKey !== ''}
+              onClick={() => editRowHandler(record)}
+            >
+              Edit Form
+            </Button>
+            <Button
+              size="small"
+              color="primary"
+              variant="dashed"
+              className="mr-2"
+              disabled={editingKey !== ''}
+              onClick={() => console.log(`design edit panel`)}
+            >
+              Design Schema
+            </Button>
+            <Popconfirm
+              title="Sure to Delete this form?"
+              onConfirm={() => deleteRowHandler(record)}
+            >
+              <Button
+                size="small"
+                color="danger"
+                variant="dashed"
+                disabled={editingKey !== ''}
+              >
+                Delete
+              </Button>
+            </Popconfirm>
+          </span>
+        );
+      },
+    },
+  ];
+
+  const mergedColumns = editableColumns.map(col => {
+    if (!col.editable) {
+      return col;
+    }
+    return {
+      ...col,
+      // provide properties for `EditableCell`
+      onCell: record => ({
+        record,
+        inputType: col.dataIndex === 'sequence' ? 'number' : 'text',
+        dataIndex: col.dataIndex,
+        title: col.title,
+        editing: isEditing(record),
+      }),
+    };
+  });
+
+  return {
+    form,
+    columns: mergedColumns,
+  };
+};
+
+/**
+ * @deprecated
+ */
 export const dataSource = [
   {
     key: '12345',
@@ -69,14 +230,6 @@ export const columns = [
             onClick={() => console.log(`design edit panel`)}
           >
             Design Schema
-          </Button>
-          <Button
-            size="small"
-            color="danger"
-            variant="dashed"
-            onClick={() => console.log(`design edit panel`)}
-          >
-            Delete
           </Button>
         </span>
       );

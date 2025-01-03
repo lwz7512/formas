@@ -3,12 +3,10 @@ import { snakeCase } from 'lodash';
 import { useState } from 'react';
 
 import { useBizTreeRoots } from './api-biztree';
-import { createFormDefine, useFormList } from './api-form';
+import { createFormDefine } from './api-form';
 
 export const useFormCRUD = (onFormCreate, onFormFailure) => {
   const { list } = useBizTreeRoots();
-
-  const formList = useFormList();
 
   // manage modal state
   const [currentModalName, setCurrentModalName] = useState('');
@@ -28,8 +26,6 @@ export const useFormCRUD = (onFormCreate, onFormFailure) => {
     // console.log(resp);
     if (resp.errCode == 200) {
       onFormCreate && onFormCreate();
-      // reload all the forms
-      formList.refreshForms();
     } else {
       onFormFailure && onFormFailure();
     }
@@ -41,6 +37,5 @@ export const useFormCRUD = (onFormCreate, onFormFailure) => {
     closeFormModal,
     createNewForm,
     rootBizSystems: list,
-    ...formList,
   };
 };

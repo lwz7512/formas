@@ -6,3 +6,4 @@ export * from './card/card-base';
 export * from './card/get-started-card';
 export * from './loader/loader';
 export * from './page-header/page-header';
+export * from './table/cell';

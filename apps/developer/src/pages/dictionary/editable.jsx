@@ -1,6 +1,7 @@
 import { Form, Table } from 'antd';
 
-import { EditableCell } from './cell';
+import { EditableCell } from '@/components';
+
 import { useEditableColumns } from './columns';
 
 /**

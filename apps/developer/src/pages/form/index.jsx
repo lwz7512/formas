@@ -1,9 +1,12 @@
-import { App, Button, Divider, Typography, Table } from 'antd';
+import { App, Button, Divider, Form, Typography, Table } from 'antd';
 
-import { columns } from './columns';
-import { AddNewFormModal } from './modals';
+import { EditableCell } from '@/components';
 
+import { useFormList } from '@/hooks/api-form';
 import { useFormCRUD } from '@/hooks/use-form';
+
+import { useEditableColumns } from './columns';
+import { AddNewFormModal } from './modals';
 
 /**
  * Form meta-data definition page
@@ -12,8 +15,13 @@ import { useFormCRUD } from '@/hooks/use-form';
 export const FormDefinePage = () => {
   const { message } = App.useApp();
 
+  const { forms, refreshForms } = useFormList();
+
+  const { columns, form } = useEditableColumns(refreshForms);
+
   const onFormCreatSuccess = () => {
     message.success('New form created!');
+    refreshForms();
   };
 
   const onFormCreatFailure = () => {
@@ -21,7 +29,6 @@ export const FormDefinePage = () => {
   };
 
   const {
-    forms,
     isNewFormOpen,
     rootBizSystems,
     openNewFormModal,
@@ -48,7 +55,19 @@ export const FormDefinePage = () => {
         </Divider>
 
         {/* Form list */}
-        <Table bordered dataSource={forms} columns={columns} />
+        <Form form={form} component={false}>
+          <Table
+            components={{
+              body: {
+                cell: EditableCell,
+              },
+            }}
+            bordered
+            dataSource={forms}
+            columns={columns}
+            rowClassName="editable-row"
+          />
+        </Form>
       </div>
       {/* === New Form Modal === */}
       <AddNewFormModal

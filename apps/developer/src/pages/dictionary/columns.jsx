@@ -64,7 +64,7 @@ export const useEditableColumns = list => {
       label: '',
       value: '',
       sequence: 0,
-      ...record,
+      ...record, // reset existing fields
     });
     setEditingKey(record.key);
   };
@@ -147,6 +147,7 @@ export const useEditableColumns = list => {
     }
     return {
       ...col,
+      // provide properties for `EditableCell`
       onCell: record => ({
         record,
         inputType: col.dataIndex === 'sequence' ? 'number' : 'text',
