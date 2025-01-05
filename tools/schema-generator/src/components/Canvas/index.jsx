@@ -124,7 +124,7 @@ const Canvas = ({ onSelect }) => {
         )}
         {_showDefaultBtns[3] !== false && (
           <Button type="primary" className="mr2" onClick={toggleModal}>
-            {getDefaultBtnText(_showDefaultBtns[3], t('导出schema'))}
+            {getDefaultBtnText(_showDefaultBtns[3], t('导出'))}
           </Button>
         )}
         {_extraBtns.map((item, idx) => {

@@ -7,7 +7,7 @@ import {
   vanillaPostData,
   vanillaDeleteData,
   vanillaPutData,
-  // vanillaGetData,
+  vanillaGetData,
 } from '.';
 
 const tableRowGenerator = form => ({

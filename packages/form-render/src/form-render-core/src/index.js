@@ -14,7 +14,7 @@ import {
 import Watcher from './Watcher';
 
 const defaultFinish = (data, errors) => {
-  console.log('onFinish:', { data, errors });
+  // console.log('onFinish:', { data, errors });
 };
 
 export { default as connectForm } from './connectForm';

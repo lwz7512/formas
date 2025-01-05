@@ -1,5 +1,36 @@
 import { useState, useEffect, useCallback } from 'react';
 
+/**
+ * General GET request function using browser vanilla `fetch` API
+ *
+ * @param {string} url request url string
+ * @param {Object} params request parameters in object format
+ * @param {Function} onSuccess success callback
+ * @param {Funcion} onError failure callback
+ * @param {Function} onFinish finally callback
+ */
+export const vanillaGetData = async (url, onSuccess, onError, onFinish) => {
+  try {
+    // 从localStorage获取token
+    const token = localStorage.getItem('formas.jwt');
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      },
+    });
+    const json = await response.json();
+    onSuccess && onSuccess(json);
+    // return response:
+    return json;
+  } catch (error) {
+    onError && onError(error);
+  } finally {
+    onFinish && onFinish();
+  }
+};
+
 export const useFetchData = (url, params = {}) => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
