@@ -134,3 +134,14 @@ export const updateFormDefineSchema = async item => {
   );
   return result;
 };
+
+/**
+ * 一键生成表单定义对应的视图
+ */
+export const createFormDefineDataview = async item => {
+  const result = await vanillaPostData(
+    `${host}/api/formas/forms/${item.key}/dataview`,
+    {}
+  );
+  return result;
+};
