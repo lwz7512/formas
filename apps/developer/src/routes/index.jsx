@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import { DICTIONARY_PATH, BIZTREE_PATH, FORM_DEFINE_PATH } from '@/constants';
-import { GuestLayout, DashboardLayout } from '@/layouts';
+import { GuestLayout, HeaderFooterLayout } from '@/layouts';
 
 import { WelcomePage, SignInPage, SignUpPage } from '../pages/auth';
 import { ErrorPage } from '../pages/errors/error-x';
@@ -50,7 +50,7 @@ export const Routers = createBrowserRouter(
     },
     {
       path: '/auth/welcome',
-      element: <DashboardLayout />,
+      element: <HeaderFooterLayout />,
       errorElement: <ErrorPage />,
       children: [
         {
@@ -62,7 +62,7 @@ export const Routers = createBrowserRouter(
     },
     {
       path: DICTIONARY_PATH,
-      element: <DashboardLayout />,
+      element: <HeaderFooterLayout />,
       errorElement: <ErrorPage />,
       children: [
         {
@@ -74,7 +74,7 @@ export const Routers = createBrowserRouter(
     },
     {
       path: BIZTREE_PATH,
-      element: <DashboardLayout />,
+      element: <HeaderFooterLayout />,
       errorElement: <ErrorPage />,
       children: [
         {
@@ -86,7 +86,7 @@ export const Routers = createBrowserRouter(
     },
     {
       path: FORM_DEFINE_PATH,
-      element: <DashboardLayout />,
+      element: <HeaderFooterLayout />,
       errorElement: <ErrorPage />,
       children: [
         {

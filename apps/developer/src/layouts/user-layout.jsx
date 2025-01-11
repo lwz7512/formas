@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import {
@@ -19,7 +20,6 @@ import { AppLayout } from './app-layout';
 const { Link } = Typography;
 
 import './styles.css';
-import { useEffect, useState } from 'react';
 
 // DescriptionsProps['items']
 const DESCRIPTION_ITEMS = [
