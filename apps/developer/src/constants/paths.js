@@ -15,6 +15,8 @@ const ROOTS_AUTH = '/auth';
 const ROOTS_ERRORS = '/errors';
 const ROOTS_ABOUT = '/about';
 
+/** @date 2025/01/12 */
+export const HOME_AFTER_LOGIN = '/auth/welcome';
 /** @date 2024/12/01 */
 export const DICTIONARY_PATH = '/dictionary/index';
 /** @date 2024/12/07 */

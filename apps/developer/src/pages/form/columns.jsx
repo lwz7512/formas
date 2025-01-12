@@ -78,7 +78,7 @@ export const useEditableColumns = refreshForms => {
     {
       title: 'Operation',
       dataIndex: 'actions',
-      width: '25%',
+      width: '30%',
       render: (_, record) => {
         const editable = isEditing(record);
         return editable ? (
@@ -120,7 +120,7 @@ export const useEditableColumns = refreshForms => {
               disabled={editingKey !== ''}
               onClick={() => openFormDesigner(record.key)}
             >
-              Design Schema
+              Schema
             </Button>
             <Popconfirm
               title="Sure to Delete this form?"

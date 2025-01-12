@@ -32,7 +32,7 @@ export const devloperMenuItems = [
     icon: <ClusterOutlined />,
   },
   {
-    label: 'Form Define',
+    label: 'App Define',
     key: FORM_DEFINE_PATH,
     icon: <FormOutlined />,
   },

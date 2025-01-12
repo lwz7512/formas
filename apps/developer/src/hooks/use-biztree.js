@@ -107,7 +107,6 @@ export const useBizTreeState = (
     if (!title) return console.warn(`## no title field for child node!`);
     // save new child
     await doChildNodeAdd(pid, title, description || '...');
-    console.log(`>>> refresh tree by: ${currentRoot.id}`);
     // refresh tree by root id
     loadTreeBy(currentRoot.id, currentRoot.title);
   };

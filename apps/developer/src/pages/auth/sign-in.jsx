@@ -20,7 +20,7 @@ import {
 } from '@ant-design/icons';
 
 import { Logo } from '@/components';
-import { PATH_AUTH, DICTIONARY_PATH } from '@/constants';
+import { PATH_AUTH, HOME_AFTER_LOGIN } from '@/constants';
 
 import { useLogin } from '@/hooks/api-auth';
 
@@ -68,7 +68,7 @@ export const SignInPage = () => {
     }
     // open dictionary page:
     // @2024/12/01
-    navigate(DICTIONARY_PATH, { replace: true });
+    navigate(HOME_AFTER_LOGIN, { replace: true });
 
     message.open({
       type: 'success',

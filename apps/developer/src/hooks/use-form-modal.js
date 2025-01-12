@@ -1,31 +1,38 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+import { ROOT_BIZ_TREE_ID, ROOT_BIZ_TREE_NAME } from '@/config';
 
 import { useBizTreeQuery } from './api-biztree';
 
-export const useFormModal = rootBizSystems => {
+export const useFormModal = selectedBizModel => {
   const [moduleValue, setModuleValue] = useState();
 
   const [newFormObject, setFormObject] = useState({
     title: '',
     note: '',
     sequence: 0,
-    moduleId: '',
+    moduleId: '', // module property placeholder
   });
 
   // sub - tree - loading
   const { loadTreeBy, treeSelectData } = useBizTreeQuery();
 
+  // ! == load hard-coded tree == !
+  useEffect(() => {
+    loadTreeBy(ROOT_BIZ_TREE_ID, ROOT_BIZ_TREE_NAME);
+  }, [loadTreeBy]);
+
+  // observe left-tree module selection: `selectedBizModel`
+  useEffect(() => {
+    setModuleValue(selectedBizModel);
+  }, [selectedBizModel]);
+
   /**
-   * Tree Node Select
+   * Tree Node Select to manage selected module state:
    * @param {string} newValue
    */
   const onTreeSelectChange = nodeValue => {
     setModuleValue(nodeValue);
-    setFormObject({ ...newFormObject, moduleId: nodeValue });
-  };
-
-  const onPopupScroll = e => {
-    // console.log('onPopupScroll', e);
   };
 
   /**
@@ -50,27 +57,16 @@ export const useFormModal = rootBizSystems => {
     handleFormInputChange('sequence', value);
   };
 
-  /**
-   * load sub tree of selected biz-system
-   * @param {string} value biz node id
-   */
-  const handleRootModuleSelectChange = value => {
-    const sysNode = rootBizSystems.find(node => node.id == value);
-    // console.log(`select item: ${sysNode.title}`);
-    loadTreeBy(value, sysNode.title);
-    // clear selected module previously
-    setModuleValue('');
-  };
-
   return {
     moduleValue,
-    newFormObject,
+    /**
+     * Export A merged form object with two state:
+     */
+    newFormObject: { ...newFormObject, moduleId: moduleValue },
     treeSelectData,
     onTreeSelectChange,
-    onPopupScroll,
     onFormNameChange,
     onFormDescChange,
     onFormSequenceChange,
-    handleRootModuleSelectChange,
   };
 };

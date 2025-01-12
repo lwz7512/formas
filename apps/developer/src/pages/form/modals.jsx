@@ -1,4 +1,4 @@
-import { Modal, Input, InputNumber, Select, TreeSelect } from 'antd';
+import { Modal, Input, InputNumber, TreeSelect } from 'antd';
 
 import { useFormModal } from '@/hooks/use-form-modal';
 
@@ -6,12 +6,13 @@ const { TextArea } = Input;
 
 export const AddNewFormModal = ({
   isFormModalOpen,
-  rootBizSystems,
+  /** biz node selected fro left tree */
+  selectedBizModel,
   handleFormCreation,
   handleFormModalClose,
 }) => {
   const { newFormObject, moduleValue, treeSelectData, ...handlers } =
-    useFormModal(rootBizSystems);
+    useFormModal(selectedBizModel);
 
   return (
     <Modal
@@ -31,17 +32,6 @@ export const AddNewFormModal = ({
         value={newFormObject.name}
         onChange={handlers.onFormNameChange}
       />
-      {/* === Business Module Root Selection === */}
-      <h2>Select Business System:</h2>
-      <Select
-        placeholder="Select a system"
-        className="w-full"
-        onChange={handlers.handleRootModuleSelectChange}
-        options={rootBizSystems.map(node => ({
-          label: node.title,
-          value: node.id,
-        }))}
-      />
       {/* === Business Tree Node Selection === */}
       <h2>Select Business Module:</h2>
       <TreeSelect
@@ -56,7 +46,6 @@ export const AddNewFormModal = ({
         treeDefaultExpandAll
         onChange={handlers.onTreeSelectChange}
         treeData={treeSelectData}
-        onPopupScroll={handlers.onPopupScroll}
       />
       <h2>Form Sequence(Number only):</h2>
       <InputNumber

@@ -1,6 +1,10 @@
 import { SERVICE_HOST_POST as host } from '@/config';
-import { vanillaPostData, vanillaDeleteData, vanillaPutData, vanillaGetData } from '.';
-
+import {
+  vanillaPostData,
+  vanillaDeleteData,
+  vanillaPutData,
+  // vanillaGetData,
+} from '.';
 
 /**
  * 查询数据源列表
@@ -25,20 +29,18 @@ export const fetchDatasourceList = async () => {
  * @param {{driver: string, title: string, host: string, port: string, database: string, instance: string, user: string, password: string}} item
  */
 export const createDatasources = async item => {
-  const { driver, title, host, port, database, instance, user, password } = item;
   const result = await vanillaPostData(`${host}/api/formas/datasources`, {
-    driver: driver,
-    title: title,
-    host: host,
-    port: port,
-    database: database,
-    instance: instance,
-    user: user,
-    password: password,
+    driver: item.driver,
+    title: item.title,
+    host: item.host,
+    port: item.port,
+    database: item.database,
+    instance: item.instance,
+    user: item.user,
+    password: item.password,
   });
   return result;
 };
-
 
 /**
  * 修改数据源
@@ -60,13 +62,14 @@ export const updateDatasources = async item => {
   return result;
 };
 
-
 /**
  * 删除数据源
  * @param {string} key datasource id
  */
 export const removeDatasources = async key => {
-  const result = await vanillaDeleteData(`${host}/api/formas/datasources/${key}`);
+  const result = await vanillaDeleteData(
+    `${host}/api/formas/datasources/${key}`
+  );
   return result;
 };
 
@@ -75,9 +78,12 @@ export const removeDatasources = async key => {
  * @param {string} key datasource id
  */
 export const testDatasourcesConnection = async key => {
-  const sqlStmt = "SELECT 1 AS a FROM DUAL";
-  const result = await vanillaPostData(`${host}/api/formas/datasources/${key}/query-one`, {
-    sqlStmt: sqlStmt,
-  });
+  const sqlStmt = 'SELECT 1 AS a FROM DUAL';
+  const result = await vanillaPostData(
+    `${host}/api/formas/datasources/${key}/query-one`,
+    {
+      sqlStmt: sqlStmt,
+    }
+  );
   return result;
 };

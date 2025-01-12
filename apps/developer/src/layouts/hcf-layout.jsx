@@ -16,7 +16,11 @@ export const HCFLayout = ({ children }) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  const [, path_1, path_2] = pathname.split('/');
+  const [, path_1, path_2, path_3] = pathname.split('/');
+  const bcgen = title => ({ title });
+  const dynaBreadcrumbs = path_3
+    ? [bcgen(path_2), bcgen(path_3)]
+    : [bcgen(path_2)];
 
   // save current menum item
   const [current, setCurrent] = useState('');
@@ -65,9 +69,7 @@ export const HCFLayout = ({ children }) => {
               {
                 title: path_1,
               },
-              {
-                title: path_2,
-              },
+              ...dynaBreadcrumbs,
             ]}
           />
           <div className="site-layout-content">{children}</div>
@@ -77,7 +79,7 @@ export const HCFLayout = ({ children }) => {
             textAlign: 'center',
           }}
         >
-          Ant Design ©2018 Created by Ant UED
+          Formas-Devtools ©2025 Created by Formas team
         </Footer>
       </Layout>
     </App>

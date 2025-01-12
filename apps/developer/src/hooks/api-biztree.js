@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { nanoid } from 'nanoid';
 
 import { SERVICE_GATE_API as host } from '@/config';
@@ -54,6 +54,7 @@ const rebuildSimpleTree = srcNode => {
   if (!srcNode) return [];
   const traversor = (sn, dn) => {
     dn.value = sn.id;
+    dn.key = sn.id; // key is a must to have
     dn.title = sn.title;
     if (sn.children) {
       dn.children = [];
@@ -97,10 +98,9 @@ export const useBizTreeQuery = () => {
   // transform to data-structure of `TreeSelect`:
   const treeSelectData = rebuildSimpleTree(subTreeStruc[0]);
 
-  return {
-    subTreeStruc,
-    treeSelectData,
-    loadTreeBy: async (rootId, title) => {
+  // a memorized load tree function
+  const mLoadTreeBy = useCallback(
+    async (rootId, title) => {
       // construct root node:
       setSubTreeStruc([
         {
@@ -126,9 +126,15 @@ export const useBizTreeQuery = () => {
           },
         ]);
       }
-
       return resp;
     },
+    [doFetch]
+  );
+
+  return {
+    subTreeStruc,
+    treeSelectData,
+    loadTreeBy: mLoadTreeBy,
   };
 };
 
