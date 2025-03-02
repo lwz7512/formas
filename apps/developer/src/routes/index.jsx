@@ -1,6 +1,11 @@
 import { createBrowserRouter } from 'react-router-dom';
 
-import { DICTIONARY_PATH, BIZTREE_PATH, FORM_DEFINE_PATH } from '@/constants';
+import {
+  DICTIONARY_PATH,
+  BIZTREE_PATH,
+  FORM_DEFINE_PATH,
+  EXTERNAL_DATA_SOURCE_PATH,
+} from '@/constants';
 import { GuestLayout, HeaderFooterLayout } from '@/layouts';
 
 import { WelcomePage, SignInPage, SignUpPage } from '../pages/auth';
@@ -8,6 +13,7 @@ import { ErrorPage } from '../pages/errors/error-x';
 import { DictionaryPage } from '../pages/dictionary';
 import { BizTreeConfigPage } from '../pages/biztree';
 import { FormDefinePage, FormSchemaDesigner } from '../pages/form';
+import { DataSourcePage } from '../pages/datasource';
 
 const options = {
   future: {
@@ -97,6 +103,18 @@ export const Routers = createBrowserRouter(
         {
           path: 'designer',
           element: <FormSchemaDesigner />,
+        },
+      ],
+    },
+    {
+      path: EXTERNAL_DATA_SOURCE_PATH,
+      element: <HeaderFooterLayout />,
+      errorElement: <ErrorPage />,
+      children: [
+        {
+          index: true,
+          path: '',
+          element: <DataSourcePage />,
         },
       ],
     },

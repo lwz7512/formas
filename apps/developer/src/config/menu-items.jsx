@@ -1,16 +1,20 @@
-// import { Link } from 'react-router-dom';
-
 import {
   AppstoreOutlined,
   BranchesOutlined,
   ClusterOutlined,
   FormOutlined,
+  DatabaseOutlined,
   // InfoCircleOutlined,
   // PieChartOutlined,
   // SettingOutlined,
 } from '@ant-design/icons';
 
-import { DICTIONARY_PATH, BIZTREE_PATH, FORM_DEFINE_PATH } from '@/constants';
+import {
+  DICTIONARY_PATH,
+  BIZTREE_PATH,
+  FORM_DEFINE_PATH,
+  EXTERNAL_DATA_SOURCE_PATH,
+} from '@/constants';
 
 /**
  * menu data from dashboard demos
@@ -35,5 +39,10 @@ export const devloperMenuItems = [
     label: 'App Define',
     key: FORM_DEFINE_PATH,
     icon: <FormOutlined />,
+  },
+  {
+    label: 'Data Source',
+    key: EXTERNAL_DATA_SOURCE_PATH,
+    icon: <DatabaseOutlined />,
   },
 ];

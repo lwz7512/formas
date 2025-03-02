@@ -25,6 +25,8 @@ export const BIZTREE_PATH = '/biztree/index';
 export const FORM_DEFINE_PATH = '/formdefine/index';
 /** @date 2025/01/03 */
 export const FORM_DEFINE_DESIGNER = '/formdefine/external-designer';
+/** @date 2025/03/02 */
+export const EXTERNAL_DATA_SOURCE_PATH = '/datasource/index';
 
 export const PATH_ERROR = {
   root: ROOTS_ERRORS,
