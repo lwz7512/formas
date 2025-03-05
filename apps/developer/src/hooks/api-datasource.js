@@ -1,4 +1,4 @@
-import { SERVICE_HOST_POST as host } from '@/config';
+import { SERVICE_GATE_API as host } from '@/config';
 import {
   vanillaPostData,
   vanillaDeleteData,

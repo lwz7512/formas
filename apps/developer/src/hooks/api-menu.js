@@ -1,15 +1,17 @@
-import { SERVICE_HOST_POST as host } from '@/config';
-import { vanillaPostData, vanillaDeleteData, vanillaPutData, vanillaGetData } from '.';
-
+import { SERVICE_GATE_API as host } from '@/config';
+import {
+  vanillaPostData,
+  vanillaDeleteData,
+  vanillaPutData,
+  vanillaGetData,
+} from '.';
 
 /**
  * 查询我的菜单树
  * @returns {Promise} form list
  */
 export const fetchMyMenuTree = async () => {
-  const result = await vanillaGetData(
-    `${host}/api/formas/menus/mine`
-  );
+  const result = await vanillaGetData(`${host}/api/formas/menus/mine`);
   return result;
 };
 
@@ -17,7 +19,7 @@ export const fetchMyMenuTree = async () => {
  * 查询菜单列表
  * @returns {Promise} form list
  */
-export const fetchMenuList = async (menuId) => {
+export const fetchMenuList = async menuId => {
   const result = await vanillaGetData(
     `${host}/api/formas/menus/${menuId}/table`
   );
@@ -28,7 +30,7 @@ export const fetchMenuList = async (menuId) => {
  * 查询菜单树
  * @returns {Promise} form list
  */
-export const fetchMenuTree = async (menuId) => {
+export const fetchMenuTree = async menuId => {
   const result = await vanillaGetData(
     `${host}/api/formas/menus/${menuId}/tree`
   );
@@ -50,22 +52,17 @@ export const createMenu = async item => {
   return result;
 };
 
-
 /**
  * 修改菜单
  */
 export const updateMenu = async item => {
-  const result = await vanillaPutData(
-    `${host}/api/formas/menus/${item.key}`,
-    {
-      title: item.title,
-      note: item.type,
-      sequence: item.value,
-    }
-  );
+  const result = await vanillaPutData(`${host}/api/formas/menus/${item.key}`, {
+    title: item.title,
+    note: item.type,
+    sequence: item.value,
+  });
   return result;
 };
-
 
 /**
  * 删除菜单

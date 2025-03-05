@@ -25,8 +25,8 @@ export const DataSourcePage = () => {
             Create New Data Source
           </Button>
         </Divider>
-        {/* Data Source Table */}
-        <DSTable />
+        {/* TODO: Data Source Table */}
+        <DSTable list={ds.dsItems} />
       </Flex>
       {/* == modals == */}
       <AddNewDSModal
