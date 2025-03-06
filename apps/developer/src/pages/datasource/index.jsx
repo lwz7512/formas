@@ -1,19 +1,19 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { App, Button, Divider, Layout, Tabs, theme, Tree } from 'antd';
+import { App, Layout, Tabs, theme, Tree } from 'antd';
+
+import { ROOT_BIZ_TREE_ID, ROOT_BIZ_TREE_NAME } from '@/config';
+import { FORM_DEFINE_PATH } from '@/constants';
 
 import { useDataSource } from '@/hooks/use-datasource';
 import { useBizTreeQuery } from '@/hooks/api-biztree';
 import { useTreeNodeStore } from '@/hooks/use-shared-treenode';
 
-import { ROOT_BIZ_TREE_ID, ROOT_BIZ_TREE_NAME } from '@/config';
-import { FORM_DEFINE_PATH } from '@/constants';
+import { AddNewDSModal, ModifyDSModal } from './modals';
+import { createTabItems } from './tabItems';
 
-import { DSTable } from './table';
-import { AddNewDSModal } from './modals';
-
-const { Content, Sider } = Layout;
+const { Sider } = Layout;
 
 /**
  * Form meta-data definition page
@@ -31,46 +31,9 @@ export const DataSourcePage = () => {
   const { onTreeNodeSelect } = useTreeNodeStore();
   const ds = useDataSource();
 
-  const items = [
-    {
-      key: 'form',
-      label: 'Form Define',
-      children: 'loading content...',
-    },
-    {
-      key: 'view',
-      label: 'View Define',
-      children: 'Content of Tab Pane 2',
-    },
-    {
-      key: 'datasource',
-      label: 'Datasouce Define',
-      children: (
-        <Content
-          className="form-define-tab"
-          style={{ padding: '0 24px', minHeight: '70vh' }}
-        >
-          <Divider
-            orientation="right"
-            style={{
-              borderColor: '#7cb305',
-            }}
-          >
-            <Button className="mb-4" type="primary" onClick={ds.openNewDSModal}>
-              Create New Data Source
-            </Button>
-          </Divider>
-
-          {/* TODO: Data Source Table */}
-          <DSTable list={ds.dsItems} />
-        </Content>
-      ),
-    },
-  ];
-
   // TODO: navigate to other page module ...
   const onChange = key => {
-    console.log(`## switched to ${key} tab!`);
+    // console.log(`## switched to ${key} tab!`);
     if (key == 'form') {
       navigate(FORM_DEFINE_PATH);
     }
@@ -106,10 +69,10 @@ export const DataSourcePage = () => {
       <Tabs
         className="ml-4 w-full"
         defaultActiveKey="datasource"
-        items={items}
+        items={createTabItems(ds)}
         onChange={onChange}
       />
-      {/* == modals == */}
+      {/* == modals: == */}
       <AddNewDSModal
         datasource={ds.datasource}
         isNewDSOpen={ds.isNewDSOpen}
@@ -117,6 +80,15 @@ export const DataSourcePage = () => {
         handleDSCreation={ds.handleDSCreation}
         handleDSModalClose={ds.closeNewDSModal}
       />
+      {/* TODO: update datasource */}
+      <ModifyDSModal
+        datasource={ds.datasource}
+        isModifyDSOpen={ds.isModifyDSOpen}
+        onDSFieldChange={ds.onDSFieldChange}
+        handleDSUpdate={ds.handleDSUpdate}
+        handleDSModalClose={ds.closeModifyDSModal}
+      />
+      {/* TODO: delete datasource */}
     </Layout>
   );
 };

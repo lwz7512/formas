@@ -37,11 +37,9 @@ export const useDataSource = () => {
   const { dsItems, memRefreshDSItems } = useDataSourceList();
 
   const [isNewDSOpen, setIsNewDSOpen] = useState(false);
+  const [isModifyDSOpen, setIsModifyDSOpen] = useState(false);
 
-  const openNewDSModal = () => setIsNewDSOpen(true);
-  const closeNewDSModal = () => setIsNewDSOpen(false);
-
-  const [datasource, setDatasource] = useState({
+  const emptyDS = {
     title: '',
     driver: '',
     host: '',
@@ -50,25 +48,59 @@ export const useDataSource = () => {
     instance: '',
     user: '',
     password: '',
-  });
+  };
+  const [datasource, setDatasource] = useState({});
 
   const onDSFieldChange = (field, value) => {
     setDatasource({ ...datasource, [field]: value });
   };
 
+  /**
+   * open new ds modal, and init blank values
+   */
+  const openNewDSModal = () => {
+    setIsNewDSOpen(true);
+    setDatasource(emptyDS);
+  };
+  const closeNewDSModal = () => setIsNewDSOpen(false);
+  const closeModifyDSModal = () => setIsModifyDSOpen(false);
+
+  /**
+   * refresh datasource list after modal closed
+   */
   const handleDSCreation = () => {
     // console.log(datasource);
     closeNewDSModal();
     createDatasources(datasource).then(() => memRefreshDSItems());
   };
 
+  const handleDSUpdate = () => {
+    // TODO: ...
+  };
+
+  const editDatasource = record => {
+    setIsModifyDSOpen(true);
+    setDatasource(record);
+  };
+
+  const deleteDatasource = record => {
+    console.log(`>>> to delete ds:`);
+    console.log(record);
+    // TODO: ...
+  };
+
   return {
     dsItems,
     datasource,
     isNewDSOpen,
+    isModifyDSOpen,
     openNewDSModal,
     closeNewDSModal,
     onDSFieldChange,
     handleDSCreation,
+    editDatasource,
+    deleteDatasource,
+    closeModifyDSModal,
+    handleDSUpdate,
   };
 };
