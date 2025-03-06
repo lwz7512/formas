@@ -1,4 +1,4 @@
-import { Table } from 'antd';
+import { Button, Table } from 'antd';
 
 const columns = [
   {
@@ -40,6 +40,35 @@ const columns = [
     title: 'Password',
     dataIndex: 'password',
     key: 'password',
+  },
+  {
+    title: 'Actions',
+    dataIndex: 'actions',
+    width: '30%',
+    render: (_, record) => {
+      return (
+        <span data-key={record.key}>
+          <Button
+            size="small"
+            color="primary"
+            variant="dashed"
+            className="mr-2"
+            onClick={() => console.log(`to edit ds: ${record.title}`)}
+          >
+            Edit
+          </Button>
+          <Button
+            size="small"
+            color="primary"
+            variant="dashed"
+            className="mr-2"
+            onClick={() => console.log(`to delete ds: ${record.title}`)}
+          >
+            Delete
+          </Button>
+        </span>
+      );
+    },
   },
 ];
 

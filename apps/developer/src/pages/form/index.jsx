@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   App,
   Button,
@@ -11,8 +13,12 @@ import {
 } from 'antd';
 
 import { EditableCell } from '@/components';
+import { ROOT_BIZ_TREE_ID, ROOT_BIZ_TREE_NAME } from '@/config';
+import { EXTERNAL_DATA_SOURCE_PATH } from '@/constants';
 
+import { useBizTreeQuery } from '@/hooks/api-biztree';
 import { useFormPage } from '@/hooks/use-form';
+import { useTreeNodeStore } from '@/hooks/use-shared-treenode';
 
 import { useEditableColumns } from './columns';
 import { AddNewFormModal } from './modals';
@@ -27,14 +33,18 @@ const { Content, Sider } = Layout;
  * @returns
  */
 export const FormDefinePage = () => {
+  const navigate = useNavigate();
+
   const { message } = App.useApp();
 
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  const { forms, treeSelectData, isNewFormOpen, newChildNode, ...handlers } =
-    useFormPage(message);
+  const { loadTreeBy, treeSelectData } = useBizTreeQuery();
+  const { newChildNode, onTreeNodeSelect } = useTreeNodeStore();
+
+  const { forms, isNewFormOpen, ...handlers } = useFormPage(message);
 
   const { columns, form } = useEditableColumns(handlers.refreshForms);
 
@@ -43,7 +53,10 @@ export const FormDefinePage = () => {
       key: 'form',
       label: 'Form Define',
       children: (
-        <Content style={{ padding: '0 24px', minHeight: '70vh' }}>
+        <Content
+          className="form-define-tab"
+          style={{ padding: '0 24px', minHeight: '70vh' }}
+        >
           <Divider
             orientation="right"
             style={{
@@ -84,14 +97,21 @@ export const FormDefinePage = () => {
     {
       key: 'datasource',
       label: 'Datasouce Define',
-      children: 'Content of Tab Pane 3',
+      children: 'loading content...',
     },
   ];
 
   // TODO: navigate to other page module ...
   const onChange = key => {
     console.log(`## switched to ${key} tab!`);
+    if (key == 'datasource') {
+      navigate(EXTERNAL_DATA_SOURCE_PATH);
+    }
   };
+
+  useEffect(() => {
+    loadTreeBy(ROOT_BIZ_TREE_ID, ROOT_BIZ_TREE_NAME);
+  }, [loadTreeBy]);
 
   return (
     <Layout
@@ -112,17 +132,17 @@ export const FormDefinePage = () => {
           }}
           showIcon={false}
           treeData={treeSelectData}
-          onSelect={handlers.onTreeNodeSelect}
+          onSelect={onTreeNodeSelect}
         />
       </Sider>
       {/* main content reside in tab */}
       <Tabs
-        className=" ml-4"
-        defaultActiveKey="1"
+        className="ml-4 w-full"
+        defaultActiveKey="form"
         items={items}
         onChange={onChange}
       />
-      ;{/* === New Form Modal === */}
+      {/* === New Form Modal === */}
       <AddNewFormModal
         isFormModalOpen={isNewFormOpen}
         selectedBizModel={newChildNode.pid}

@@ -1,11 +1,8 @@
 import { snakeCase } from 'lodash';
 
-import { useState, useEffect } from 'react';
-
-import { ROOT_BIZ_TREE_ID, ROOT_BIZ_TREE_NAME } from '@/config';
+import { useState } from 'react';
 
 import { useBizTreeRoots } from './api-biztree';
-import { useBizTreeQuery } from './api-biztree';
 import { createFormDefine, useFormList } from './api-form';
 
 /**
@@ -14,21 +11,6 @@ import { createFormDefine, useFormList } from './api-form';
  * @returns
  */
 export const useFormPage = message => {
-  const { loadTreeBy, treeSelectData } = useBizTreeQuery();
-
-  const [newChildNode, setNewChildNode] = useState({
-    pid: '', // to set biz-module id
-    title: '',
-    description: '',
-  });
-  const onTreeNodeSelect = (selectedKeys, { node }) => {
-    if (node.pos == '0-0') return; // root node
-    const [pid] = selectedKeys;
-    // console.log(`>>> node clicked: ${pid}`);
-    // remember selected parent node
-    setNewChildNode({ ...newChildNode, pid });
-  };
-
   const { forms, refreshForms } = useFormList();
 
   const onFormCreatSuccess = () => {
@@ -43,20 +25,13 @@ export const useFormPage = message => {
   const { isNewFormOpen, openNewFormModal, closeFormModal, createNewForm } =
     useFormCRUD(onFormCreatSuccess, onFormCreatFailure);
 
-  useEffect(() => {
-    loadTreeBy(ROOT_BIZ_TREE_ID, ROOT_BIZ_TREE_NAME);
-  }, [loadTreeBy]);
-
   return {
     forms,
     isNewFormOpen,
-    newChildNode,
-    treeSelectData,
     refreshForms,
     openNewFormModal,
     closeFormModal,
     createNewForm,
-    onTreeNodeSelect,
   };
 };
 
