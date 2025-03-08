@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useAsyncFn } from 'react-use';
 
-import { fetchDatasourceList, createDatasources } from './api-datasource';
+import {
+  fetchDatasourceList,
+  createDatasources,
+  updateDatasources,
+  removeDatasources,
+} from './api-datasource';
 
 /**
  * Refreshable data source list hook
@@ -75,7 +80,8 @@ export const useDataSource = () => {
   };
 
   const handleDSUpdate = () => {
-    // TODO: ...
+    closeModifyDSModal();
+    updateDatasources(datasource).then(() => memRefreshDSItems());
   };
 
   const editDatasource = record => {
@@ -84,9 +90,7 @@ export const useDataSource = () => {
   };
 
   const deleteDatasource = record => {
-    console.log(`>>> to delete ds:`);
-    console.log(record);
-    // TODO: ...
+    removeDatasources(record.key).then(() => memRefreshDSItems());
   };
 
   return {
