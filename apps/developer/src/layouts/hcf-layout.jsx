@@ -4,10 +4,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { App, Breadcrumb, Layout, Menu } from 'antd';
 
 import { devloperMenuItems } from '@/config/menu-items';
-import {
-  EXTERNAL_DATA_SOURCE_PATH as DSRoute,
-  FORM_DEFINE_PATH as FMRoute,
-} from '@/constants';
 
 import './styles.css';
 
@@ -32,8 +28,7 @@ export const HCFLayout = ({ children }) => {
   // select the menu if user refreshed
   useEffect(() => {
     // keep the app define menu selected!
-    const variantPath = pathname == DSRoute ? FMRoute : pathname;
-    setCurrent(variantPath);
+    setCurrent(pathname);
   }, [pathname]);
 
   /**

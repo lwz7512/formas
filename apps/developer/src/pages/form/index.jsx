@@ -94,11 +94,6 @@ export const FormDefinePage = () => {
       label: 'View Define',
       children: 'Content of Tab Pane 2',
     },
-    {
-      key: 'datasource',
-      label: 'Datasouce Define',
-      children: 'loading content...',
-    },
   ];
 
   // TODO: navigate to other page module ...
