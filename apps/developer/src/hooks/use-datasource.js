@@ -6,6 +6,7 @@ import {
   createDatasources,
   updateDatasources,
   removeDatasources,
+  testDatasourcesConnection,
 } from './api-datasource';
 
 /**
@@ -38,7 +39,7 @@ export const useDataSourceList = () => {
  * use data source api
  * @2025/03/02
  */
-export const useDataSource = () => {
+export const useDataSource = (messageInstance, notificationInstance) => {
   const { dsItems, memRefreshDSItems } = useDataSourceList();
 
   const [isNewDSOpen, setIsNewDSOpen] = useState(false);
@@ -93,6 +94,19 @@ export const useDataSource = () => {
     removeDatasources(record.key).then(() => memRefreshDSItems());
   };
 
+  const testDatasource = record => {
+    console.log(record);
+    testDatasourcesConnection(record.key).then(result => {
+      console.log(result);
+      if (result.errCode === 200) {
+        notificationInstance.success({ message: 'connection success!' });
+      } else {
+        notificationInstance.error({ message: 'connection failed!' });
+      }
+    });
+    notificationInstance.info({ message: 'connection testing...' });
+  };
+
   return {
     dsItems,
     datasource,
@@ -106,5 +120,6 @@ export const useDataSource = () => {
     deleteDatasource,
     closeModifyDSModal,
     handleDSUpdate,
+    testDatasource,
   };
 };

@@ -41,6 +41,9 @@ export const DSTable = ({ list, ds }) => {
       title: 'Password',
       dataIndex: 'password',
       key: 'password',
+      render: (_, record) => {
+        return <span>{record.password ? '******' : ''}</span>;
+      },
     },
     {
       title: 'Actions',
@@ -57,6 +60,15 @@ export const DSTable = ({ list, ds }) => {
               onClick={() => ds.editDatasource(record)}
             >
               Edit
+            </Button>
+            <Button
+              size="small"
+              color="primary"
+              variant="dashed"
+              className="mr-2"
+              onClick={() => ds.testDatasource(record)}
+            >
+              Test
             </Button>
             <Popconfirm
               title="Delete the data source"

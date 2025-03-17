@@ -16,8 +16,8 @@ const tableRowGenerator = form => ({
 });
 
 export const useFormList = () => {
-  const [state, doFetch] = useAsyncFn(async () => {
-    const result = await fetchFormDefineList();
+  const [state, doFetch] = useAsyncFn(async sysModuleId => {
+    const result = await fetchFormDefineList(sysModuleId);
     const { datas } = result;
     if (!datas) {
       console.warn(`## No result for dictionary definition!`);
@@ -41,7 +41,7 @@ export const useFormList = () => {
  * 查询表单定义列表 with `post` method
  * @returns {Promise} form list
  */
-export const fetchFormDefineList = async () => {
+export const fetchFormDefineList = async sysModuleId => {
   const params = {
     currPage: 1,
     pageSize: 100,

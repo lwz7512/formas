@@ -10,13 +10,13 @@ import { DSTable } from './table';
  * @returns
  */
 export const DataSourcePage = () => {
-  const { message } = App.useApp();
+  const { message, notification } = App.useApp();
 
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  const ds = useDataSource();
+  const ds = useDataSource(message, notification);
 
   return (
     <Layout
