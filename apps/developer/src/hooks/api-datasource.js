@@ -38,6 +38,7 @@ export const createDatasources = async item => {
     instance: item.instance,
     user: item.user,
     password: item.password,
+    isDefault: item.isDefault || 0,
   });
   return result;
 };
@@ -57,6 +58,7 @@ export const updateDatasources = async item => {
       instance: item.instance,
       user: item.user,
       password: item.password,
+      isDefault: item.isDefault,
     }
   );
   return result;
