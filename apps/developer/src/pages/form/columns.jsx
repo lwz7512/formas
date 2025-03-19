@@ -10,7 +10,7 @@ import { removeFormDefine, updateFormDefine } from '@/hooks/api-form';
  * Manage form CRUD operations
  * @returns
  */
-export const useEditableColumns = refreshForms => {
+export const useEditableColumns = (refreshForms, moduleId) => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
@@ -34,7 +34,7 @@ export const useEditableColumns = refreshForms => {
 
   const deleteRowHandler = async record => {
     await removeFormDefine(record.key);
-    await refreshForms();
+    await refreshForms(moduleId);
   };
 
   const updateFormRowHandler = async key => {
@@ -42,7 +42,7 @@ export const useEditableColumns = refreshForms => {
     // console.log(row);
     setEditingKey(''); // close edit state
     await updateFormDefine({ key, ...row });
-    await refreshForms();
+    await refreshForms(moduleId);
   };
 
   const cancelChangeHandler = () => {
@@ -56,12 +56,12 @@ export const useEditableColumns = refreshForms => {
       key: 'title',
       editable: true,
     },
-    {
-      title: 'Module ID',
-      dataIndex: 'moduleId',
-      key: 'moduleId',
-      width: '20%',
-    },
+    // {
+    //   title: 'Module ID',
+    //   dataIndex: 'moduleId',
+    //   key: 'moduleId',
+    //   width: '20%',
+    // },
     {
       title: 'Seqence',
       dataIndex: 'sequence',

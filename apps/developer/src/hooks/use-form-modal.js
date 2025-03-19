@@ -4,6 +4,11 @@ import { ROOT_BIZ_TREE_ID, ROOT_BIZ_TREE_NAME } from '@/config';
 
 import { useBizTreeQuery } from './api-biztree';
 
+/**
+ * form creation modal
+ * @param {string} selectedBizModel
+ * @returns
+ */
 export const useFormModal = selectedBizModel => {
   const [moduleValue, setModuleValue] = useState();
 

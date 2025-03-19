@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 import { useAsyncFn } from 'react-use';
 
 import { SERVICE_GATE_API as host } from '@/config';
@@ -7,7 +5,7 @@ import {
   vanillaPostData,
   vanillaDeleteData,
   vanillaPutData,
-  vanillaGetData,
+  // vanillaGetData,
 } from '.';
 
 const tableRowGenerator = form => ({
@@ -26,10 +24,6 @@ export const useFormList = () => {
     return datas.map(tableRowGenerator);
   }, []);
 
-  useEffect(() => {
-    doFetch();
-  }, [doFetch]);
-
   return {
     loading: state.loading,
     forms: state.value,
@@ -42,6 +36,15 @@ export const useFormList = () => {
  * @returns {Promise} form list
  */
 export const fetchFormDefineList = async sysModuleId => {
+  const searchs = sysModuleId
+    ? [
+        {
+          column: 'moduleId',
+          op: 'eq',
+          value: sysModuleId,
+        },
+      ]
+    : [];
   const params = {
     currPage: 1,
     pageSize: 100,
@@ -51,7 +54,7 @@ export const fetchFormDefineList = async sysModuleId => {
         dir: 'asc',
       },
     ],
-    searchs: [],
+    searchs,
   };
   const result = await vanillaPostData(
     `${host}/api/formas/forms/filter`,

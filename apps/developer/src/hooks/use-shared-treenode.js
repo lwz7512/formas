@@ -64,7 +64,13 @@ export const useTreeNodeStore = () => {
   };
 
   return {
+    /**
+     * newly selected tree node
+     */
     newChildNode,
+    /**
+     * handler for tree node selection
+     */
     onTreeNodeSelect,
   };
 };

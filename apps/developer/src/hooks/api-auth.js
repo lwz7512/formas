@@ -31,6 +31,7 @@ export const useLogin = (loginName, password) => {
     // got token and cache it for authentication in later request!
     if (data) {
       localStorage.setItem('formas.jwt', data);
+      localStorage.setItem('formas.lastLogin', new Date().toISOString());
     } else {
       console.warn(`## login failed, no token returned!`);
     }

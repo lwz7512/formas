@@ -1,6 +1,6 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import {
   App,
   Button,
@@ -33,7 +33,10 @@ import {
   PATH_DOCS,
   PATH_GITHUB,
   PATH_LANDING,
+  HOME_AFTER_LOGIN,
 } from '@/constants';
+
+import { isLoggedInValid } from '@/utils';
 
 const { Header, Content, Footer } = Layout;
 
@@ -45,7 +48,7 @@ export const GuestLayout = () => {
   const [navFill, setNavFill] = useState(false);
   const [open, setOpen] = useState(false);
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const showDrawer = () => {
     setOpen(true);
@@ -56,14 +59,25 @@ export const GuestLayout = () => {
   };
 
   useEffect(() => {
-    window.addEventListener('scroll', () => {
+    const handleScroll = () => {
       if (window.scrollY > 50) {
         setNavFill(true);
       } else {
         setNavFill(false);
       }
-    });
-  }, []);
+    };
+    window.addEventListener('scroll', handleScroll);
+
+    // also check if user have logged in
+    const isLoggedIn = isLoggedInValid();
+    if (isLoggedIn) {
+      navigate(HOME_AFTER_LOGIN);
+    }
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [navigate]);
 
   return (
     <App>

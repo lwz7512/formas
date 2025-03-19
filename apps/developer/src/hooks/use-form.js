@@ -1,21 +1,25 @@
 import { snakeCase } from 'lodash';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { useBizTreeRoots } from './api-biztree';
 import { createFormDefine, useFormList } from './api-form';
 
 /**
- * for `FormDefinePage`
+ * for `FormDefinePage` module
  * @param {Function} message
  * @returns
  */
-export const useFormPage = message => {
+export const useFormPage = (message, moduleId) => {
   const { forms, refreshForms } = useFormList();
+
+  useEffect(() => {
+    refreshForms(moduleId);
+  }, [refreshForms, moduleId]);
 
   const onFormCreatSuccess = () => {
     message.success('New form created!');
-    refreshForms();
+    refreshForms(moduleId);
   };
 
   const onFormCreatFailure = () => {

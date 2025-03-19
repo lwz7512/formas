@@ -42,11 +42,29 @@ export const FormDefinePage = () => {
   } = theme.useToken();
 
   const { loadTreeBy, treeSelectData } = useBizTreeQuery();
+  /**
+   * shared tree node store exposed for other page
+   */
   const { newChildNode, onTreeNodeSelect } = useTreeNodeStore();
 
-  const { forms, isNewFormOpen, ...handlers } = useFormPage(message);
+  /**
+   * form page handlers, load all the forms by default
+   */
+  const { forms, isNewFormOpen, ...handlers } = useFormPage(
+    message,
+    newChildNode.pid
+  );
 
-  const { columns, form } = useEditableColumns(handlers.refreshForms);
+  const { columns, form } = useEditableColumns(
+    handlers.refreshForms,
+    newChildNode.pid
+  );
+
+  const treeNodeSelectHandler = (selectedKeys, info) => {
+    const [pid] = selectedKeys;
+    onTreeNodeSelect(selectedKeys, info);
+    handlers.refreshForms(pid);
+  };
 
   const items = [
     {
@@ -66,6 +84,7 @@ export const FormDefinePage = () => {
             <Button
               className="mb-4"
               type="primary"
+              disabled={!newChildNode.pid}
               onClick={handlers.openNewFormModal}
             >
               Create New Form
@@ -73,6 +92,8 @@ export const FormDefinePage = () => {
           </Divider>
 
           {/* Form list */}
+          {/* All forms are loaded by default */}
+          {/* list of forms are loaded by nodeId */}
           <Form form={form} component={false}>
             <Table
               components={{
@@ -127,7 +148,7 @@ export const FormDefinePage = () => {
           }}
           showIcon={false}
           treeData={treeSelectData}
-          onSelect={onTreeNodeSelect}
+          onSelect={treeNodeSelectHandler}
         />
       </Sider>
       {/* main content reside in tab */}
