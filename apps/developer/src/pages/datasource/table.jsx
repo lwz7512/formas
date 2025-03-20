@@ -38,11 +38,19 @@ export const DSTable = ({ list, ds }) => {
       key: 'user',
     },
     {
-      title: 'Password',
-      dataIndex: 'password',
-      key: 'password',
+      title: 'Is Default',
+      dataIndex: 'isDefault',
+      key: 'isDefault',
       render: (_, record) => {
-        return <span>{record.password ? '******' : ''}</span>;
+        return (
+          <span
+            className={
+              record.isDefault ? 'font-bold' : 'font-thin text-gray-500'
+            }
+          >
+            {record.isDefault ? 'Yes' : 'No'}
+          </span>
+        );
       },
     },
     {

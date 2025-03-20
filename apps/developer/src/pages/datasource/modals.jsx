@@ -1,4 +1,4 @@
-import { Modal, Input } from 'antd';
+import { Modal, Input, Select } from 'antd';
 
 export const AddNewDSModal = ({
   isNewDSOpen,
@@ -22,13 +22,46 @@ export const AddNewDSModal = ({
       value={datasource.title}
       onChange={evt => onDSFieldChange('title', evt.target.value)}
     />
-    <h2>Driver</h2>
-    <Input
+
+    <h2>Select Driver</h2>
+    <Select
       name="driver"
-      placeholder="your database driver"
-      className=" mb-2"
+      className="w-full mb-2"
+      placeholder="Select a driver"
       value={datasource.driver}
-      onChange={evt => onDSFieldChange('driver', evt.target.value)}
+      onChange={value => onDSFieldChange('driver', value)}
+      options={[
+        {
+          label: 'MySQL',
+          value: 'mysql',
+        },
+        {
+          label: 'MariaDB',
+          value: 'mariadb',
+        },
+        {
+          label: 'SQL Server',
+          value: 'sqlserver',
+        },
+      ]}
+    />
+    <h2>Select Default or Not</h2>
+    <Select
+      name="isDefault"
+      className="mb-2 w-full"
+      placeholder="Select as default"
+      value={datasource.isDefault}
+      onChange={value => onDSFieldChange('isDefault', value)}
+      options={[
+        {
+          label: 'Yes',
+          value: 1,
+        },
+        {
+          label: 'No',
+          value: 0,
+        },
+      ]}
     />
     <h2>Host</h2>
     <Input
@@ -103,13 +136,45 @@ export const ModifyDSModal = ({
       value={datasource.title}
       onChange={evt => onDSFieldChange('title', evt.target.value)}
     />
-    <h2>Driver</h2>
-    <Input
+    <h2>Select Driver</h2>
+    <Select
       name="driver"
-      placeholder="your database driver"
-      className=" mb-2"
+      className="w-full mb-2"
+      placeholder="Select a driver"
       value={datasource.driver}
-      onChange={evt => onDSFieldChange('driver', evt.target.value)}
+      onChange={value => onDSFieldChange('driver', value)}
+      options={[
+        {
+          label: 'MySQL',
+          value: 'mysql',
+        },
+        {
+          label: 'MariaDB',
+          value: 'mariadb',
+        },
+        {
+          label: 'SQL Server',
+          value: 'sqlserver',
+        },
+      ]}
+    />
+    <h2>Select Default or Not</h2>
+    <Select
+      name="isDefault"
+      className="mb-2 w-full"
+      placeholder="Select as default"
+      value={datasource.isDefault}
+      onChange={value => onDSFieldChange('isDefault', value)}
+      options={[
+        {
+          label: 'Yes',
+          value: 1,
+        },
+        {
+          label: 'No',
+          value: 0,
+        },
+      ]}
     />
     <h2>Host</h2>
     <Input
