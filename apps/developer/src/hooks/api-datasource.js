@@ -40,6 +40,10 @@ export const createDatasources = async item => {
     password: item.password,
     isDefault: item.isDefault || 0,
   });
+  // check `errCode` and `errMsg` from response!
+  if (result.errCode !== 200) {
+    throw new Error(result.errMsg);
+  }
   return result;
 };
 
@@ -61,6 +65,10 @@ export const updateDatasources = async item => {
       isDefault: item.isDefault,
     }
   );
+  // check `errCode` and `errMsg` from response!
+  if (result.errCode !== 200) {
+    throw new Error(result.errMsg);
+  }
   return result;
 };
 
@@ -87,5 +95,9 @@ export const testDatasourcesConnection = async key => {
       sqlStmt: sqlStmt,
     }
   );
+  // check `errCode` and `errMsg` from response!
+  if (result.errCode !== 200) {
+    throw new Error(result.errMsg);
+  }
   return result;
 };

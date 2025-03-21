@@ -163,7 +163,7 @@ export const ModifyDSModal = ({
       name="isDefault"
       className="mb-2 w-full"
       placeholder="Select as default"
-      value={datasource.isDefault}
+      value={datasource.isDefault || 0}
       onChange={value => onDSFieldChange('isDefault', value)}
       options={[
         {

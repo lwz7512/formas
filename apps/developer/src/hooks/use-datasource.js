@@ -39,7 +39,7 @@ export const useDataSourceList = () => {
  * use data source api
  * @2025/03/02
  */
-export const useDataSource = (messageInstance, notificationInstance) => {
+export const useDataSource = notificationInstance => {
   const { dsItems, memRefreshDSItems } = useDataSourceList();
 
   const [isNewDSOpen, setIsNewDSOpen] = useState(false);
@@ -80,9 +80,27 @@ export const useDataSource = (messageInstance, notificationInstance) => {
     createDatasources(datasource).then(() => memRefreshDSItems());
   };
 
+  /**
+   * handle datasource update, and close modify modal after update,
+   * if password is not filled, return error message!
+   * @2025/03/21
+   */
   const handleDSUpdate = () => {
+    // check password is filled!
+    if (!datasource.password) {
+      return notificationInstance.error({ message: 'password is required!' });
+    }
+    // update datasource
+    updateDatasources(datasource)
+      .then(() => {
+        memRefreshDSItems();
+        notificationInstance.success({ message: 'update success!' });
+      })
+      .catch(error => {
+        notificationInstance.error({ message: error.message });
+      });
+    // close modify modal
     closeModifyDSModal();
-    updateDatasources(datasource).then(() => memRefreshDSItems());
   };
 
   const editDatasource = record => {
@@ -95,7 +113,7 @@ export const useDataSource = (messageInstance, notificationInstance) => {
   };
 
   const testDatasource = record => {
-    console.log(record);
+    // console.log(record);
     testDatasourcesConnection(record.key).then(result => {
       console.log(result);
       if (result.errCode === 200) {
