@@ -1,0 +1,106 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { App, Layout, Tabs, theme, Tree } from 'antd';
+
+import { ROOT_BIZ_TREE_ID, ROOT_BIZ_TREE_NAME } from '@/config';
+import { FORM_DEFINE_PATH } from '@/constants';
+
+import { useBizTreeQuery } from '@/hooks/api-biztree';
+import { useTreeNodeStore } from '@/hooks/use-shared-treenode';
+import { useViewList } from '@/hooks/api-dataview';
+
+import { DVTable } from './table';
+
+const { Content, Sider } = Layout;
+
+/**
+ * Data view page
+ * @date 2025/03/23
+ * @returns
+ */
+export const DataViewPage = () => {
+  const navigate = useNavigate();
+
+  const { message, notification } = App.useApp();
+
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
+
+  const { loadTreeBy, treeSelectData } = useBizTreeQuery();
+  /**
+   * shared tree node store exposed for other page
+   */
+  const { newChildNode, onTreeNodeSelect } = useTreeNodeStore();
+
+  const treeNodeSelectHandler = (selectedKeys, info) => {
+    const [pid] = selectedKeys;
+    console.log(`>>> to select node: ${pid}`);
+    onTreeNodeSelect(selectedKeys, info);
+    // TODO: load dataviews by pid ...
+  };
+
+  // TODO: navigate to other page module ...
+  const onChange = key => {
+    // console.log(`## switched to ${key} tab!`);
+    if (key == 'form') {
+      navigate(FORM_DEFINE_PATH);
+    }
+  };
+
+  const items = [
+    {
+      key: 'form',
+      label: 'Form Define',
+      children: 'loading content...',
+    },
+    {
+      key: 'dataview',
+      label: 'View Defined',
+      children: (
+        <Content
+          className="form-define-tab"
+          style={{ padding: '0 24px', minHeight: '70vh' }}
+        >
+          <DVTable moduleId={newChildNode.pid} />
+        </Content>
+      ),
+    },
+  ];
+
+  useEffect(() => {
+    loadTreeBy(ROOT_BIZ_TREE_ID, ROOT_BIZ_TREE_NAME);
+  }, [loadTreeBy]);
+
+  return (
+    <Layout
+      style={{
+        padding: '24px 0',
+        background: colorBgContainer,
+        borderRadius: borderRadiusLG,
+      }}
+    >
+      <Sider
+        style={{ background: colorBgContainer, borderRight: '1px solid #CCC' }}
+        width={200}
+      >
+        {/* TODO: using biz-tree component... */}
+        <Tree
+          showLine={{
+            showLeafIcon: true,
+          }}
+          showIcon={false}
+          treeData={treeSelectData}
+          onSelect={treeNodeSelectHandler}
+        />
+      </Sider>
+      {/* main content reside in tab */}
+      <Tabs
+        className="ml-4 w-full"
+        defaultActiveKey="dataview"
+        items={items}
+        onChange={onChange}
+      />
+    </Layout>
+  );
+};

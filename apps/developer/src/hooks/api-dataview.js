@@ -1,3 +1,5 @@
+import { useAsyncFn } from 'react-use';
+
 import { SERVICE_GATE_API as host } from '@/config';
 import {
   vanillaPostData,
@@ -6,11 +8,43 @@ import {
   // vanillaGetData,
 } from '.';
 
+const tableRowGenerator = view => ({
+  ...view,
+  key: view.id, // key property is required by ant-table data source
+});
+
+export const useViewList = () => {
+  const [state, doFetch] = useAsyncFn(async sysModuleId => {
+    const result = await fetchDataviewList(sysModuleId);
+    const { datas } = result;
+    if (!datas) {
+      console.warn(`## No result for dictionary definition!`);
+      return null;
+    }
+    return datas.map(tableRowGenerator);
+  }, []);
+
+  return {
+    loading: state.loading,
+    views: state.value,
+    refreshViews: doFetch,
+  };
+};
+
 /**
  * 查询数据视图定义列表 with `post` method
  * @returns {Promise} form list
  */
-export const fetchDataviewList = async () => {
+export const fetchDataviewList = async sysModuleId => {
+  const searchs = sysModuleId
+    ? [
+        {
+          column: 'moduleId',
+          op: 'eq',
+          value: sysModuleId,
+        },
+      ]
+    : [];
   const params = {
     currPage: 1,
     pageSize: 100,
@@ -20,7 +54,7 @@ export const fetchDataviewList = async () => {
         dir: 'asc',
       },
     ],
-    searchs: [],
+    searchs,
   };
   const result = await vanillaPostData(
     `${host}/api/formas/dataviews/filter`,
@@ -30,18 +64,21 @@ export const fetchDataviewList = async () => {
 };
 
 /**
- * 创建数据视图定义
- * @param {{moduleId: string, formDefineId: string, title: string, note: string, sequence:string}} item
+ * 创建数据视图定义(从表单定义创建)
+ * @param {{moduleId: string, id: string, title: string, note: string, sequence: string}} formRecord
  */
-export const createDataview = async item => {
-  const { moduleId, formDefineId, title, note, sequence } = item;
+export const createDataview = async formRecord => {
+  const { moduleId, id, title, note, sequence } = formRecord;
   const result = await vanillaPostData(`${host}/api/formas/dataviews`, {
-    moduleId: moduleId,
-    formDefineId: formDefineId,
-    title: title,
-    note: note,
-    sequence: sequence,
+    formId: id,
+    moduleId,
+    title,
+    note,
+    sequence,
   });
+  if (result.errCode !== 200) {
+    throw new Error(result.errMsg);
+  }
   return result;
 };
 
@@ -57,6 +94,9 @@ export const updateDataview = async item => {
       sequence: item.sequence,
     }
   );
+  if (result.errCode !== 200) {
+    throw new Error(result.errMsg);
+  }
   return result;
 };
 

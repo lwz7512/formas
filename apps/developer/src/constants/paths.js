@@ -27,6 +27,8 @@ export const FORM_DEFINE_PATH = '/formdefine/index';
 export const FORM_DEFINE_DESIGNER = '/formdefine/external-designer';
 /** @date 2025/03/02 */
 export const EXTERNAL_DATA_SOURCE_PATH = '/datasource/index';
+/** @date 2025/03/23 */
+export const DATA_VIEW_PATH = '/dataview/index';
 
 export const PATH_ERROR = {
   root: ROOTS_ERRORS,

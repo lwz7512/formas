@@ -69,6 +69,8 @@ export const GuestLayout = () => {
     window.addEventListener('scroll', handleScroll);
 
     // also check if user have logged in
+    // TODO: leave this to `Yue` to re-implement as a hook!
+    // @2025-03-22
     const isLoggedIn = isLoggedInValid();
     if (isLoggedIn) {
       navigate(HOME_AFTER_LOGIN);

@@ -14,7 +14,7 @@ import {
 
 import { EditableCell } from '@/components';
 import { ROOT_BIZ_TREE_ID, ROOT_BIZ_TREE_NAME } from '@/config';
-import { EXTERNAL_DATA_SOURCE_PATH } from '@/constants';
+import { DATA_VIEW_PATH } from '@/constants';
 
 import { useBizTreeQuery } from '@/hooks/api-biztree';
 import { useFormPage } from '@/hooks/use-form';
@@ -30,12 +30,14 @@ const { Content, Sider } = Layout;
 
 /**
  * Form meta-data definition page
+ *
+ * @date 2024/12/31
  * @returns
  */
 export const FormDefinePage = () => {
   const navigate = useNavigate();
 
-  const { message } = App.useApp();
+  const { message, notification } = App.useApp();
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -56,8 +58,9 @@ export const FormDefinePage = () => {
   );
 
   const { columns, form } = useEditableColumns(
+    newChildNode.pid,
     handlers.refreshForms,
-    newChildNode.pid
+    notification
   );
 
   const treeNodeSelectHandler = (selectedKeys, info) => {
@@ -92,8 +95,8 @@ export const FormDefinePage = () => {
           </Divider>
 
           {/* Form list */}
-          {/* All forms are loaded by default */}
-          {/* list of forms are loaded by nodeId */}
+          {/* All forms are loaded by default, */}
+          {/* list of forms are loaded by tree nodeId */}
           <Form form={form} component={false}>
             <Table
               components={{
@@ -111,17 +114,17 @@ export const FormDefinePage = () => {
       ),
     },
     {
-      key: 'view',
-      label: 'View Define',
-      children: 'Content of Tab Pane 2',
+      key: 'dataview',
+      label: 'View Defined',
+      children: 'loading content...',
     },
   ];
 
   // TODO: navigate to other page module ...
   const onChange = key => {
-    console.log(`## switched to ${key} tab!`);
-    if (key == 'datasource') {
-      navigate(EXTERNAL_DATA_SOURCE_PATH);
+    // console.log(`## switched to ${key} tab!`);
+    if (key == 'dataview') {
+      navigate(DATA_VIEW_PATH);
     }
   };
 

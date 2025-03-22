@@ -1,16 +1,49 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Button, Form, Popconfirm, Typography } from 'antd';
+import { Form } from 'antd';
 
 import { FORM_DEFINE_PATH } from '@/constants';
 import { removeFormDefine, updateFormDefine } from '@/hooks/api-form';
+import { createDataview } from '@/hooks/api-dataview';
+
+import { RowDisplayActions, RowEditActions } from './actions';
+
+const columns4Display = [
+  {
+    title: 'Form Name',
+    dataIndex: 'title',
+    key: 'title',
+    editable: true,
+  },
+  {
+    title: 'Seqence',
+    dataIndex: 'sequence',
+    key: 'sequence',
+    editable: true,
+    width: '4%',
+  },
+  {
+    title: 'Note',
+    dataIndex: 'note',
+    key: 'title',
+    editable: true,
+  },
+];
 
 /**
  * Manage form CRUD operations
+ * @date 2024/12/31
+ * @param {string} moduleId - the module id
+ * @param {function} refreshForms - refresh the form list
+ * @param {function} notificationInstance - the notification callback instance
  * @returns
  */
-export const useEditableColumns = (refreshForms, moduleId) => {
+export const useEditableColumns = (
+  moduleId,
+  refreshForms,
+  notificationInstance
+) => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
@@ -49,32 +82,25 @@ export const useEditableColumns = (refreshForms, moduleId) => {
     setEditingKey('');
   };
 
+  const createDataviewHandler = async record => {
+    notificationInstance.info({
+      message: 'Creating dataview...',
+    });
+    try {
+      await createDataview(record);
+    } catch (error) {
+      notificationInstance.error({
+        message: error.message,
+      });
+      return console.error(error.message);
+    }
+    notificationInstance.success({
+      message: 'Dataview created successfully',
+    });
+  };
+
   const editableColumns = [
-    {
-      title: 'Form Name',
-      dataIndex: 'title',
-      key: 'title',
-      editable: true,
-    },
-    // {
-    //   title: 'Module ID',
-    //   dataIndex: 'moduleId',
-    //   key: 'moduleId',
-    //   width: '20%',
-    // },
-    {
-      title: 'Seqence',
-      dataIndex: 'sequence',
-      key: 'sequence',
-      editable: true,
-      width: '4%',
-    },
-    {
-      title: 'Note',
-      dataIndex: 'note',
-      key: 'title',
-      editable: true,
-    },
+    ...columns4Display,
     {
       title: 'Operation',
       dataIndex: 'actions',
@@ -82,60 +108,20 @@ export const useEditableColumns = (refreshForms, moduleId) => {
       render: (_, record) => {
         const editable = isEditing(record);
         return editable ? (
-          <span data-key={record.key}>
-            <Typography.Link
-              onClick={() => updateFormRowHandler(record.key)}
-              style={{
-                marginInlineEnd: 8,
-              }}
-            >
-              Save
-            </Typography.Link>
-            <Typography.Link
-              onClick={cancelChangeHandler}
-              style={{
-                marginInlineEnd: 8,
-              }}
-            >
-              Cancel
-            </Typography.Link>
-          </span>
+          <RowDisplayActions
+            record={record}
+            updateFormRowHandler={updateFormRowHandler}
+            cancelChangeHandler={cancelChangeHandler}
+          />
         ) : (
-          <span data-key={record.key}>
-            <Button
-              size="small"
-              color="primary"
-              variant="dashed"
-              className="mr-2"
-              disabled={editingKey !== ''}
-              onClick={() => editRowHandler(record)}
-            >
-              Edit Form
-            </Button>
-            <Button
-              size="small"
-              color="primary"
-              variant="dashed"
-              className="mr-2"
-              disabled={editingKey !== ''}
-              onClick={() => openFormDesigner(record.key)}
-            >
-              Schema
-            </Button>
-            <Popconfirm
-              title="Sure to Delete this form?"
-              onConfirm={() => deleteRowHandler(record)}
-            >
-              <Button
-                size="small"
-                color="danger"
-                variant="dashed"
-                disabled={editingKey !== ''}
-              >
-                Delete
-              </Button>
-            </Popconfirm>
-          </span>
+          <RowEditActions
+            record={record}
+            editingKey={editingKey}
+            editRowHandler={editRowHandler}
+            openFormDesigner={openFormDesigner}
+            deleteRowHandler={deleteRowHandler}
+            createDataviewHandler={createDataviewHandler}
+          />
         );
       },
     },
@@ -163,82 +149,3 @@ export const useEditableColumns = (refreshForms, moduleId) => {
     columns: mergedColumns,
   };
 };
-
-/**
- * @deprecated
- */
-export const dataSource = [
-  {
-    key: '12345',
-    title: 'Form ABC',
-    moduleId: '12345',
-    sequence: 1,
-    note: '10 Downing Street',
-  },
-  {
-    key: '23456',
-    title: 'Form DEF',
-    moduleId: '23456',
-    sequence: 2,
-    note: '10 Downing Street',
-  },
-  {
-    key: '34567',
-    title: 'Form GHJ',
-    moduleId: '34567',
-    sequence: 3,
-    note: '10 Downing Street',
-  },
-];
-
-export const columns = [
-  {
-    title: 'Form Name',
-    dataIndex: 'title',
-    key: 'title',
-  },
-  {
-    title: 'Module ID',
-    dataIndex: 'moduleId',
-    key: 'moduleId',
-  },
-  {
-    title: 'Seqence',
-    dataIndex: 'sequence',
-    key: 'sequence',
-  },
-  {
-    title: 'Note',
-    dataIndex: 'note',
-    key: 'title',
-  },
-  {
-    title: 'Operation',
-    dataIndex: 'actions',
-    width: '25%',
-    render: (_, record) => {
-      return (
-        <span data-key={record.key}>
-          <Button
-            size="small"
-            color="primary"
-            variant="dashed"
-            className="mr-2"
-            onClick={() => console.log(`open edit panel`)}
-          >
-            Edit Form
-          </Button>
-          <Button
-            size="small"
-            color="primary"
-            variant="dashed"
-            className="mr-2"
-            onClick={() => console.log(`design edit panel`)}
-          >
-            Design Schema
-          </Button>
-        </span>
-      );
-    },
-  },
-];

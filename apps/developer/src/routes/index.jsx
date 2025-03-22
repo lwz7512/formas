@@ -5,6 +5,7 @@ import {
   BIZTREE_PATH,
   FORM_DEFINE_PATH,
   EXTERNAL_DATA_SOURCE_PATH,
+  DATA_VIEW_PATH,
 } from '@/constants';
 import { GuestLayout, HeaderFooterLayout } from '@/layouts';
 
@@ -14,6 +15,7 @@ import { DictionaryPage } from '../pages/dictionary';
 import { BizTreeConfigPage } from '../pages/biztree';
 import { FormDefinePage, FormSchemaDesigner } from '../pages/form';
 import { DataSourcePage } from '../pages/datasource';
+import { DataViewPage } from '../pages/dataview';
 
 const options = {
   future: {
@@ -115,6 +117,18 @@ export const Routers = createBrowserRouter(
           index: true,
           path: '',
           element: <DataSourcePage />,
+        },
+      ],
+    },
+    {
+      path: DATA_VIEW_PATH,
+      element: <HeaderFooterLayout />,
+      errorElement: <ErrorPage />,
+      children: [
+        {
+          index: true,
+          path: '',
+          element: <DataViewPage />,
         },
       ],
     },

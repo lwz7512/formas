@@ -27,9 +27,10 @@ export const AddNewFormModal = ({
     >
       <h2>Form Name(English only):</h2>
       <Input
+        name="title"
         placeholder="New form name NO space input"
         className=" mb-2"
-        value={newFormObject.name}
+        value={newFormObject.title}
         onChange={handlers.onFormNameChange}
       />
       {/* === Business Tree Node Selection === */}
@@ -49,6 +50,7 @@ export const AddNewFormModal = ({
       />
       <h2>Form Sequence(Number only):</h2>
       <InputNumber
+        name="sequence"
         placeholder="Form display sequence"
         className=" mb-2 w-full"
         value={newFormObject.sequence}
@@ -56,6 +58,7 @@ export const AddNewFormModal = ({
       />
       <h2>Form Description(optional)</h2>
       <TextArea
+        name="note"
         placeholder="New Node description"
         autoSize={{
           minRows: 2,

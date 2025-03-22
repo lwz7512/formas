@@ -6,6 +6,7 @@ import { App, Breadcrumb, Layout, Menu } from 'antd';
 import { devloperMenuItems } from '@/config/menu-items';
 
 import './styles.css';
+import { DATA_VIEW_PATH, FORM_DEFINE_PATH } from '@/constants';
 
 const { Header, Content, Footer } = Layout;
 
@@ -27,8 +28,10 @@ export const HCFLayout = ({ children }) => {
 
   // select the menu if user refreshed
   useEffect(() => {
-    // keep the app define menu selected!
-    setCurrent(pathname);
+    // FIXME: keep the app define menu selected!
+    const keyForHighlight =
+      pathname === DATA_VIEW_PATH ? FORM_DEFINE_PATH : pathname;
+    setCurrent(keyForHighlight);
   }, [pathname]);
 
   /**
