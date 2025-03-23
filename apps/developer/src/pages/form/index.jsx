@@ -44,10 +44,12 @@ export const FormDefinePage = () => {
   } = theme.useToken();
 
   const { loadTreeBy, treeSelectData } = useBizTreeQuery();
+
   /**
    * shared tree node store exposed for other page
    */
-  const { newChildNode, onTreeNodeSelect } = useTreeNodeStore();
+  const { expandedKeys, newChildNode, onTreeNodeSelect } =
+    useTreeNodeStore(treeSelectData);
 
   /**
    * form page handlers, load all the forms by default
@@ -144,15 +146,25 @@ export const FormDefinePage = () => {
         style={{ background: colorBgContainer, borderRight: '1px solid #CCC' }}
         width={200}
       >
-        {/* TODO: using biz-tree component... */}
-        <Tree
-          showLine={{
-            showLeafIcon: true,
-          }}
-          showIcon={false}
-          treeData={treeSelectData}
-          onSelect={treeNodeSelectHandler}
-        />
+        {/*
+         * lazy init tree component until treeSelectData is loaded,
+         * to allow the root node can be expanded as expected!
+         * @date 2025/03/23
+         */}
+        {treeSelectData.length > 0 && (
+          <Tree
+            showLine={{
+              showLeafIcon: true,
+            }}
+            autoExpandParent={true}
+            defaultExpandParent={true}
+            defaultExpandedKeys={expandedKeys}
+            defaultSelectedKeys={expandedKeys.slice(-1)}
+            showIcon={false}
+            treeData={treeSelectData}
+            onSelect={treeNodeSelectHandler}
+          />
+        )}
       </Sider>
       {/* main content reside in tab */}
       <Tabs

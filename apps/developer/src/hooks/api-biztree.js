@@ -7,45 +7,6 @@ import { useFetchData, useOnDemandFetch } from './use-fetch-data';
 import { useAsyncPost } from './use-post-data';
 
 /**
- * === source node structure: ===
- * {
- *   depth: 1,
- *   description: '',
- *   id: '',
- *   key: '',
- *   lft: 1,
- *   rgt: 1,
- *   num: 0,
- *   pid: '',
- *   rootid: '',
- *   status: 0,
- *   title: '',
- *   children: []
- * }
- * === destination node structure: ===
- * {
- *   ...rawNode,
- *   value: id,
- * }
- * @deprecated
- * @param {object} srcNode
- * @returns destNode cloned tree structure with additional property
- */
-const recursiveTreeNode = srcNode => {
-  if (!srcNode) return [];
-  const cloneTree = JSON.parse(JSON.stringify(srcNode));
-  const iterator = node => {
-    // add new property `value`:
-    node.value = node.id;
-    const children = node.children;
-    if (!children) return;
-    children.forEach(c => iterator(c));
-  };
-  iterator(cloneTree);
-  return [cloneTree];
-};
-
-/**
  * rebuild new tree in simple structure
  * @param {object} srcNode
  * @returns

@@ -1,13 +1,12 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { App, Layout, Tabs, theme, Tree } from 'antd';
+import { Layout, Tabs, theme, Tree } from 'antd';
 
 import { ROOT_BIZ_TREE_ID, ROOT_BIZ_TREE_NAME } from '@/config';
 import { FORM_DEFINE_PATH } from '@/constants';
 
 import { useBizTreeQuery } from '@/hooks/api-biztree';
 import { useTreeNodeStore } from '@/hooks/use-shared-treenode';
-import { useViewList } from '@/hooks/api-dataview';
 
 import { DVTable } from './table';
 
@@ -21,7 +20,7 @@ const { Content, Sider } = Layout;
 export const DataViewPage = () => {
   const navigate = useNavigate();
 
-  const { message, notification } = App.useApp();
+  // const { message, notification } = App.useApp();
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -31,7 +30,8 @@ export const DataViewPage = () => {
   /**
    * shared tree node store exposed for other page
    */
-  const { newChildNode, onTreeNodeSelect } = useTreeNodeStore();
+  const { expandedKeys, newChildNode, onTreeNodeSelect } =
+    useTreeNodeStore(treeSelectData);
 
   const treeNodeSelectHandler = (selectedKeys, info) => {
     const [pid] = selectedKeys;
@@ -84,15 +84,25 @@ export const DataViewPage = () => {
         style={{ background: colorBgContainer, borderRight: '1px solid #CCC' }}
         width={200}
       >
-        {/* TODO: using biz-tree component... */}
-        <Tree
-          showLine={{
-            showLeafIcon: true,
-          }}
-          showIcon={false}
-          treeData={treeSelectData}
-          onSelect={treeNodeSelectHandler}
-        />
+        {/*
+         * lazy init tree component until treeSelectData is loaded,
+         * to allow the root node can be expanded as expected!
+         * @date 2025/03/23
+         */}
+        {treeSelectData.length > 0 && (
+          <Tree
+            showLine={{
+              showLeafIcon: true,
+            }}
+            autoExpandParent={true}
+            defaultExpandParent={true}
+            defaultExpandedKeys={expandedKeys}
+            defaultSelectedKeys={expandedKeys.slice(-1)}
+            showIcon={false}
+            treeData={treeSelectData}
+            onSelect={treeNodeSelectHandler}
+          />
+        )}
       </Sider>
       {/* main content reside in tab */}
       <Tabs

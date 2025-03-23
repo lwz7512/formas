@@ -15,6 +15,7 @@ const columns4Display = [
     dataIndex: 'title',
     key: 'title',
     editable: true,
+    width: '20%',
   },
   {
     title: 'Seqence',
@@ -28,6 +29,7 @@ const columns4Display = [
     dataIndex: 'note',
     key: 'title',
     editable: true,
+    width: '20%',
   },
 ];
 
