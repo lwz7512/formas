@@ -5,7 +5,7 @@ import { useAsyncFn } from 'react-use';
  * General post request function using browser vanilla `fetch` API
  *
  * @param {string} url request url string
- * @param {Object} params request parameters in object format
+ * @param {Object|undefined} params request parameters in object format
  * @param {Function} onSuccess success callback
  * @param {Funcion} onError failure callback
  * @param {Function} onFinish finally callback
@@ -26,7 +26,7 @@ export const vanillaPostData = async (
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
       },
-      body: JSON.stringify(params),
+      body: JSON.stringify(params || {}),
     });
     const json = await response.json();
     onSuccess && onSuccess(json);

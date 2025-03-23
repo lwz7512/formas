@@ -64,7 +64,7 @@ export const fetchDataviewList = async sysModuleId => {
 };
 
 /**
- * 创建数据视图定义(从表单定义创建)
+ * 创建数据视图定义(从表单定义创建) - NOT IN USE
  * @param {{moduleId: string, id: string, title: string, note: string, sequence: string}} formRecord
  */
 export const createDataview = async formRecord => {

@@ -79,6 +79,21 @@ export const createFormDefine = async item => {
 };
 
 /**
+ * 根据表单定义生成数据视图
+ * @param {string} formId
+ * @returns {Promise} dataview
+ */
+export const generateDataviewBy = async formId => {
+  const result = await vanillaPostData(
+    `${host}/api/formas/forms/${formId}/dataview`
+  );
+  if (result.errCode !== 200) {
+    throw new Error(result.errMsg);
+  }
+  return result;
+};
+
+/**
  * 修改表单定义
  */
 export const updateFormDefine = async item => {

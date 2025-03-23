@@ -4,8 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { Form } from 'antd';
 
 import { FORM_DEFINE_PATH } from '@/constants';
-import { removeFormDefine, updateFormDefine } from '@/hooks/api-form';
-import { createDataview } from '@/hooks/api-dataview';
+import {
+  removeFormDefine,
+  updateFormDefine,
+  generateDataviewBy,
+} from '@/hooks/api-form';
 
 import { RowDisplayActions, RowEditActions } from './actions';
 
@@ -89,7 +92,8 @@ export const useEditableColumns = (
       message: 'Creating dataview...',
     });
     try {
-      await createDataview(record);
+      // 根据表单定义生成数据视图
+      await generateDataviewBy(record.id);
     } catch (error) {
       notificationInstance.error({
         message: error.message,
