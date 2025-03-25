@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Layout, Tabs, theme, Tree } from 'antd';
+import { App, Layout, Tabs, theme, Tree } from 'antd';
 
 import { ROOT_BIZ_TREE_ID, ROOT_BIZ_TREE_NAME } from '@/config';
 import { FORM_DEFINE_PATH } from '@/constants';
@@ -20,7 +20,7 @@ const { Content, Sider } = Layout;
 export const DataViewPage = () => {
   const navigate = useNavigate();
 
-  // const { message, notification } = App.useApp();
+  const { notification } = App.useApp();
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -34,10 +34,8 @@ export const DataViewPage = () => {
     useTreeNodeStore(treeSelectData);
 
   const treeNodeSelectHandler = (selectedKeys, info) => {
-    const [pid] = selectedKeys;
-    console.log(`>>> to select node: ${pid}`);
+    // const [pid] = selectedKeys;
     onTreeNodeSelect(selectedKeys, info);
-    // TODO: load dataviews by pid ...
   };
 
   // TODO: navigate to other page module ...
@@ -62,7 +60,10 @@ export const DataViewPage = () => {
           className="form-define-tab"
           style={{ padding: '0 24px', minHeight: '70vh' }}
         >
-          <DVTable moduleId={newChildNode.pid} />
+          <DVTable
+            moduleId={newChildNode.pid}
+            notificationInstance={notification}
+          />
         </Content>
       ),
     },

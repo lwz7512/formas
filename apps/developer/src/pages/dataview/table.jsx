@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
-import { Table } from 'antd';
+import { Table, Button, Popconfirm } from 'antd';
 
-import { useViewList } from '@/hooks/api-dataview';
+import { useViewList, removeDataview } from '@/hooks/api-dataview';
 
 const columns = [
   {
@@ -29,12 +29,37 @@ const columns = [
  *
  * @returns
  */
-export const DVTable = ({ moduleId }) => {
+export const DVTable = ({ moduleId, notificationInstance }) => {
   const { views, refreshViews } = useViewList();
+
+  const deleteRowHandler = async record => {
+    notificationInstance.info({ message: 'Deleting Data View...' });
+    await removeDataview(record.key);
+    await refreshViews(moduleId);
+    notificationInstance.success({ message: 'Data View deleted successfully' });
+  };
+
+  const operationColumn = {
+    title: 'Operation',
+    dataIndex: 'actions',
+    key: 'actions',
+    render: (_, record) => {
+      return (
+        <Popconfirm
+          title="Sure to Delete this Data View?"
+          onConfirm={() => deleteRowHandler(record)}
+        >
+          <Button size="small" color="danger" variant="dashed">
+            Delete
+          </Button>
+        </Popconfirm>
+      );
+    },
+  };
 
   useEffect(() => {
     refreshViews(moduleId);
   }, [refreshViews, moduleId]);
 
-  return <Table dataSource={views} columns={columns} />;
+  return <Table dataSource={views} columns={[...columns, operationColumn]} />;
 };
