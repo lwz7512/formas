@@ -134,6 +134,9 @@ importers:
       antd:
         specifier: ^5.22.2
         version: 5.22.2(date-fns@2.30.0)(luxon@3.5.0)(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      axios:
+        specifier: ^1.6.7
+        version: 1.8.4
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -267,6 +270,9 @@ importers:
       antd:
         specifier: ^4.24.16
         version: 4.24.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      axios:
+        specifier: ^1.6.7
+        version: 1.8.4
       clsx:
         specifier: 2.1.1
         version: 2.1.1
@@ -391,6 +397,9 @@ importers:
       antd:
         specifier: ^5.22.2
         version: 5.22.2(date-fns@2.30.0)(luxon@3.5.0)(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      axios:
+        specifier: ^1.6.7
+        version: 1.8.4
       clsx:
         specifier: 2.1.1
         version: 2.1.1

@@ -16,8 +16,9 @@ import { MoreOutlined } from '@ant-design/icons';
 
 import { userMenuOperationItems } from '@/config';
 
-import { AddRootMenuModal } from './modals';
-import { useUserMenu } from '@/hooks/use-user-menu';
+import { AddRootMenuModal } from './modals/create-root-menu';
+
+import { useUserMenu } from './hooks/use-user-menu';
 
 const data = [
   'Racing car sprays burning fuel into crowd.',
@@ -33,8 +34,15 @@ const data = [
  * @returns
  */
 export const MenuManagePage = () => {
-  const { isRootMenuModalOpen, showRootMenuModal, closeRootMenuModal } =
-    useUserMenu();
+  const {
+    menuList,
+    rootMenuObject,
+    isRootMenuModalOpen,
+    showRootMenuModal,
+    closeRootMenuModal,
+    handleRootMenuCreation,
+    handleMenuObjectChange,
+  } = useUserMenu();
 
   return (
     <>
@@ -67,14 +75,14 @@ export const MenuManagePage = () => {
             <List
               header={<div>Header</div>}
               bordered
-              dataSource={data}
+              dataSource={menuList}
               renderItem={item => (
                 <List.Item
                   className={clsx('select-none flex justify-between')}
                   onClick={() => null}
                 >
                   <Space>
-                    <Typography.Text>{item}</Typography.Text>
+                    <Typography.Text>{item.title}</Typography.Text>
                   </Space>
                   <Dropdown
                     menu={{
@@ -114,11 +122,15 @@ export const MenuManagePage = () => {
           </Flex>
         </Flex>
       </Flex>
-      {/* add new menu modal */}
+      {/* ==== add new menu modal ==== */}
       <AddRootMenuModal
+        rootMenuObject={rootMenuObject}
         isRootModalOpen={isRootMenuModalOpen}
         handleRootModalClose={closeRootMenuModal}
+        handleRootCreation={handleRootMenuCreation}
+        handleMenuObjectChange={handleMenuObjectChange}
       />
+      {/* ==== add new menu modal ==== */}
     </>
   );
 };

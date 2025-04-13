@@ -5,6 +5,12 @@ export const SERVICE_GATE_API = 'http://localhost:8800';
 export const ROOT_BIZ_TREE_ID = '57dc25ba6f5511ee977638c9860954df';
 export const ROOT_BIZ_TREE_NAME = '业务系统';
 
+/**
+ * 根菜单pid
+ * @date 2025/04/13
+ */
+export const ROOT_MENU_PID = '6299958ab73d11eda3e2a45e60efbf2d';
+
 // user session valid time in days
 export const USER_SESSION_VALID_TIME = 3;
 

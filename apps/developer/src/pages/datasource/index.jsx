@@ -20,12 +20,8 @@ export const DataSourcePage = () => {
   } = theme.useToken();
 
   // 数据源列表功能 Hook
-  const { 
-    data, 
-    pagination, 
-    loading, 
-    handlePageChange,
-    fetchList  } = useDataSourceList();
+  const { data, pagination, loading, handlePageChange, fetchList } =
+    useDataSourceList();
 
   // 创建数据源功能 Hook
   const {
@@ -62,7 +58,7 @@ export const DataSourcePage = () => {
   return (
     <Layout
       style={{
-        height: 'calc(100vh - 250px)',
+        minHeight: 'calc(100vh - 250px)',
         padding: '24px 0',
         background: colorBgContainer,
         borderRadius: borderRadiusLG,
@@ -84,7 +80,7 @@ export const DataSourcePage = () => {
           ...pagination, // 确保展开所有分页属性
           showTotal: total => `共 ${total} 条`, // 显式显示总数
           onChange: handlePageChange,
-          onShowSizeChange: handlePageChange
+          onShowSizeChange: handlePageChange,
         }}
       />
 

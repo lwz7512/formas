@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { createDataSource } from '../../../api/data-source';
+import { createDataSource } from '@/api/data-source';
 
 export const useCreateDataSource = ({ onSuccess }) => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
