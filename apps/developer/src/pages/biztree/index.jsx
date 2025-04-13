@@ -11,9 +11,6 @@ import {
   Space,
 } from 'antd';
 
-{
-  /* <DeleteOutlined /> */
-}
 import {
   MoreOutlined,
   PlusOutlined,
@@ -21,7 +18,7 @@ import {
   DeleteOutlined,
 } from '@ant-design/icons';
 
-import { rootNodeMenuitems } from '@/config';
+import { bizNodeMenuitems } from '@/config';
 import { useBizTreeRoots } from '@/hooks/api-biztree';
 import { useBizTreeState } from '@/hooks/use-biztree';
 
@@ -106,7 +103,7 @@ export const BizTreeConfigPage = () => {
                     </Space>
                     <Dropdown
                       menu={{
-                        items: rootNodeMenuitems,
+                        items: bizNodeMenuitems,
                         onClick: event => onRootNodeMenuClick(event, item.id),
                       }}
                       trigger={['click']}

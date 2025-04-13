@@ -15,20 +15,22 @@ const ROOTS_AUTH = '/auth';
 const ROOTS_ERRORS = '/errors';
 const ROOTS_ABOUT = '/about';
 
-/** @date 2025/01/12 */
-export const HOME_AFTER_LOGIN = '/auth/welcome';
 /** @date 2024/12/01 */
 export const DICTIONARY_PATH = '/dictionary/index';
 /** @date 2024/12/07 */
 export const BIZTREE_PATH = '/biztree/index';
 /** @date 2024/12/31 */
 export const FORM_DEFINE_PATH = '/formdefine/index';
+/** @date 2025/01/12 */
+export const HOME_AFTER_LOGIN = '/auth/welcome';
 /** @date 2025/01/03 */
 export const FORM_DEFINE_DESIGNER = '/formdefine/external-designer';
 /** @date 2025/03/02 */
 export const EXTERNAL_DATA_SOURCE_PATH = '/datasource/index';
 /** @date 2025/03/23 */
 export const DATA_VIEW_PATH = '/dataview/index';
+/** @date 2025/04/08 */
+export const MENU_MANAGE_PATH = '/menu/index';
 
 export const PATH_ERROR = {
   root: ROOTS_ERRORS,

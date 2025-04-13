@@ -28,6 +28,8 @@ export const fetchMenuList = async menuId => {
 
 /**
  * 查询菜单树
+ * TODO: 需要根据菜单id查询菜单树, where to get the menuId?
+ * @param {string} menuId 菜单id
  * @returns {Promise} form list
  */
 export const fetchMenuTree = async menuId => {
@@ -39,6 +41,9 @@ export const fetchMenuTree = async menuId => {
 
 /**
  * 创建菜单
+ * type: 菜单类型, 1: internal_link, 2: external_link,
+ * value is url
+ * TODO: where to get the top pid? 00000000000000000000000000000000, 32位
  * @param {{pid: string, title: string, type: string, value: string}} item
  */
 export const createMenu = async item => {

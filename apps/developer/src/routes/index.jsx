@@ -6,6 +6,7 @@ import {
   FORM_DEFINE_PATH,
   EXTERNAL_DATA_SOURCE_PATH,
   DATA_VIEW_PATH,
+  MENU_MANAGE_PATH,
 } from '@/constants';
 import { GuestLayout, HeaderFooterLayout } from '@/layouts';
 
@@ -16,6 +17,7 @@ import { BizTreeConfigPage } from '../pages/biztree';
 import { FormDefinePage, FormSchemaDesigner } from '../pages/form';
 import { DataSourcePage } from '../pages/datasource';
 import { DataViewPage } from '../pages/dataview';
+import { MenuManagePage } from '../pages/menu';
 
 const options = {
   future: {
@@ -129,6 +131,18 @@ export const Routers = createBrowserRouter(
           index: true,
           path: '',
           element: <DataViewPage />,
+        },
+      ],
+    },
+    {
+      path: MENU_MANAGE_PATH,
+      element: <HeaderFooterLayout />,
+      errorElement: <ErrorPage />,
+      children: [
+        {
+          index: true,
+          path: '',
+          element: <MenuManagePage />,
         },
       ],
     },

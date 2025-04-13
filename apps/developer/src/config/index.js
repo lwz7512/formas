@@ -13,7 +13,7 @@ export const MODAL_NAMES = {
   NEW_CHILD: 'add_child_node',
 };
 
-export const rootNodeMenuitems = [
+export const bizNodeMenuitems = [
   {
     label: 'Add child node',
     key: 'add_child_node',
@@ -25,5 +25,20 @@ export const rootNodeMenuitems = [
   {
     label: 'Delete root node',
     key: 'delete_root_node',
+  },
+];
+
+export const userMenuOperationItems = [
+  {
+    label: 'Add Menu node',
+    key: 'add_menu_node',
+  },
+  {
+    label: 'Rename Menu node',
+    key: 'rename_menu_node',
+  },
+  {
+    label: 'Delete Menu node',
+    key: 'delete_menu_node',
   },
 ];
