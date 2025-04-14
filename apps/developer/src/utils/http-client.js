@@ -2,13 +2,12 @@ import axios from 'axios';
 import { message } from 'antd';
 import { SERVICE_GATE_API as host } from '@/config';
 
-// 创建 axios 实例
 const httpClient = axios.create({
   baseURL: host + '/api',
   timeout: 10000,
 });
 
-// 请求拦截器 - 添加 token
+// 请求拦截器
 httpClient.interceptors.request.use(config => {
   const token = localStorage.getItem('formas.jwt');
   if (token) {
@@ -17,19 +16,33 @@ httpClient.interceptors.request.use(config => {
   return config;
 });
 
-// 响应拦截器 - 统一错误处理
+// 响应拦截器
 httpClient.interceptors.response.use(
   response => {
-    // 如果后端返回 errCode 非 200，视为错误
+    // 成功响应但业务错误（errCode非200）
     if (response.data?.errCode !== undefined && response.data.errCode !== 200) {
-      return Promise.reject(
-        new Error(response.data.errMsg || 'Request failed')
-      );
+      const error = new Error(response.data.errMsg || 'Request failed');
+      error.code = response.data.errCode;
+      console.error('API Business Error:', error); // 确保错误被记录
+      message.error(response.data.errMsg || 'Request failed');
+      return Promise.reject(error);
     }
     return response.data;
   },
   error => {
-    message.error(error.response?.data?.message || error.message);
+    // 网络或服务器错误
+    const errorMessage = error.response?.data?.message || 
+                        error.message || 
+                        'Network Error';
+    
+    console.error('HTTP Error:', {  // 结构化日志
+      config: error.config,
+      status: error.response?.status,
+      data: error.response?.data,
+      message: errorMessage
+    });
+
+    message.error(errorMessage);
     return Promise.reject(error);
   }
 );

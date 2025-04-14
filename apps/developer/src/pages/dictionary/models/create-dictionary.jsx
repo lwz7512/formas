@@ -1,30 +1,34 @@
-import { Button, Form, Input, Modal, Select } from 'antd';
+import { Modal, Form, Input, Select, Button, message } from 'antd';
 
 const DRIVER_OPTIONS = [
   { label: 'MySQL', value: 'mysql' },
   { label: 'MariaDB', value: 'mariadb' },
   { label: 'SQL Server', value: 'sqlserver' },
   { label: 'PostgreSQL', value: 'postgresql' },
-  { label: 'Oracle', value: 'oracle' },
+  { label: 'Oracle', value: 'oracle' }
 ];
 
 const DEFAULT_OPTIONS = [
   { label: 'Yes', value: 1 },
-  { label: 'No', value: 0 },
+  { label: 'No', value: 0 }
 ];
 
-export const CreateDataSourceModal = ({
+export const CreateDictionaryModal = ({
   visible,
   initialValues,
   onCancel,
   onSubmit,
-  loading,
+  loading
 }) => {
   const [form] = Form.useForm();
 
   const handleSubmit = async () => {
-    const values = await form.validateFields();
-    onSubmit(values);
+    try {
+      const values = await form.validateFields();
+      onSubmit(values);
+    } catch (error) {
+      message.error('Please fill all required fields correctly');
+    }
   };
 
   return (
@@ -38,17 +42,21 @@ export const CreateDataSourceModal = ({
         <Button key="back" onClick={onCancel}>
           Cancel
         </Button>,
-        <Button
-          key="submit"
-          type="primary"
+        <Button 
+          key="submit" 
+          type="primary" 
           loading={loading}
           onClick={handleSubmit}
         >
           Create
-        </Button>,
+        </Button>
       ]}
     >
-      <Form form={form} layout="vertical" initialValues={initialValues}>
+      <Form
+        form={form}
+        layout="vertical"
+        initialValues={initialValues}
+      >
         <Form.Item
           label="Data Source Title"
           name="title"
@@ -62,10 +70,16 @@ export const CreateDataSourceModal = ({
           name="driver"
           rules={[{ required: true, message: 'Please select a driver' }]}
         >
-          <Select placeholder="Select database type" options={DRIVER_OPTIONS} />
+          <Select 
+            placeholder="Select database type"
+            options={DRIVER_OPTIONS}
+          />
         </Form.Item>
 
-        <Form.Item label="Default Data Source" name="isDefault">
+        <Form.Item
+          label="Default Data Source"
+          name="isDefault"
+        >
           <Select options={DEFAULT_OPTIONS} />
         </Form.Item>
 
@@ -95,7 +109,10 @@ export const CreateDataSourceModal = ({
           <Input placeholder="e.g. my_database" />
         </Form.Item>
 
-        <Form.Item label="Instance (Optional)" name="instance">
+        <Form.Item
+          label="Instance (Optional)"
+          name="instance"
+        >
           <Input placeholder="For SQL Server named instances" />
         </Form.Item>
 

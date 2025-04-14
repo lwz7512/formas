@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
-import { Form, Input, Modal, Select } from 'antd';
+import { Modal, Form, Input, Select } from 'antd';
 
-export const ModifyDataSourceModal = ({
+export const ModifyDictionaryModal = ({
   visible,
   datasource = {},
   onSubmit,
   onClose,
-  loading,
+  loading
 }) => {
   const [form] = Form.useForm();
 
@@ -16,14 +16,19 @@ export const ModifyDataSourceModal = ({
       form.resetFields();
       form.setFieldsValue({
         isDefault: 0, // 默认值
-        ...datasource, // 覆盖传入的数据
+        ...datasource // 覆盖传入的数据
       });
     }
   }, [visible, datasource, form]);
 
   const handleSubmit = async () => {
-    const values = await form.validateFields();
-    await onSubmit(values);
+    try {
+      const values = await form.validateFields();
+      console.log('提交数据:', values); // 调试用
+      await onSubmit(values);
+    } catch (error) {
+      console.error('表单验证失败:', error);
+    }
   };
 
   return (
@@ -58,7 +63,7 @@ export const ModifyDataSourceModal = ({
               { label: 'MariaDB', value: 'mariadb' },
               { label: 'SQL Server', value: 'sqlserver' },
               { label: 'PostgreSQL', value: 'postgresql' },
-              { label: 'Oracle', value: 'oracle' },
+              { label: 'Oracle', value: 'oracle' }
             ]}
             placeholder="请选择数据库类型"
           />
@@ -69,7 +74,7 @@ export const ModifyDataSourceModal = ({
           <Select
             options={[
               { label: '是', value: 1 },
-              { label: '否', value: 0 },
+              { label: '否', value: 0 }
             ]}
           />
         </Form.Item>

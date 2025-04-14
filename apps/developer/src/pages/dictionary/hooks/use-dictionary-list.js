@@ -1,8 +1,7 @@
-// 列表hooks
 import { useState, useEffect } from 'react';
-import { fetchDataSourceList } from '@/api/data-source';
+import { fetchDictionaryList } from '@/api/dictionary';
 
-export const useDataSourceList = (initialParams = {}) => {
+export const useDictionaryList = (initialParams = {}) => {
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
@@ -17,43 +16,33 @@ export const useDataSourceList = (initialParams = {}) => {
   const fetchList = async (params = {}) => {
     setLoading(true);
     try {
-      // 确保请求参数包含分页信息，使用与API一致的参数名
-      const requestParams = {
+      const result = await fetchDictionaryList({
         currPage: params.current || pagination.current,
         pageSize: params.pageSize || pagination.pageSize,
         ...params
-      };
-
-      const result = await fetchDataSourceList({
-        currPage: requestParams.currPage,
-        pageSize: requestParams.pageSize
       });
-      
+
       setData(result.datas || []);
       setPagination(prev => ({
         ...prev,
-        total: result.totalNum || 0,
-        current: result.currPage || requestParams.currPage,
-        pageSize: result.pageSize || requestParams.pageSize
+        total: result.totalNum, // 直接使用API返回的totalNum
+        current: result.currPage || prev.current,
+        pageSize: result.pageSize || prev.pageSize
       }));
     } catch (err) {
       setError(err);
+      console.error('Fetch error:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  // 分页变化处理器
   const handlePageChange = (current, pageSize) => {
     fetchList({ current, pageSize });
   };
 
-  // 初始加载（确保传递正确的参数名）
   useEffect(() => {
-    fetchList({
-      current: pagination.current,
-      pageSize: pagination.pageSize
-    });
+    fetchList(initialParams);
   }, []);
 
   return {

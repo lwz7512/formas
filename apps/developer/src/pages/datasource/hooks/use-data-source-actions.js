@@ -1,27 +1,21 @@
-import { message } from 'antd';
+import { App } from 'antd';
 import {
   deleteDataSource,
   testDataSourceConnection,
 } from '../../../api/data-source';
 
 export const useDataSourceActions = fetchList => {
+  const { notification } = App.useApp();
+
   const handleDelete = async id => {
-    try {
-      await deleteDataSource(id);
-      message.success('删除成功');
-      fetchList(); // 刷新列表
-    } catch (error) {
-      message.error('删除失败: ' + error.message);
-    }
+    await deleteDataSource(id);
+    notification.success({ message: '删除数据源成功' });
+    fetchList(); // 刷新列表
   };
 
   const handleTest = async id => {
-    try {
-      const result = await testDataSourceConnection(id);
-      message.success('连接测试成功');
-    } catch (error) {
-      message.error('连接失败: ' + error.message);
-    }
+    const result = await testDataSourceConnection(id);
+    notification.success({ message: '测试数据源连接成功' });
   };
 
   return { handleDelete, handleTest };

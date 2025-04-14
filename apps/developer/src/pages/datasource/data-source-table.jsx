@@ -1,26 +1,27 @@
+// 表格
 import { Button, Table, Popconfirm, Tag } from 'antd';
 
-export const DataSourceTable = ({ 
-  data, 
+export const DataSourceTable = ({
+  data,
   loading,
-  onEdit,      // 接收父组件传递的openModifyModal方法
+  onEdit,
   onTest,
   onDelete,
-  pagination,
-  onPageChange  // 新增分页回调
+  pagination = {},
+  onPageChange,
 }) => {
   const columns = [
     {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
-      ellipsis: true
+      ellipsis: true,
     },
     {
       title: 'Type',
       dataIndex: 'driver',
       key: 'driver',
-      render: (driver) => <Tag color="blue">{driver}</Tag>
+      render: driver => <Tag color="blue">{driver}</Tag>,
     },
     {
       title: 'Connection',
@@ -29,24 +30,24 @@ export const DataSourceTable = ({
         <span>
           {record.host}:{record.port}
         </span>
-      )
+      ),
     },
     {
       title: 'Database',
       dataIndex: 'database',
       key: 'database',
-      ellipsis: true
+      ellipsis: true,
     },
     {
       title: 'Default',
       dataIndex: 'isDefault',
       key: 'isDefault',
       align: 'center',
-      render: (isDefault) => (
+      render: isDefault => (
         <Tag color={isDefault ? 'green' : 'gray'}>
           {isDefault ? 'YES' : 'NO'}
         </Tag>
-      )
+      ),
     },
     {
       title: 'Actions',
@@ -54,20 +55,17 @@ export const DataSourceTable = ({
       width: 250,
       render: (_, record) => (
         <div className="flex space-x-2">
-          <Button 
+          <Button
             size="small"
-            onClick={() => onEdit(record)}  // 这里传递整行数据
+            onClick={() => onEdit(record)} // 这里传递整行数据
           >
             Edit
           </Button>
-          
-          <Button 
-            size="small"
-            onClick={() => onTest(record.id)}
-          >
+
+          <Button size="small" onClick={() => onTest(record.id)}>
             Test
           </Button>
-          
+
           <Popconfirm
             title="Confirm Deletion"
             description="Are you sure to delete this data source?"
@@ -81,24 +79,29 @@ export const DataSourceTable = ({
             </Button>
           </Popconfirm>
         </div>
-      )
-    }
+      ),
+    },
   ];
 
   return (
     <Table
       rowKey="id"
-      bordered={true}
       columns={columns}
       dataSource={data}
       loading={loading}
-      scroll={{ x: true }}
-      size="middle"
       pagination={{
-        ...pagination, // 确保展开所有分页属性
+        current: pagination.current,
+        pageSize: pagination.pageSize,
+        total: pagination.total,
         showSizeChanger: true,
         showQuickJumper: true,
+        showTotal: total => `共 ${total} 条`,
+        pageSizeOptions: ['10', '20', '50', '100'],
+        onChange: (page, pageSize) => onPageChange(page, pageSize),
+        onShowSizeChange: (current, size) => onPageChange(current, size),
       }}
+      scroll={{ x: true }}
+      size="middle"
     />
   );
 };
