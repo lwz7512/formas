@@ -1,4 +1,4 @@
-import httpClient from '../utils/http-client';
+import httpClient from '@/utils/http-client';
 
 // 数据源列表查询
 export const fetchDataSourceList = async params => {

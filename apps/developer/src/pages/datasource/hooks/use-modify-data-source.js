@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { updateDataSource } from '../../../api/data-source';
+import { updateDataSource } from '@/api/data-source';
 
 export const useModifyDataSource = ({ onSuccess }) => {
   const [isModifyModalOpen, setIsModifyModalOpen] = useState(false);

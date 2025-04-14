@@ -6,7 +6,7 @@ export const useModifyDictionary = ({ onSuccess }) => {
   const [currentDictionary, setCurrentDictionary] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
 
-  // 打开修改模态框并设置当前数据源
+  // 打开修改模态框并设置当前字典数据
   const openModifyModal = item => {
     setCurrentDictionary(item);
     setIsModifyModalOpen(true);
@@ -24,7 +24,7 @@ export const useModifyDictionary = ({ onSuccess }) => {
     try {
       await updateDictionaryItem({
         ...values,
-        id: currentDataSource.id, // 确保携带原始ID
+        id: currentDictionary.id, // 确保携带原始ID
       });
       onSuccess?.(); // 成功回调
       closeModifyModal(); // 关闭模态框
