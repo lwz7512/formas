@@ -20,3 +20,28 @@ export const isLoggedInValid = () => {
   }
   return true;
 };
+
+/**
+ * rebuild new tree in simple structure
+ * @param {object} srcNode
+ * @returns
+ */
+export const rebuildSimpleTree = srcNode => {
+  if (!srcNode) return [];
+  const traversor = (sn, dn) => {
+    dn.value = sn.id;
+    dn.key = sn.id; // key is a must to have
+    dn.title = sn.title;
+    if (sn.children) {
+      dn.children = [];
+      sn.children.forEach(c => {
+        const nc = {};
+        dn.children.push(nc);
+        traversor(c, nc);
+      });
+    }
+  };
+  const newTreeRoot = {};
+  traversor(srcNode, newTreeRoot);
+  return [newTreeRoot];
+};

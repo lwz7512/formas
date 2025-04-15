@@ -2,34 +2,10 @@ import { useState, useCallback } from 'react';
 import { nanoid } from 'nanoid';
 
 import { SERVICE_GATE_API as host } from '@/config';
+import { rebuildSimpleTree } from '@/utils';
 
 import { useFetchData, useOnDemandFetch } from './use-fetch-data';
 import { useAsyncPost } from './use-post-data';
-
-/**
- * rebuild new tree in simple structure
- * @param {object} srcNode
- * @returns
- */
-const rebuildSimpleTree = srcNode => {
-  if (!srcNode) return [];
-  const traversor = (sn, dn) => {
-    dn.value = sn.id;
-    dn.key = sn.id; // key is a must to have
-    dn.title = sn.title;
-    if (sn.children) {
-      dn.children = [];
-      sn.children.forEach(c => {
-        const nc = {};
-        dn.children.push(nc);
-        traversor(c, nc);
-      });
-    }
-  };
-  const newTreeRoot = {};
-  traversor(srcNode, newTreeRoot);
-  return [newTreeRoot];
-};
 
 /**
  * fetch root nodes in the left tree

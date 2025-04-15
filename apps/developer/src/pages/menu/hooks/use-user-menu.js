@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 
-import { createMenu, fetchMenuList, fetchMenuTree } from '@/api/api-menu';
+import { createMenu, fetchMenuList } from '@/api/api-menu';
 
 import { ROOT_MENU_PID } from '@/config';
+
+import { useMenuTreeQuery } from './use-user-tree';
 
 const initialRootMenuObject = {
   // 菜单pid
@@ -36,6 +38,10 @@ export const useUserMenu = () => {
   const [menuList, setMenuList] = useState([]);
   const [isRootMenuModalOpen, setIsRootMenuModalOpen] = useState(false);
   const [rootMenuObject, setRootMenuObject] = useState(initialRootMenuObject);
+  // sub-menu tree
+  const { loadTreeBy, treeSelectData } = useMenuTreeQuery();
+  const [isChildMenuModalOpen, setIsChildMenuModalOpen] = useState(false);
+  const [childMenuObject, setChildMenuObject] = useState({});
 
   const showRootMenuModal = () => {
     setIsRootMenuModalOpen(true);
@@ -43,6 +49,36 @@ export const useUserMenu = () => {
 
   const closeRootMenuModal = () => {
     setIsRootMenuModalOpen(false);
+  };
+
+  const showChildMenuModal = () => {
+    setIsChildMenuModalOpen(true);
+  };
+
+  const closeChildMenuModal = () => {
+    setIsChildMenuModalOpen(false);
+  };
+
+  const rootMenuItemClickHandler = item => {
+    console.log(`>>> load menu tree by item:`, item);
+  };
+
+  const onRootMenuOperationClick = (event, rootId) => {
+    // save `parent id` as drop-down menu item selected
+    setChildMenuObject({ ...childMenuObject, pid: rootId });
+
+    if (event.key == 'add_menu_node') {
+      showChildMenuModal();
+      console.log(`>>> showChildMenuModal`);
+    }
+  };
+
+  const handleChildMenuCreation = async () => {
+    setIsChildMenuModalOpen(false);
+    console.log(`>>> to create child menu:`, childMenuObject);
+    // await createMenu(childMenuObject);
+    // const res = await loadTreeBy();
+    // setMenuList(res);
   };
 
   /**
@@ -74,9 +110,17 @@ export const useUserMenu = () => {
     menuList,
     rootMenuObject,
     isRootMenuModalOpen,
+    isChildMenuModalOpen,
+    childMenuObject,
+    treeSelectData,
+    closeChildMenuModal,
+    onRootMenuOperationClick,
+    rootMenuItemClickHandler,
     showRootMenuModal,
     closeRootMenuModal,
     handleRootMenuCreation,
     handleMenuObjectChange,
+    showChildMenuModal,
+    handleChildMenuCreation,
   };
 };

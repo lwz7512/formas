@@ -7,17 +7,22 @@ import {
   Button,
   List,
   Divider,
-  // Tree,
+  Tree,
   Dropdown,
   Space,
 } from 'antd';
 
-import { MoreOutlined } from '@ant-design/icons';
+import {
+  MoreOutlined,
+  PlusOutlined,
+  EditOutlined,
+  DeleteOutlined,
+} from '@ant-design/icons';
 
 import { userMenuOperationItems } from '@/config';
 
 import { AddRootMenuModal } from './modals/create-root-menu';
-
+import { AddChildMenuModal } from './modals/create-child-menu';
 import { useUserMenu } from './hooks/use-user-menu';
 
 const data = [
@@ -38,10 +43,17 @@ export const MenuManagePage = () => {
     menuList,
     rootMenuObject,
     isRootMenuModalOpen,
+    isChildMenuModalOpen,
+    childMenuObject,
+    treeSelectData,
     showRootMenuModal,
     closeRootMenuModal,
+    closeChildMenuModal,
     handleRootMenuCreation,
     handleMenuObjectChange,
+    onRootMenuOperationClick,
+    rootMenuItemClickHandler,
+    handleChildMenuCreation,
   } = useUserMenu();
 
   return (
@@ -79,7 +91,7 @@ export const MenuManagePage = () => {
               renderItem={item => (
                 <List.Item
                   className={clsx('select-none flex justify-between')}
-                  onClick={() => null}
+                  onClick={() => rootMenuItemClickHandler(item)}
                 >
                   <Space>
                     <Typography.Text>{item.title}</Typography.Text>
@@ -87,7 +99,8 @@ export const MenuManagePage = () => {
                   <Dropdown
                     menu={{
                       items: userMenuOperationItems,
-                      onClick: event => null,
+                      onClick: event =>
+                        onRootMenuOperationClick(event, item.id),
                     }}
                     trigger={['click']}
                     placement="bottomRight"
@@ -119,6 +132,51 @@ export const MenuManagePage = () => {
             >
               Sub Menu Tree Creation:
             </Divider>
+            {/* ==== sub-menu tree ==== */}
+            <Tree
+              blockNode
+              showLine={{
+                showLeafIcon: true,
+              }}
+              showIcon={false}
+              onSelect={() => null}
+              treeData={treeSelectData}
+              titleRender={nodeData => {
+                // console.log(`>>> node data:`);
+                // console.log(nodeData);
+                return (
+                  <>
+                    <span className="inline-block">{nodeData.title}</span>
+                    <span
+                      className={clsx(
+                        'opacity-10 hover:opacity-100',
+                        nodeData.depth > 0 ? 'inline-block' : 'hidden'
+                      )}
+                    >
+                      <button
+                        type="button"
+                        className="px-2 hover:bg-blue-200 mr-2"
+                        onClick={() => null}
+                      >
+                        <PlusOutlined className="text-base" />
+                      </button>
+                      <button
+                        type="button"
+                        className="px-2 hover:bg-blue-200 mr-2"
+                      >
+                        <EditOutlined className="text-base " />
+                      </button>
+                      <button
+                        type="button"
+                        className="px-2 hover:bg-blue-200 mr-2"
+                      >
+                        <DeleteOutlined className="text-base " />
+                      </button>
+                    </span>
+                  </>
+                );
+              }}
+            />
           </Flex>
         </Flex>
       </Flex>
@@ -131,6 +189,13 @@ export const MenuManagePage = () => {
         handleMenuObjectChange={handleMenuObjectChange}
       />
       {/* ==== add new menu modal ==== */}
+      <AddChildMenuModal
+        childMenuObject={childMenuObject}
+        isChildMenuOpen={isChildMenuModalOpen}
+        handleChildMenuCreation={handleChildMenuCreation}
+        handleChildModalClose={closeChildMenuModal}
+        handleMenuObjectChange={handleMenuObjectChange}
+      />
     </>
   );
 };
