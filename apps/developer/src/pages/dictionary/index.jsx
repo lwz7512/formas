@@ -102,7 +102,7 @@ export const DictionaryPage = () => {
           </Button>
         </Space>
       }
-      bordered={false}
+      bordered={true}
     >
       <DictionaryTable
         data={data}
