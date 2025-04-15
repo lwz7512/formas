@@ -12,21 +12,19 @@ export const useDictionaryList = (initialParams = {}) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [searchParams, setSearchParams] = useState([]);
 
   const fetchList = async (params = {}) => {
     setLoading(true);
     try {
-      // 确保请求参数包含分页信息，使用与API一致的参数名
       const requestParams = {
         currPage: params.current || pagination.current,
         pageSize: params.pageSize || pagination.pageSize,
+        searchs: params.searchs || searchParams, // 优先使用传入的搜索条件
         ...params
       };
 
-      const result = await fetchDictionaryList({
-        currPage: requestParams.currPage,
-        pageSize: requestParams.pageSize
-      });
+      const result = await fetchDictionaryList(requestParams);
       
       setData(result.datas || []);
       setPagination(prev => ({
@@ -42,12 +40,25 @@ export const useDictionaryList = (initialParams = {}) => {
     }
   };
 
-  // 分页变化处理器
   const handlePageChange = (current, pageSize) => {
     fetchList({ current, pageSize });
   };
 
-  // 初始加载（确保传递正确的参数名）
+  // 修改setSearch函数，直接传递搜索参数
+  const setSearch = (column, value) => {
+    const newSearchParams = value ? 
+      [{ column, op: 'like', value }] : 
+      [];
+    
+    // 先更新状态
+    setSearchParams(newSearchParams);
+    // 然后直接使用新的搜索参数进行查询
+    return fetchList({ 
+      current: 1,
+      searchs: newSearchParams 
+    });
+  };
+
   useEffect(() => {
     fetchList({
       current: pagination.current,
@@ -61,6 +72,7 @@ export const useDictionaryList = (initialParams = {}) => {
     loading,
     error,
     fetchList,
-    handlePageChange
+    handlePageChange,
+    setSearch
   };
 };

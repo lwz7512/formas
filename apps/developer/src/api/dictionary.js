@@ -5,19 +5,15 @@ import httpClient from '@/utils/http-client';
  * @param {Object} params 查询参数
  * @param {number} params.current 当前页码
  * @param {number} params.pageSize 每页条数
- * @param {string} params.orderColumn 排序列
+ * @param {string} params.searchs 查询条件列
  */
-export const fetchDictionaryList = async ({
-  currPage = 1,
-  pageSize = 10,
-}) => {
+export const fetchDictionaryList = async (params) => {
   const response = await httpClient.post('/sys/dictionaries/filter', {
-    currPage: currPage,
-    pageSize: pageSize,
-    orders: [{ column: 'category', dir: 'asc' }, { column: 'sequence', dir: 'asc' }],
-    searchs: []
+    currPage: params.currPage,
+    pageSize: params.pageSize,
+    orders: [{ column: 'category', dir: 'asc' }],
+    searchs: params.searchs || [] // 确保传递搜索条件
   });
-  
   return response;
 };
 
