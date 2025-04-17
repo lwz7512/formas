@@ -1,208 +1,205 @@
-import clsx from 'clsx';
-import {
-  App,
-  Flex,
-  Typography,
-  Button,
-  List,
-  Divider,
-  Tree,
-  Dropdown,
-  Space,
-} from 'antd';
+// index.jsx
+import { useState } from 'react';
+import { App, Button, Card, Col, Row, Space, Typography } from 'antd';
+import { ClusterOutlined, PlusOutlined } from '@ant-design/icons';
 
-import {
-  MoreOutlined,
-  PlusOutlined,
-  EditOutlined,
-  DeleteOutlined,
-} from '@ant-design/icons';
+import { useRootNodeList } from './hooks/use-root-node-list';
+import { useCreateRootNode } from './hooks/use-create-root-node';
+import { useEditRootNode } from './hooks/use-modify-root-node';
+import { useRootNodeActions } from './hooks/use-root-node-actions';
+import { useChildNodeList } from './hooks/use-child-node-list';
+import { useCreateChildNode } from './hooks/use-create-child-node';
+import { useChildNodeActions } from './hooks/use-child-node-actions';
+import { useEditChildNode } from './hooks/use-edit-child-node';
 
-import { bizNodeMenuitems } from '@/config';
-import { useBizTreeRoots } from '@/hooks/api-biztree';
-import { useBizTreeState } from '@/hooks/use-biztree';
+import { RootNodeTable } from './components/root-node-table';
+import { CreateRootNodeModal } from './models/create-root-node';
+import { EditRootNodeModal } from './models/modify-root-node';
+import { ChildNodeTree } from './components/child-node-tree';
+import { CreateChildNodeModal } from './models/create-child-node';
+import { EditChildNodeModal } from './models/edit-child-node';
+import './BizTreeConfig.css';
 
-// import { treeData } from './tree-data';
-import { AddRootNodeModal, AddChildNodeModal } from './modals';
-
-/**
- * Business Tree Configuaration
- * @date 2024/12/07
- */
 export const BizTreeConfigPage = () => {
   const { message } = App.useApp();
-  const { list, refresh } = useBizTreeRoots();
 
-  const onRootNodeSuccess = () => {
-    message.success('New Root Node Added to system!');
-  };
-
-  const onChildNodeSuccess = () => {
-    message.success('A child node added to selected node!');
-  };
-
+  // 根节点列表数据
   const {
-    /** root node object */
-    currentRoot,
-    isRootModalOpen,
-    /** child node object */
-    newChildNode,
-    isChildNodeModalOpen,
-    newRootNode,
-    subTreeStruc,
-    showRootModal,
-    showChildModal,
-    onRootNodeMenuClick,
-    closeCurrentModal,
-    rootItemClickHandler,
-    handleRootCreation,
-    handleChildCreation,
-    onTreeNodeSelect,
-    onRootNodeNameChange,
-    onRootNodeDescChange,
-    onChildNodeNameChange,
-    onChildNodeDescChange,
-  } = useBizTreeState(refresh, onRootNodeSuccess, onChildNodeSuccess);
+    data,
+    pagination,
+    loading,
+    handleTableChange,
+    refresh: refreshRootList,
+  } = useRootNodeList();
+
+  // 根节点创建
+  const {
+    isModalOpen: isRootModalOpen,
+    showModal: showRootModal,
+    closeModal: closeRootModal,
+    handleSubmit: handleRootCreation,
+    loading: isCreatingRoot,
+  } = useCreateRootNode(refreshRootList, message);
+
+  // 根节点修改
+  const {
+    isModalOpen: isEditModalOpen,
+    showModal: showEditModal,
+    closeModal: closeEditModal,
+    handleSubmit: handleEditSubmit,
+    loading: isEditingRoot,
+  } = useEditRootNode(refreshRootList, message);
+
+  // 根节点删除
+  const { handleDelete } = useRootNodeActions(refreshRootList);
+
+  // 当前选中节点
+  const [currentNode, setCurrentNode] = useState(null);
+
+  // 子节点hook
+  const {
+    treeData: childTreeData,
+    loading: childLoading,
+    refresh: refreshChildList,
+  } = useChildNodeList(currentNode?.id, message);
+
+  // 添加子节点hook
+  const {
+    isModalOpen: isChildModalOpen,
+    showModal: showChildModal,
+    closeModal: closeChildModal,
+    handleSubmit: handleChildCreation,
+    parentNode,
+    loading: isCreatingChild,
+  } = useCreateChildNode(refreshChildList, message);
+
+  // 编辑子节点hook
+  const {
+    isModalOpen: isEditChildModalOpen,
+    showModal: showEditChildModal,
+    closeModal: closeEditChildModal,
+    handleSubmit: handleEditChildSubmit,
+    currentNode: editingChildNode,
+    loading: isEditingChild,
+  } = useEditChildNode(refreshChildList, message);
+
+  // 删除子节点hook
+  const { isDeleting: isDeletingChild, handleDelete: handleDeleteChild } =
+    useChildNodeActions(refreshChildList, message);
 
   return (
-    <>
-      <Flex vertical gap="middle" style={{ minHeight: '100vh' }}>
-        <Typography.Title className="m-0 text-center">
-          BizTree Config
-        </Typography.Title>
-        {/* left-main-nodes definition | right-sub-nodes definition */}
-        <Flex gap="middle" justify="space-between">
-          <Flex className="left_part" vertical flex={1}>
-            <div className="row-1 mb-4">
-              <Divider
-                orientation="left"
-                style={{
-                  borderColor: '#7cb305',
-                }}
+    <div className="biz-tree-config-page">
+      <Row gutter={[16, 16]}>
+        {/* 左侧根节点区域 */}
+        <Col xs={24} sm={24} md={12} lg={8} xl={6}>
+          <Card
+            title={
+              <Space align="center">
+                <ClusterOutlined />
+                <Typography.Text strong>业务树</Typography.Text>
+              </Space>
+            }
+            extra={
+              <Button
+                type="primary"
+                icon={<PlusOutlined />}
+                onClick={showRootModal}
+                loading={loading || isCreatingRoot}
               >
-                Root Node Creation:
-              </Divider>
-              <Button className="mb-4" type="primary" onClick={showRootModal}>
-                Add Custom Node
+                新增根节点
               </Button>
-              <List
-                header={<div>Start of system nodes:</div>}
-                footer={<div>End of system nodes</div>}
-                bordered
-                dataSource={list}
-                renderItem={item => (
-                  <List.Item
-                    className={clsx(
-                      'select-none flex justify-between',
-                      currentRoot.id == item.id ? 'bg-blue-100' : ''
-                    )}
-                    onClick={() => rootItemClickHandler(item)}
-                  >
-                    <Space>
-                      <Typography.Text>{item.title}</Typography.Text>
-                    </Space>
-                    <Dropdown
-                      menu={{
-                        items: bizNodeMenuitems,
-                        onClick: event => onRootNodeMenuClick(event, item.id),
-                      }}
-                      trigger={['click']}
-                      placement="bottomRight"
-                    >
-                      <a
-                        onClick={e => {
-                          e.preventDefault();
-                          // NOTE: prevent click event propagate to parent item
-                          e.stopPropagation();
-                        }}
-                        className="hover:bg-white"
-                      >
-                        <Space>
-                          <MoreOutlined className=" text-2xl" />
-                        </Space>
-                      </a>
-                    </Dropdown>
-                  </List.Item>
+            }
+            className="root-node-card"
+            loading={loading}
+          >
+            <RootNodeTable
+              data={data}
+              currentId={currentNode?.id}
+              loading={loading}
+              pagination={pagination}
+              onRowClick={setCurrentNode}
+              onMenuClick={(action, id, record) => {
+                if (action === 'delete') {
+                  handleDelete(id);
+                } else if (action === 'edit') {
+                  showEditModal(record);
+                } else if (action === 'add') {
+                  showChildModal(record);
+                }
+              }}
+              onChange={handleTableChange}
+              rowClassName={record =>
+                record.id === currentNode?.id ? 'ant-table-row-selected' : ''
+              }
+            />
+          </Card>
+        </Col>
+
+        {/* 右侧子树区域 */}
+        <Col xs={24} sm={24} md={12} lg={16} xl={18}>
+          <Card
+            title={
+              <Space align="center">
+                <Typography.Text strong>子节点管理</Typography.Text>
+                {currentNode?.title && (
+                  <Typography.Text type="secondary">
+                    (当前根节点: {currentNode.title})
+                  </Typography.Text>
                 )}
-              />
-            </div>
-          </Flex>
-          <Flex className="right_part" vertical flex={1}>
-            <div className="row-1 mb-4">
-              <Divider
-                orientation="left"
-                style={{
-                  borderColor: '#7cb305',
-                }}
-              >
-                Tree Nodes Creation:
-              </Divider>
-              <Tree
-                blockNode
-                showLine={{
-                  showLeafIcon: true,
-                }}
-                showIcon={false}
-                onSelect={onTreeNodeSelect}
-                treeData={subTreeStruc}
-                titleRender={nodeData => {
-                  // console.log(`>>> node data:`);
-                  // console.log(nodeData);
-                  return (
-                    <>
-                      <span className="inline-block">{nodeData.title}</span>
-                      <span
-                        className={clsx(
-                          'opacity-10 hover:opacity-100',
-                          nodeData.depth > 0 ? 'inline-block' : 'hidden'
-                        )}
-                      >
-                        <button
-                          type="button"
-                          className="px-2 hover:bg-blue-200 mr-2"
-                          onClick={showChildModal}
-                        >
-                          <PlusOutlined className="text-base" />
-                        </button>
-                        <button
-                          type="button"
-                          className="px-2 hover:bg-blue-200 mr-2"
-                        >
-                          <EditOutlined className="text-base " />
-                        </button>
-                        <button
-                          type="button"
-                          className="px-2 hover:bg-blue-200 mr-2"
-                        >
-                          <DeleteOutlined className="text-base " />
-                        </button>
-                      </span>
-                    </>
-                  );
-                }}
-              />
-            </div>
-          </Flex>
-        </Flex>
-      </Flex>
-      {/* === Add root node modal === */}
-      <AddRootNodeModal
-        isRootModalOpen={isRootModalOpen}
-        newRootNode={newRootNode}
-        handleRootCreation={handleRootCreation}
-        handleRootModalClose={closeCurrentModal}
-        onRootNodeNameChange={onRootNodeNameChange}
-        onRootNodeDescChange={onRootNodeDescChange}
+              </Space>
+            }
+            className="subtree-card"
+          >
+            <ChildNodeTree
+              currentRoot={currentNode}
+              treeData={childTreeData}
+              loading={childLoading || isDeletingChild}
+              onAddChild={showChildModal}
+              onEditNode={showEditChildModal} // 传递编辑处理函数
+              onDeleteNode={handleDeleteChild} // 传递删除处理函数
+              onNodeSelect={node => {
+                // 处理节点选择
+                console.log('选中节点:', node);
+              }}
+            />
+          </Card>
+        </Col>
+      </Row>
+
+      {/* 创建根节点模态框 */}
+      <CreateRootNodeModal
+        visible={isRootModalOpen}
+        onOk={handleRootCreation} // 直接接收表单值
+        onClose={closeRootModal}
+        loading={isCreatingRoot}
       />
-      {/* === Add Child Node of parent node === */}
-      <AddChildNodeModal
-        isChildNodeModalOpen={isChildNodeModalOpen}
-        newChildNode={newChildNode}
-        handleChildNodeCreation={handleChildCreation}
-        onChildNodeNameChange={onChildNodeNameChange}
-        onChildNodeDescChange={onChildNodeDescChange}
-        handleChildNodeModalClose={closeCurrentModal}
+
+      {/* 修改根节点模态框 */}
+      <EditRootNodeModal
+        visible={isEditModalOpen}
+        onOk={handleEditSubmit}
+        onClose={closeEditModal}
+        node={currentNode}
+        loading={isEditingRoot}
       />
-    </>
+
+      {/* 创建子节点模态框 */}
+      <CreateChildNodeModal
+        visible={isChildModalOpen}
+        onOk={handleChildCreation}
+        onClose={closeChildModal}
+        parentNode={parentNode}
+        loading={isCreatingChild}
+      />
+
+      {/* 编辑子节点模态框 */}
+      <EditChildNodeModal
+        visible={isEditChildModalOpen}
+        onOk={handleEditChildSubmit}
+        onClose={closeEditChildModal}
+        node={editingChildNode}
+        loading={isEditingChild}
+      />
+    </div>
   );
 };
