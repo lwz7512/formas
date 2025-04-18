@@ -1,7 +1,6 @@
 // components/child-node-tree.jsx
-import { Button, Empty, Popconfirm, Tree, theme } from 'antd';
+import { Button, Empty, Popconfirm, Tree } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { useMemo } from 'react';
 
 export const ChildNodeTree = ({
   currentRoot,
@@ -12,18 +11,18 @@ export const ChildNodeTree = ({
   treeData = [],
   loading = false,
 }) => {
-  const { token } = theme.useToken();
-
-  const renderTreeNodeTitle = (nodeData) => {
+  const renderTreeNodeTitle = nodeData => {
     return (
       <div className="flex items-center justify-between w-full group">
-        <span className="truncate flex-1">{nodeData.title}</span>
+        <span className="truncate flex-1" style={{ paddingLeft: 12 }}>
+          {nodeData.title}
+        </span>
         <div className="tree-node-actions opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <Button
             type="text"
             size="small"
             icon={<PlusOutlined />}
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               onAddChild?.(nodeData);
             }}
@@ -32,7 +31,7 @@ export const ChildNodeTree = ({
             type="text"
             size="small"
             icon={<EditOutlined />}
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               onEditNode?.(nodeData);
             }}
@@ -50,22 +49,13 @@ export const ChildNodeTree = ({
               size="small"
               icon={<DeleteOutlined />}
               danger
-              onClick={(e) => e.stopPropagation()}
+              onClick={e => e.stopPropagation()}
             />
           </Popconfirm>
         </div>
       </div>
     );
   };
-
-  const treeStyle = useMemo(
-    () => ({
-      background: token.colorBgContainer,
-      borderRadius: token.borderRadius,
-      padding: '8px 0',
-    }),
-    [token]
-  );
 
   if (!currentRoot) {
     return (
@@ -81,20 +71,16 @@ export const ChildNodeTree = ({
 
   return (
     <Tree
-      className="biz-tree"
-      style={treeStyle}
       blockNode
-      showLine={{
-        showLeafIcon: false,
-        color: token.colorBorderSecondary,
-      }}
-      onSelect={(_, { node }) => onNodeSelect?.(node)}
       treeData={treeData}
       titleRender={renderTreeNodeTitle}
       selectedKeys={[currentRoot?.selectedChildId]}
       expandAction="click"
-      rootStyle={{
-        padding: '4px 0',
+      indent={24}
+      selectable
+      showIcon={false}
+      showLine={{
+        showLeafIcon: false,
       }}
     />
   );
