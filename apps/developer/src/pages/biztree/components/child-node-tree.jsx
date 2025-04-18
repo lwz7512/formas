@@ -1,6 +1,11 @@
 // components/child-node-tree.jsx
 import { Button, Empty, Popconfirm, Tree } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { 
+  PlusOutlined,       // 加号图标
+  EditOutlined,       // 编辑图标
+  DeleteOutlined,     // 删除图标
+  DeploymentUnitOutlined // 部署单元图标
+} from '@ant-design/icons';
 
 export const ChildNodeTree = ({
   currentRoot,
@@ -76,11 +81,14 @@ export const ChildNodeTree = ({
       titleRender={renderTreeNodeTitle}
       selectedKeys={[currentRoot?.selectedChildId]}
       expandAction="click"
-      indent={24}
       selectable
       showIcon={false}
       showLine={{
-        showLeafIcon: false,
+        showLeafIcon: <DeploymentUnitOutlined style={{ 
+          color: '#1890ff', 
+          fontSize: 14,
+          marginRight: 8 
+        }} />,
       }}
     />
   );
