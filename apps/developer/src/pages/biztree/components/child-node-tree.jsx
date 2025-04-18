@@ -19,7 +19,7 @@ export const ChildNodeTree = ({
   const renderTreeNodeTitle = nodeData => {
     return (
       <div className="flex items-center justify-between w-full group">
-        <span className="truncate flex-1" style={{ paddingLeft: 12 }}>
+        <span className="truncate flex-1">
           {nodeData.title}
         </span>
         <div className="tree-node-actions opacity-0 group-hover:opacity-100 transition-opacity duration-200">
