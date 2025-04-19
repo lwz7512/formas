@@ -37,11 +37,22 @@ const fetchMenuListUnderRoot = async () => {
 export const useUserMenu = () => {
   const [menuList, setMenuList] = useState([]);
   const [isRootMenuModalOpen, setIsRootMenuModalOpen] = useState(false);
+  // current root menu object, also act as the parent menu object!
   const [rootMenuObject, setRootMenuObject] = useState(initialRootMenuObject);
+
+  const [isChildMenuModalOpen, setIsChildMenuModalOpen] = useState(false);
+  const [childMenuObject, setChildMenuObject] = useState({
+    pid: '',
+    title: '',
+    type: 'internal_link',
+    value: '',
+    icon: '',
+    sort: 0,
+    status: 1,
+  });
+
   // sub-menu tree
   const { loadTreeBy, treeSelectData } = useMenuTreeQuery();
-  const [isChildMenuModalOpen, setIsChildMenuModalOpen] = useState(false);
-  const [childMenuObject, setChildMenuObject] = useState({});
 
   const showRootMenuModal = () => {
     setIsRootMenuModalOpen(true);
@@ -59,8 +70,14 @@ export const useUserMenu = () => {
     setIsChildMenuModalOpen(false);
   };
 
-  const rootMenuItemClickHandler = item => {
+  const rootMenuItemClickHandler = async item => {
+    // save root menu object
+    setRootMenuObject(item);
+    // load sub-menu tree
     console.log(`>>> load menu tree by item:`, item);
+    // ! to be fixed after the backend is updated...
+    await loadTreeBy(item.id, item.title);
+    // TODO: show child menu tree on right side
   };
 
   const onRootMenuOperationClick = (event, rootId) => {
@@ -71,14 +88,6 @@ export const useUserMenu = () => {
       showChildMenuModal();
       console.log(`>>> showChildMenuModal`);
     }
-  };
-
-  const handleChildMenuCreation = async () => {
-    setIsChildMenuModalOpen(false);
-    console.log(`>>> to create child menu:`, childMenuObject);
-    // await createMenu(childMenuObject);
-    // const res = await loadTreeBy();
-    // setMenuList(res);
   };
 
   /**
@@ -98,6 +107,19 @@ export const useUserMenu = () => {
    */
   const handleMenuObjectChange = (key, value) => {
     setRootMenuObject({ ...rootMenuObject, [key]: value });
+  };
+
+  const handleChildMenuObjectChange = (key, value) => {
+    setChildMenuObject({ ...childMenuObject, [key]: value });
+  };
+
+  const handleChildMenuCreation = async () => {
+    setIsChildMenuModalOpen(false);
+    // console.log(`>>> to create child menu:`, childMenuObject);
+    await createMenu(childMenuObject);
+    // TODO: refresh sub-menu tree ...
+    // const res = await loadTreeBy();
+    // setMenuList(res);
   };
 
   useEffect(() => {
@@ -122,5 +144,6 @@ export const useUserMenu = () => {
     handleMenuObjectChange,
     showChildMenuModal,
     handleChildMenuCreation,
+    handleChildMenuObjectChange,
   };
 };

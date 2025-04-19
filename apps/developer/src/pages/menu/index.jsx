@@ -54,6 +54,7 @@ export const MenuManagePage = () => {
     onRootMenuOperationClick,
     rootMenuItemClickHandler,
     handleChildMenuCreation,
+    handleChildMenuObjectChange,
   } = useUserMenu();
 
   return (
@@ -90,6 +91,7 @@ export const MenuManagePage = () => {
               dataSource={menuList}
               renderItem={item => (
                 <List.Item
+                  key={item.id}
                   className={clsx('select-none flex justify-between')}
                   onClick={() => rootMenuItemClickHandler(item)}
                 >
@@ -99,8 +101,9 @@ export const MenuManagePage = () => {
                   <Dropdown
                     menu={{
                       items: userMenuOperationItems,
-                      onClick: event =>
-                        onRootMenuOperationClick(event, item.id),
+                      onClick: event => {
+                        onRootMenuOperationClick(event, item.id);
+                      },
                     }}
                     trigger={['click']}
                     placement="bottomRight"
@@ -194,7 +197,7 @@ export const MenuManagePage = () => {
         isChildMenuOpen={isChildMenuModalOpen}
         handleChildMenuCreation={handleChildMenuCreation}
         handleChildModalClose={closeChildMenuModal}
-        handleMenuObjectChange={handleMenuObjectChange}
+        handleMenuObjectChange={handleChildMenuObjectChange}
       />
     </>
   );
