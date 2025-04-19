@@ -8,6 +8,27 @@ export const DictionaryTable = ({
   pagination = {},
   onPageChange,
 }) => {
+  // 处理行双击事件
+  const handleRowDoubleClick = (record) => {
+    if (onEdit) {
+      onEdit(record);
+    }
+  };
+
+  // 设置行属性
+  const rowProps = (record) => {
+    return {
+      onDoubleClick: () => handleRowDoubleClick(record),
+      style: { 
+        cursor: 'pointer',
+        // 添加悬停效果
+        ':hover': {
+          backgroundColor: '#f5f5f5'
+        }
+      },
+    };
+  };
+
   const columns = [
     {
       title: '分类',
@@ -89,6 +110,7 @@ export const DictionaryTable = ({
       scroll={{ x: 800 }}
       size="middle"
       bordered={false}
+      onRow={rowProps} // 添加行属性配置
     />
   );
 };

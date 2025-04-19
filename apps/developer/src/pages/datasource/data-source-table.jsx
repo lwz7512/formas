@@ -1,4 +1,3 @@
-// 表格
 import { Button, Table, Popconfirm, Tag } from 'antd';
 
 export const DataSourceTable = ({
@@ -10,6 +9,21 @@ export const DataSourceTable = ({
   pagination = {},
   onPageChange,
 }) => {
+  // 处理行双击事件
+  const handleRowDoubleClick = (record) => {
+    if (onEdit) {
+      onEdit(record);
+    }
+  };
+
+  // 设置行属性
+  const rowProps = (record) => {
+    return {
+      onDoubleClick: () => handleRowDoubleClick(record),
+      style: { cursor: 'pointer' }, // 鼠标悬停时显示手型指针
+    };
+  };
+
   const columns = [
     {
       title: 'Title',
@@ -57,7 +71,7 @@ export const DataSourceTable = ({
         <div className="flex space-x-2">
           <Button
             size="small"
-            onClick={() => onEdit(record)} // 这里传递整行数据
+            onClick={() => onEdit(record)}
           >
             Edit
           </Button>
@@ -102,6 +116,7 @@ export const DataSourceTable = ({
       }}
       scroll={{ x: true }}
       size="middle"
+      onRow={rowProps} // 添加行属性配置
     />
   );
 };
