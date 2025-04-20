@@ -19,7 +19,6 @@ export const MenuManagePage = () => {
     treeSelectData,
     showChildMenuModal,
     showEditChildMenu,
-    showDeleteChildMenu,
     closeChildMenuModal,
     handleChildMenuCreation,
     handleChildMenuObjectChange,
@@ -43,12 +42,6 @@ export const MenuManagePage = () => {
           className="left_part min-h-96 w-1/3 border border-red-500"
           vertical
         >
-          {/* == put button inside of div to limit its width */}
-          {/* <div className="row-1 mb-4">
-            <Button className="mb-4" type="primary" onClick={showRootMenuModal}>
-              Add Root Menu
-            </Button>
-          </div> */}
           <Tree
             blockNode
             selectable
