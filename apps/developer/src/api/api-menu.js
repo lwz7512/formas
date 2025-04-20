@@ -73,11 +73,7 @@ export const createMenu = async item => {
  */
 export const updateMenu = async item => {
   try {
-    const result = await httpClient.put(`/api/formas/menus/${item.key}`, {
-      title: item.title,
-      note: item.type,
-      sequence: item.value,
-    });
+    const result = await httpClient.put(`/formas/menus/${item.key}`, item);
     return result;
   } catch (error) {
     console.error('修改菜单失败:', error);
@@ -91,7 +87,7 @@ export const updateMenu = async item => {
  */
 export const removeMenu = async key => {
   try {
-    const result = await httpClient.delete(`/api/formas/menus/${key}`);
+    const result = await httpClient.delete(`/formas/menus/${key}`);
     return result;
   } catch (error) {
     console.error('删除菜单失败:', error);

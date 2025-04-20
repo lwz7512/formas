@@ -1,11 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
-import {
-  createMenu,
-  fetchMenuList,
-  removeMenu,
-  updateMenu,
-} from '@/api/api-menu';
+import { createMenu, updateMenu, removeMenu } from '@/api/api-menu';
 
 import { ROOT_MENU_PID } from '@/config';
 
@@ -32,24 +27,20 @@ const initialRootMenuObject = {
   note: '',
 };
 
-const fetchMenuListUnderRoot = async () => {
-  const res = await fetchMenuList(ROOT_MENU_PID);
-  return res.datas.filter(item => item.pid === ROOT_MENU_PID);
-};
-
 /**
  * user menu management
  * @date 2025/04/10
  */
 export const useUserMenu = () => {
-  const [menuList, setMenuList] = useState([]);
-  const [isRootMenuModalOpen, setIsRootMenuModalOpen] = useState(false);
   // current root menu object, also act as the parent menu object!
   const [parentMenuObject, setParentMenuObject] = useState(
     initialRootMenuObject
   );
 
   const [isChildMenuModalOpen, setIsChildMenuModalOpen] = useState(false);
+  const [isEditChildMenuModalOpen, setIsEditChildMenuModalOpen] =
+    useState(false);
+
   const [childMenuObject, setChildMenuObject] = useState({
     pid: '',
     title: '',
@@ -73,62 +64,59 @@ export const useUserMenu = () => {
     setParentMenuObject(node);
   };
 
+  /**
+   * show edit child menu modal, and set child menu object
+   * @param {*} node menu node data
+   */
   const showEditChildMenu = node => {
+    setIsEditChildMenuModalOpen(true);
     // show edit child menu modal, and set child menu object
-    setChildMenuObject(node);
-  };
-
-  const showDeleteChildMenu = node => {
-    // show delete child menu modal, and set child menu object
     setChildMenuObject(node);
   };
 
   const closeChildMenuModal = () => {
     setIsChildMenuModalOpen(false);
+    setIsEditChildMenuModalOpen(false);
   };
 
   const handleChildMenuObjectChange = (key, value) => {
     setChildMenuObject({ ...childMenuObject, [key]: value });
   };
 
+  /**
+   * == Create child menu ==
+   */
   const handleChildMenuCreation = async () => {
     setIsChildMenuModalOpen(false);
     await createMenu({ ...childMenuObject, pid: parentMenuObject.key });
     // TODO: refresh sub-menu tree ...
-    const res = await loadTreeBy(ROOT_MENU_PID);
-    setMenuList(res);
+    await loadTreeBy(ROOT_MENU_PID);
   };
 
-  const handleDeleteChildMenu = async menuId => {
-    // await removeMenu(menuId);
+  /**
+   * == Update child menu ==
+   */
+  const handleEditChildMenu = async () => {
+    await updateMenu(childMenuObject);
     // TODO: refresh sub-menu tree ...
-    // const res = await loadTreeBy();
-    // setMenuList(res);
+    await loadTreeBy(ROOT_MENU_PID);
+    closeChildMenuModal();
   };
 
-  const handleEditChildMenu = async menuId => {
-    // await updateMenu(menuId);
+  const handleDeleteChildMenu = async menuNode => {
+    await removeMenu(menuNode.key);
     // TODO: refresh sub-menu tree ...
-    // const res = await loadTreeBy();
-    // setMenuList(res);
+    await loadTreeBy(ROOT_MENU_PID);
   };
-
-  useEffect(() => {
-    fetchMenuListUnderRoot().then(res => {
-      setMenuList(res);
-    });
-  }, []);
 
   return {
-    menuList,
-    isRootMenuModalOpen,
     isChildMenuModalOpen,
+    isEditChildMenuModalOpen,
     childMenuObject,
     treeSelectData,
     closeChildMenuModal,
     showChildMenuModal,
     showEditChildMenu,
-    showDeleteChildMenu,
     handleChildMenuCreation,
     handleChildMenuObjectChange,
     handleDeleteChildMenu,

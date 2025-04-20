@@ -3,6 +3,7 @@ import { Flex, Typography, Tree } from 'antd';
 import { MenuTreeNodeTitle } from './components/tree-node';
 
 import { AddChildMenuModal } from './modals/create-child-menu';
+import { EditChildMenuModal } from './modals/update-child-menu';
 import { useUserMenu } from './hooks/use-user-menu';
 
 /**
@@ -13,6 +14,7 @@ import { useUserMenu } from './hooks/use-user-menu';
 export const MenuManagePage = () => {
   const {
     isChildMenuModalOpen,
+    isEditChildMenuModalOpen,
     childMenuObject,
     treeSelectData,
     showChildMenuModal,
@@ -21,8 +23,8 @@ export const MenuManagePage = () => {
     closeChildMenuModal,
     handleChildMenuCreation,
     handleChildMenuObjectChange,
-    // handleDeleteChildMenu,
-    // handleEditChildMenu,
+    handleEditChildMenu,
+    handleDeleteChildMenu,
   } = useUserMenu();
 
   return (
@@ -57,7 +59,7 @@ export const MenuManagePage = () => {
                   nodeData={nodeData}
                   onAddChild={showChildMenuModal}
                   onEditNode={showEditChildMenu}
-                  onDeleteNode={showDeleteChildMenu}
+                  onDeleteNode={handleDeleteChildMenu}
                 />
               );
             }}
@@ -73,6 +75,13 @@ export const MenuManagePage = () => {
         handleMenuObjectChange={handleChildMenuObjectChange}
       />
       {/* ==== edit child menu modal ==== */}
+      <EditChildMenuModal
+        childMenuObject={childMenuObject}
+        isChildMenuOpen={isEditChildMenuModalOpen}
+        handleChildMenuUpdate={handleEditChildMenu}
+        handleChildModalClose={closeChildMenuModal}
+        handleMenuObjectChange={handleChildMenuObjectChange}
+      />
     </>
   );
 };

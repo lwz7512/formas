@@ -22,16 +22,17 @@ export const isLoggedInValid = () => {
 };
 
 /**
- * rebuild new tree in simple structure
+ * rebuild new tree to add `key` property for each node!
  * @param {object} srcNode
  * @returns
  */
 export const rebuildSimpleTree = srcNode => {
   if (!srcNode) return [];
   const traversor = (sn, dn) => {
-    dn.value = sn.id;
+    // ! copy properties from source node to destination node, to keep the same structure!
+    // @date 2025/04/20
+    Object.assign(dn, sn);
     dn.key = sn.id; // key is a must to have
-    dn.title = sn.title;
     if (sn.children) {
       dn.children = [];
       sn.children.forEach(c => {
