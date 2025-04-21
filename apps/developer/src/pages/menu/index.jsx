@@ -1,16 +1,11 @@
-import { Flex, Typography, Tree } from 'antd';
+import { Button, Card, Col, Row, Space, Typography, Tree } from 'antd';
+import { MenuOutlined, PlusOutlined } from '@ant-design/icons';
 
 import { MenuTreeNodeTitle } from './components/tree-node';
-
 import { AddChildMenuModal } from './modals/create-child-menu';
 import { EditChildMenuModal } from './modals/update-child-menu';
 import { useUserMenu } from './hooks/use-user-menu';
 
-/**
- * Menu Manage Page
- * @date 2025/04/08
- * @returns
- */
 export const MenuManagePage = () => {
   const {
     isChildMenuModalOpen,
@@ -26,40 +21,64 @@ export const MenuManagePage = () => {
     handleDeleteChildMenu,
   } = useUserMenu();
 
+  // 新增根菜单处理函数
+  const handleAddRootMenu = () => {
+    handleChildMenuObjectChange({ parentId: null }); // 设置parentId为null表示根菜单
+    showChildMenuModal();
+  };
+
   return (
-    <>
-      <Flex
-        className="w-100"
-        vertical
-        gap="middle"
-        style={{ minHeight: '100vh' }}
-      >
-        <Typography.Title className="m-0 text-center">
-          User Menu Tree Management
-        </Typography.Title>
-        {/* left-main-nodes definition | right-sub-nodes definition */}
-        <Flex
-          className="left_part min-h-96 w-1/3 border border-red-500"
-          vertical
-        >
-          <Tree
-            blockNode
-            selectable
-            treeData={treeSelectData}
-            titleRender={nodeData => {
-              return (
-                <MenuTreeNodeTitle
-                  nodeData={nodeData}
-                  onAddChild={showChildMenuModal}
-                  onEditNode={showEditChildMenu}
-                  onDeleteNode={handleDeleteChildMenu}
-                />
-              );
+    <div className="biz-tree-config-page">
+      <Row gutter={[16, 16]}>
+        {/* 左侧菜单树区域 */}
+        <Col xs={24} sm={24} md={12} lg={8} xl={6}>
+          <Card
+            title={
+              <Space align="center">
+                <MenuOutlined />
+                <Typography.Text strong>菜单</Typography.Text>
+              </Space>
+            }
+            extra={
+              <Button
+                type="primary"
+                icon={<PlusOutlined />}
+                onClick={handleAddRootMenu}
+                loading={isChildMenuModalOpen}
+              >
+                新增菜单
+              </Button>
+            }
+            bodyStyle={{
+              padding: '20px 20px 20px 0',
+              margin: 0
             }}
-          />
-        </Flex>
-      </Flex>
-      {/* ==== add new menu modal ==== */}
+          >
+            <Tree
+              blockNode
+              selectable
+              treeData={treeSelectData}
+              titleRender={nodeData => {
+                return (
+                  <MenuTreeNodeTitle
+                    nodeData={nodeData}
+                    onAddChild={showChildMenuModal}
+                    onEditNode={showEditChildMenu}
+                    onDeleteNode={handleDeleteChildMenu}
+                  />
+                );
+              }}
+            />
+          </Card>
+        </Col>
+
+        {/* 右侧内容区域 */}
+        <Col xs={24} sm={24} md={12} lg={16} xl={18}>
+          <Card>{/* 这里可以放置菜单详情或其他相关内容 */}</Card>
+        </Col>
+      </Row>
+
+      {/* 新增菜单对话框 */}
       <AddChildMenuModal
         childMenuObject={childMenuObject}
         isChildMenuOpen={isChildMenuModalOpen}
@@ -67,7 +86,8 @@ export const MenuManagePage = () => {
         handleChildModalClose={closeChildMenuModal}
         handleMenuObjectChange={handleChildMenuObjectChange}
       />
-      {/* ==== edit child menu modal ==== */}
+
+      {/* 编辑菜单对话框 */}
       <EditChildMenuModal
         childMenuObject={childMenuObject}
         isChildMenuOpen={isEditChildMenuModalOpen}
@@ -75,6 +95,6 @@ export const MenuManagePage = () => {
         handleChildModalClose={closeChildMenuModal}
         handleMenuObjectChange={handleChildMenuObjectChange}
       />
-    </>
+    </div>
   );
 };

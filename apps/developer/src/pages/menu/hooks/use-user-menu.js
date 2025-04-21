@@ -83,14 +83,21 @@ export const useUserMenu = () => {
     setChildMenuObject({ ...childMenuObject, [key]: value });
   };
 
+  // 修改刷新逻辑
+  const refreshMenuTree = async () => {
+    await loadTreeBy(ROOT_MENU_PID);
+  };
+
   /**
    * == Create child menu ==
    */
   const handleChildMenuCreation = async () => {
     setIsChildMenuModalOpen(false);
-    await createMenu({ ...childMenuObject, pid: parentMenuObject.key });
-    // TODO: refresh sub-menu tree ...
-    await loadTreeBy(ROOT_MENU_PID);
+    await createMenu({
+      ...childMenuObject,
+      pid: parentMenuObject ? parentMenuObject.key : ROOT_MENU_PID,
+    });
+    await refreshMenuTree();
   };
 
   /**
@@ -98,15 +105,13 @@ export const useUserMenu = () => {
    */
   const handleEditChildMenu = async () => {
     await updateMenu(childMenuObject);
-    // TODO: refresh sub-menu tree ...
-    await loadTreeBy(ROOT_MENU_PID);
+    await refreshMenuTree();
     closeChildMenuModal();
   };
 
-  const handleDeleteChildMenu = async menuNode => {
+  const handleDeleteChildMenu = async (menuNode) => {
     await removeMenu(menuNode.key);
-    // TODO: refresh sub-menu tree ...
-    await loadTreeBy(ROOT_MENU_PID);
+    await refreshMenuTree();
   };
 
   return {
