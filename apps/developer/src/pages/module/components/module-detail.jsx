@@ -1,65 +1,55 @@
 // components/module-detail.jsx
-import { useState, useEffect } from 'react';
-import { Button, Empty, Space, Table, Tabs, Typography } from 'antd';
-import { FormOutlined, PlusOutlined, TableOutlined } from '@ant-design/icons';
-// import { useView } from './hooks/use-view';
+import { useState } from 'react';
+import { Button, Empty, Space, Tabs, Typography } from 'antd';
+import { PlusOutlined, TableOutlined } from '@ant-design/icons';
+import { useView } from '../hooks/use-view';
+import { useForm } from '../hooks/use-form';
 import { ViewTable } from './view-table';
+import { FormTable } from './form-table';
+import { FormCreateModel } from '../models/form-create';
 
 export const ModuleDetailPanel = ({ selectedModule }) => {
   const [activeTab, setActiveTab] = useState('forms');
+  
+  // 视图相关逻辑
+  const view = useView(selectedModule?.id);
+  
+  // 表单相关逻辑
+  const {
+    forms,
+    loading,
+    editingKey,
+    isModalOpen,
+    setEditingKey,
+    setIsModalOpen,
+    handleCreate,
+    handleUpdate,
+    handleDelete,
+    handleGenerateView
+  } = useForm(selectedModule?.id);
 
-  // 表单数据
-  const formData = [
-    {
-      id: '1',
-      name: '用户表单',
-      code: 'user_form',
-      description: '用户信息录入表单',
-    },
-    {
-      id: '2',
-      name: '订单表单',
-      code: 'order_form',
-      description: '订单信息表单',
-    },
-  ];
+  // 编辑表单
+  const handleEdit = async (updatedForm) => {
+    try {
+      await handleUpdate(updatedForm.id, updatedForm);
+    } catch (error) {
+      console.error('更新失败:', error);
+    }
+  };
 
-  // 表格列定义
-  const formColumns = [
-    {
-      title: '名称',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: '编码',
-      dataIndex: 'code',
-      key: 'code',
-    },
-    {
-      title: '描述',
-      dataIndex: 'description',
-      key: 'description',
-    },
-    {
-      title: '操作',
-      key: 'action',
-      render: (_, record) => (
-        <Space size="middle">
-          <Button type="link" icon={<FormOutlined />}>
-            编辑
-          </Button>
-          <Button type="link" danger>
-            删除
-          </Button>
-        </Space>
-      ),
-    },
-  ];
+  // 保存表单
+  const handleSave = async (key) => {
+    try {
+      await handleUpdate(key);
+      setEditingKey('');
+    } catch (errInfo) {
+      console.log('保存失败:', errInfo);
+    }
+  };
 
-  // 处理新建操作
-  const handleCreate = () => {
-    console.log(`创建${activeTab === 'forms' ? '表单' : '视图'}`);
+  // 取消编辑
+  const handleCancel = () => {
+    setEditingKey('');
   };
 
   if (!selectedModule) {
@@ -74,44 +64,60 @@ export const ModuleDetailPanel = ({ selectedModule }) => {
   }
 
   return (
-    <Tabs
-      activeKey={activeTab}
-      onChange={setActiveTab}
-      tabBarExtraContent={
-        <Button type="primary" icon={<PlusOutlined />} onClick={handleCreate}>
-          {activeTab === 'forms' ? '新建表单' : '新建视图'}
-        </Button>
-      }
-      items={[
-        {
-          key: 'forms',
-          label: (
-            <Space>
-              <TableOutlined />
-              表单
-            </Space>
-          ),
-          children: (
-            <Table
-              columns={formColumns}
-              dataSource={formData}
-              rowKey="id"
-              bordered
-              size="middle"
-            />
-          ),
-        },
-        {
-          key: 'views',
-          label: (
-            <Space>
-              <TableOutlined />
-              视图
-            </Space>
-          ),
-          children: <ViewTable moduleId={selectedModule?.id} />,
-        },
-      ]}
-    />
+    <>
+      <Tabs
+        activeKey={activeTab}
+        onChange={setActiveTab}
+        tabBarExtraContent={
+          <Button 
+            type="primary" 
+            icon={<PlusOutlined />} 
+            onClick={() => setIsModalOpen(true)}
+          >
+            {activeTab === 'forms' ? '新建表单' : '新建视图'}
+          </Button>
+        }
+        items={[
+          {
+            key: 'forms',
+            label: (
+              <Space>
+                <TableOutlined />
+                表单
+              </Space>
+            ),
+            children: (
+              <FormTable
+                forms={forms}
+                loading={loading}
+                editingKey={editingKey}
+                onEdit={handleEdit}
+                onSave={handleSave}
+                onCancel={handleCancel}
+                onDelete={handleDelete}
+                onGenerateView={handleGenerateView}
+              />
+            ),
+          },
+          {
+            key: 'views',
+            label: (
+              <Space>
+                <TableOutlined />
+                视图
+              </Space>
+            ),
+            children: <ViewTable moduleId={selectedModule?.id} />,
+          },
+        ]}
+      />
+      
+      <FormCreateModel
+        visible={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        onSubmit={handleCreate}
+        moduleId={selectedModule?.id}
+      />
+    </>
   );
 };
