@@ -29,7 +29,7 @@ export const ViewTable = ({ moduleId }) => {
           <Button type="link">编辑</Button>
           <Popconfirm
             title="确定要删除此视图吗?"
-            onConfirm={() => handleDelete(record.key)}
+            onConfirm={() => handleDelete(record.id)}
           >
             <Button type="link" danger>
               删除
@@ -44,8 +44,8 @@ export const ViewTable = ({ moduleId }) => {
     <Table
       columns={columns}
       dataSource={views}
-      rowKey="key"
-      bordered
+      rowKey="id"
+      bordered={false}
       size="middle"
       loading={loading}
     />

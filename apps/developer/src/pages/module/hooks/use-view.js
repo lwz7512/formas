@@ -12,8 +12,8 @@ export const useView = (moduleId) => {
     try {
       setLoading(true);
       const response = await fetchDataviewList(id);
-      setViews(response.data || []);
-      return response.data;
+      setViews(response.datas || []);
+      return response.datas;
     } catch (error) {
       notification.error({ message: '加载视图失败' });
       return [];

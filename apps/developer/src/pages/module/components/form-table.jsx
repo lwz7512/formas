@@ -1,6 +1,8 @@
 // components/form-table.jsx
 import { useState } from 'react';
 import { Form, Table, Typography, Button, Popconfirm, Space, Modal, Input, InputNumber } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { FORM_DEFINE_PATH } from '@/constants';
 
 export const FormTable = ({ 
   forms, 
@@ -12,6 +14,12 @@ export const FormTable = ({
   const [form] = Form.useForm();
   const [editingRecord, setEditingRecord] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const navigate = useNavigate();
+
+  // 打开表单设计器
+  const openFormDesigner = (formId) => {
+    navigate(`${FORM_DEFINE_PATH}/designer?formid=${formId}`);
+  };
 
   // 打开编辑对话框
   const handleEdit = (record) => {
@@ -61,6 +69,12 @@ export const FormTable = ({
           <Typography.Link onClick={() => handleEdit(record)}>
             编辑
           </Typography.Link>
+          <Button
+            size="small"
+            onClick={() => openFormDesigner(record.id)}
+          >
+            表单设计
+          </Button>
           <Button
             size="small"
             onClick={() => onGenerateView(record.id)}
