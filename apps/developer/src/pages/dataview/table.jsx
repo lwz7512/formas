@@ -1,3 +1,4 @@
+// view-table.jsx
 import { useEffect } from 'react';
 import { Table, Button, Popconfirm } from 'antd';
 

@@ -1,9 +1,12 @@
 // index.jsx
 import { useState } from 'react';
 import { App, Card, Col, Row, Space, Typography } from 'antd';
+
 import { useModuleTree } from './hooks/use-module-tree';
+
 import { ModuleCreateModel } from './models/module-create';
 import { ModuleTree } from './components/module-tree';
+import { ModuleDetailPanel } from './components/module-detail';
 import { ROOT_BIZ_TREE_ID } from '@/config';
 
 export const ModuleManagement = () => {
@@ -14,7 +17,6 @@ export const ModuleManagement = () => {
     createModule,
     updateModule,
     deleteModule,
-    refreshModules,
     selectedModule,
     setSelectedModule,
   } = useModuleTree();
@@ -89,24 +91,3 @@ export const ModuleManagement = () => {
     </div>
   );
 };
-
-const ModuleDetailPanel = ({ selectedModule }) => (
-  <Card
-    title={
-      <Space align="center">
-        <Typography.Text strong>模块详情</Typography.Text>
-        {selectedModule && (
-          <Typography.Text type="secondary">
-            (当前模块: {selectedModule.title})
-          </Typography.Text>
-        )}
-      </Space>
-    }
-  >
-    {selectedModule ? (
-      <div>模块详情内容</div>
-    ) : (
-      <div>请从左侧选择模块</div>
-    )}
-  </Card>
-);
