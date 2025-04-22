@@ -1,4 +1,3 @@
-// hooks/use-module-tree.js
 // src/hooks/use-module-tree.js
 import { useState, useEffect } from 'react';
 import { message } from 'antd';
@@ -24,11 +23,11 @@ export const useModuleTree = () => {
   };
 
   // 新增模块
-  const addModule = async (moduleData, parentId = null) => {
+  const addModule = async (moduleData, parentId) => {
     try {
+      moduleData.pid = parentId;
       const newModule = await createModule({
-        ...moduleData,
-        parentId
+        ...moduleData
       });
       await fetchModules();
       return newModule;
@@ -39,7 +38,7 @@ export const useModuleTree = () => {
   };
 
   // 更新模块
-  const updateModule = async (id, moduleData) => {
+  const handleUpdateModule = async (id, moduleData) => {
     try {
       await updateModule(id, moduleData);
       await fetchModules();
@@ -50,9 +49,9 @@ export const useModuleTree = () => {
   };
 
   // 删除模块
-  const deleteModule = async (id) => {
+  const handleDeleteModule = async (node) => {
     try {
-      await deleteModule(id);
+      await deleteModule(node.id);
       await fetchModules();
       message.success('删除成功');
     } catch (error) {
@@ -73,7 +72,7 @@ export const useModuleTree = () => {
     setSelectedModule,
     fetchModules,
     addModule,
-    updateModule,
-    deleteModule
+    handleUpdateModule,
+    handleDeleteModule
   };
 };

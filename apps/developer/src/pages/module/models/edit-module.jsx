@@ -1,61 +1,57 @@
-// src/models/create-module.jsx
+// models/edit-module.jsx
+import { Form, Input, Modal } from 'antd';
 import { useEffect } from 'react';
-import { Modal, Input, Form } from 'antd';
 
 const { TextArea } = Input;
 
-export const CreateModuleModal = ({ 
-  visible, 
-  onOk, 
+export const EditModuleModal = ({
+  visible,
+  onOk,
   onClose,
-  parentModule = { title: '', description: '' },
-  loading
+  moduleData,
+  loading = false,
 }) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    if (visible) {
+    if (moduleData) {
       form.setFieldsValue({
-        title: '',
-        description: ''
+        title: moduleData.title,
+        // Add other fields if needed
+        description: moduleData.description,
       });
     }
-  }, [visible, form]);
+  }, [moduleData, form]);
 
-  const handleSubmit = async () => {
+  const handleOk = async () => {
     try {
       const values = await form.validateFields();
-      await onOk(values);
-      form.resetFields();
+      await onOk(values);  // 等待操作完成
+      form.resetFields();  // 重置表单
     } catch (error) {
-      console.error('验证失败:', error);
+      console.error('Validation or submission failed:', error);
+      throw error; // 抛出错误让Modal保持打开
     }
-  };
-
-  const handleCancel = () => {
-    form.resetFields();
-    onClose();
   };
 
   return (
     <Modal
-      title={`新增模块${parentModule?.title ? `到【${parentModule.title}】` : ''}`}
+      title="编辑模块"
       open={visible}
-      onOk={handleSubmit}
-      onCancel={handleCancel}
+      onOk={handleOk}
+      onCancel={onClose}
       confirmLoading={loading}
       destroyOnClose
-      width={600}
     >
       <Form form={form} layout="vertical">
         <Form.Item
-          label="模块名称"
           name="title"
+          label="模块名称"
           rules={[{ required: true, message: '请输入模块名称' }]}
         >
-          <Input placeholder="例如: 预算管理系统" />
+          <Input placeholder="请输入模块名称" />
         </Form.Item>
-        
+        {/* Add other form fields if needed */}
         <Form.Item
           label="模块描述"
           name="description"

@@ -1,32 +1,46 @@
 // index.jsx
 import { useState } from 'react';
-import { App, Button, Card, Col, Row, Space, Typography, Tree } from 'antd';
-import { AppstoreOutlined, PlusOutlined } from '@ant-design/icons';
+import { App, Card, Col, Row, Space, Typography, message } from 'antd';
 import { useModuleTree } from './hooks/use-module-tree';
-
 import { CreateModuleModal } from './models/create-module';
+import { ROOT_BIZ_TREE_ID } from '@/config';
+import { ModuleTree } from './components/module-tree';
 
 export const ModuleDevelopmentConsole = () => {
   const { message } = App.useApp();
   const {
     treeData,
     loading,
-    // selectedModule,
-    // setSelectedModule,
-    addModule
+    addModule,
+    handleDeleteModule, // 假设你的useModuleTree hook中有这个方法
+    handleUpdateModule,
   } = useModuleTree();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedModule, setSelectedModule] = useState(null);
 
-  const handleCreateModule = async (values) => {
+  const handleAddModule = async (values, parentId = ROOT_BIZ_TREE_ID) => {
     try {
-      // 调用API创建模块
-      console.log('创建模块:', values);
-      // 成功后关闭对话框
-      setIsModalVisible(false);
+      await addModule(values, parentId);
+      message.success(parentId ? '子模块添加成功' : '模块创建成功');
     } catch (error) {
       console.error('创建失败', error);
+      message.error(parentId ? '子模块添加失败' : '模块创建失败');
+      throw error; // 抛出错误让对话框保持打开
+    }
+  };
+
+  const onDeleteModule = async id => {
+    try {
+      await handleDeleteModule(id);
+      message.success('删除成功');
+      // 如果删除的是当前选中的节点，清空选中状态
+      if (selectedModule && selectedModule.id === id) {
+        setSelectedModule(null);
+      }
+    } catch (error) {
+      console.error('删除失败', error);
+      message.error('删除失败');
     }
   };
 
@@ -34,40 +48,32 @@ export const ModuleDevelopmentConsole = () => {
     setSelectedModule(node);
   };
 
+  const handleEditModule = async (module, values) => {
+    try {
+      await handleUpdateModule(module.id, values);
+      message.success('模块更新成功');
+    } catch (error) {
+      console.error('更新失败', error);
+      message.error('模块更新失败');
+      throw error; // 抛出错误让对话框保持打开
+    }
+  };
+
   return (
     <div className="module-development-console">
       <Row gutter={[16, 16]}>
-        {/* 左侧模块树区域 */}
         <Col xs={24} sm={24} md={12} lg={8} xl={6}>
-          <Card
-            title={
-              <Space align="center">
-                <AppstoreOutlined />
-                <Typography.Text strong>模块</Typography.Text>
-              </Space>
-            }
-            extra={
-              <Button
-                type="primary"
-                icon={<PlusOutlined />}
-                onClick={() => setIsModalVisible(true)}
-                loading={loading}
-              >
-                新增模块
-              </Button>
-            }
+        <ModuleTree
+            treeData={treeData}
             loading={loading}
-          >
-            <Tree
-              treeData={treeData}
-              onSelect={onSelectModule}
-              selectedKeys={selectedModule ? [selectedModule.key] : []}
-              fieldNames={{ title: 'title', key: 'id' }}
-            />
-          </Card>
+            selectedModule={selectedModule}
+            onSelectModule={onSelectModule}
+            onAddModule={handleAddModule}
+            onEditModule={handleEditModule}
+            onDeleteModule={onDeleteModule}
+          />
         </Col>
 
-        {/* 右侧内容区域 */}
         <Col xs={24} sm={24} md={12} lg={16} xl={18}>
           <Card
             title={
@@ -81,14 +87,14 @@ export const ModuleDevelopmentConsole = () => {
               </Space>
             }
           >
-            {/* 这里放置子模块或表单等内容 */}
+            {/* 内容区域 */}
           </Card>
         </Col>
       </Row>
 
       <CreateModuleModal
         visible={isModalVisible}
-        onOk={handleCreateModule}
+        onOk={handleAddModule}
         onClose={() => setIsModalVisible(false)}
         parentModule={selectedModule}
         loading={false}
