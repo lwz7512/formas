@@ -11,7 +11,7 @@ import {
 import { GuestLayout, HeaderFooterLayout } from '@/layouts';
 
 import { WelcomePage, SignInPage, SignUpPage } from '../pages/auth';
-import { ModuleDevelopmentConsole } from '../pages/module';
+import { ModuleManagement } from '../pages/module';
 import { ErrorPage } from '../pages/errors/error-x';
 import { DictionaryPage } from '../pages/dictionary';
 import { BizTreeConfigPage } from '../pages/biztree';
@@ -67,7 +67,7 @@ export const Routers = createBrowserRouter(
         {
           index: true,
           path: '',
-          element: <ModuleDevelopmentConsole />,
+          element: <ModuleManagement />,
         },
       ],
     },

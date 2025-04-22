@@ -1,78 +1,86 @@
-// src/hooks/use-module-tree.js
+// hooks/use-module-tree.js
 import { useState, useEffect } from 'react';
 import { message } from 'antd';
-import { fetchModuleTree, createModule, updateModule, deleteModule } from '@/api/modules';
+import { 
+  fetchModuleTree, 
+  createModule as apiCreateModule, 
+  updateModule as apiUpdateModule, 
+  deleteModule as apiDeleteModule 
+} from '@/api/modules';
 
 export const useModuleTree = () => {
-  const [treeData, setTreeData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [selectedModule, setSelectedModule] = useState(null);
+  const [state, setState] = useState({
+    modules: [],
+    isLoading: false,
+    selectedModule: null,
+  });
 
-  // 获取模块树数据
   const fetchModules = async () => {
+    setState(prev => ({ ...prev, isLoading: true }));
     try {
-      setLoading(true);
       const response = await fetchModuleTree();
-      setTreeData(response.datas);
+      setState(prev => ({ ...prev, modules: response.datas }));
     } catch (error) {
       message.error('获取模块树失败');
-      console.error(error);
+      console.error('Fetch modules error:', error);
     } finally {
-      setLoading(false);
+      setState(prev => ({ ...prev, isLoading: false }));
     }
   };
 
-  // 新增模块
-  const addModule = async (moduleData, parentId) => {
+  const createModule = async (moduleData, parentId) => {
     try {
-      moduleData.pid = parentId;
-      const newModule = await createModule({
-        ...moduleData
-      });
-      await fetchModules();
-      return newModule;
-    } catch (error) {
-      message.error('新增模块失败');
-      throw error;
-    }
-  };
-
-  // 更新模块
-  const handleUpdateModule = async (id, moduleData) => {
-    try {
-      await updateModule(id, moduleData);
+      setState(prev => ({ ...prev, isLoading: true }));
+      await apiCreateModule({ ...moduleData, pid: parentId });
       await fetchModules();
     } catch (error) {
-      message.error('更新模块失败');
+      console.error('Create module error:', error);
       throw error;
+    } finally {
+      setState(prev => ({ ...prev, isLoading: false }));
     }
   };
 
-  // 删除模块
-  const handleDeleteModule = async (node) => {
+  const updateModule = async (moduleId, moduleData) => {
     try {
-      await deleteModule(node.id);
+      setState(prev => ({ ...prev, isLoading: true }));
+      await apiUpdateModule(moduleId, moduleData);
       await fetchModules();
-      message.success('删除成功');
     } catch (error) {
-      message.error('删除模块失败');
+      console.error('Update module error:', error);
       throw error;
+    } finally {
+      setState(prev => ({ ...prev, isLoading: false }));
     }
   };
 
-  // 初始化加载数据
+  const deleteModule = async (moduleId) => {
+    try {
+      setState(prev => ({ ...prev, isLoading: true }));
+      await apiDeleteModule(moduleId);
+      await fetchModules();
+    } catch (error) {
+      console.error('Delete module error:', error);
+      throw error;
+    } finally {
+      setState(prev => ({ ...prev, isLoading: false }));
+    }
+  };
+
+  const setSelectedModule = (module) => {
+    setState(prev => ({ ...prev, selectedModule: module }));
+  };
+
   useEffect(() => {
     fetchModules();
   }, []);
 
   return {
-    treeData,
-    loading,
-    selectedModule,
+    ...state,
+    refreshModules: fetchModules,
+    createModule,
+    updateModule,
+    deleteModule,
     setSelectedModule,
-    fetchModules,
-    addModule,
-    handleUpdateModule,
-    handleDeleteModule
   };
 };

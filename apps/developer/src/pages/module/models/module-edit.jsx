@@ -1,47 +1,46 @@
-// models/edit-module.jsx
+// models/module-edit.jsx
 import { Form, Input, Modal } from 'antd';
 import { useEffect } from 'react';
 
 const { TextArea } = Input;
 
-export const EditModuleModal = ({
-  visible,
-  onOk,
+export const ModuleEditModal = ({
+  open,
   onClose,
-  moduleData,
-  loading = false,
+  onSubmit,
+  module,
+  isLoading = false,
 }) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    if (moduleData) {
+    if (module) {
       form.setFieldsValue({
-        title: moduleData.title,
-        // Add other fields if needed
-        description: moduleData.description,
+        title: module.title,
+        description: module.description,
       });
     }
-  }, [moduleData, form]);
+  }, [module, form]);
 
-  const handleOk = async () => {
+  const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
-      await onOk(values);  // 等待操作完成
-      form.resetFields();  // 重置表单
+      const success = await onSubmit(values);
+      if (success) onClose();
     } catch (error) {
-      console.error('Validation or submission failed:', error);
-      throw error; // 抛出错误让Modal保持打开
+      console.error('Form validation failed:', error);
     }
   };
 
   return (
     <Modal
       title="编辑模块"
-      open={visible}
-      onOk={handleOk}
+      open={open}
+      onOk={handleSubmit}
       onCancel={onClose}
-      confirmLoading={loading}
+      confirmLoading={isLoading}
       destroyOnClose
+      width={600}
     >
       <Form form={form} layout="vertical">
         <Form.Item
@@ -51,10 +50,10 @@ export const EditModuleModal = ({
         >
           <Input placeholder="请输入模块名称" />
         </Form.Item>
-        {/* Add other form fields if needed */}
+        
         <Form.Item
-          label="模块描述"
           name="description"
+          label="模块描述"
         >
           <TextArea placeholder="可选描述信息" rows={4} />
         </Form.Item>

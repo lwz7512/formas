@@ -1,64 +1,56 @@
-// src/models/create-module.jsx
+// models/module-create.jsx
+import { Form, Input, Modal } from 'antd';
 import { useEffect } from 'react';
-import { Modal, Input, Form } from 'antd';
 
 const { TextArea } = Input;
 
-export const CreateModuleModal = ({ 
-  visible, 
-  onOk, 
+export const ModuleCreateModel = ({ 
+  open, 
   onClose,
-  parentModule = { title: '', description: '' },
-  loading
+  onSubmit,
+  parentModule,
+  isLoading = false,
 }) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    if (visible) {
-      form.setFieldsValue({
-        title: '',
-        description: ''
-      });
+    if (open) {
+      form.resetFields();
     }
-  }, [visible, form]);
+  }, [open, form]);
 
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
-      await onOk(values);
-      form.resetFields();
+      const success = await onSubmit(values);
+      if (success) onClose();
     } catch (error) {
-      console.error('验证失败:', error);
+      console.error('Form validation failed:', error);
     }
-  };
-
-  const handleCancel = () => {
-    form.resetFields();
-    onClose();
   };
 
   return (
     <Modal
       title={`新增模块${parentModule?.title ? `到【${parentModule.title}】` : ''}`}
-      open={visible}
+      open={open}
       onOk={handleSubmit}
-      onCancel={handleCancel}
-      confirmLoading={loading}
+      onCancel={onClose}
+      confirmLoading={isLoading}
       destroyOnClose
       width={600}
     >
       <Form form={form} layout="vertical">
         <Form.Item
-          label="模块名称"
           name="title"
+          label="模块名称"
           rules={[{ required: true, message: '请输入模块名称' }]}
         >
           <Input placeholder="例如: 预算管理系统" />
         </Form.Item>
         
         <Form.Item
-          label="模块描述"
           name="description"
+          label="模块描述"
         >
           <TextArea placeholder="可选描述信息" rows={4} />
         </Form.Item>

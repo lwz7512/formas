@@ -1,6 +1,6 @@
 // components/module-tree.jsx
 import { useState } from 'react';
-import { Button, Card, Empty, Popconfirm, Space, Tree, Typography } from 'antd';
+import { Button, Card, Empty, Popconfirm, Tree, Typography } from 'antd';
 import { 
   AppstoreOutlined,
   PlusOutlined,
@@ -8,151 +8,121 @@ import {
   DeleteOutlined,
   DeploymentUnitOutlined
 } from '@ant-design/icons';
-import { EditModuleModal } from '../models/edit-module';
-import { CreateModuleModal } from '../models/create-module';
+import { ModuleCreateModel } from '../models/module-create';
+import { ModuleEditModal } from '../models/module-edit';
 
 export const ModuleTree = ({
-  treeData = [],
-  loading = false,
+  modules = [],
+  isLoading = false,
   selectedModule,
   onSelectModule,
-  onAddModule,
-  onEditModule,
+  onCreateModule,
+  onUpdateModule,
   onDeleteModule,
+  onOpenCreateModal,
 }) => {
-  const [editModalVisible, setEditModalVisible] = useState(false);
-  const [currentEditModule, setCurrentEditModule] = useState(null);
-  const [addModalVisible, setAddModalVisible] = useState(false);
-  const [currentParentModule, setCurrentParentModule] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [editingModule, setEditingModule] = useState(null);
+  const [parentModule, setParentModule] = useState(null);
 
-  const renderTreeNodeTitle = (nodeData) => {
-    return (
-      <div className="flex items-center justify-between w-full group">
-        <span className="truncate flex-1">
-          {nodeData.title}
-        </span>
-        <div className="tree-node-actions opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          <Button
-            type="text"
-            size="small"
-            icon={<PlusOutlined />}
-            onClick={(e) => {
-              e.stopPropagation();
-              setCurrentParentModule(nodeData);
-              setAddModalVisible(true);
-            }}
-          />
-          <Button
-            type="text"
-            size="small"
-            icon={<EditOutlined />}
-            onClick={(e) => {
-              e.stopPropagation();
-              setCurrentEditModule(nodeData);
-              setEditModalVisible(true);
-            }}
-          />
-          <Popconfirm
-            title={`确认删除【${nodeData.title}】模块？`}
-            description="删除后无法恢复，请谨慎操作"
-            onConfirm={() => onDeleteModule?.(nodeData)}
-            okText="确认删除"
-            cancelText="取消"
-            okButtonProps={{ danger: true }}
-          >
-            <Button
-              type="text"
-              size="small"
-              icon={<DeleteOutlined />}
-              danger
-              onClick={(e) => e.stopPropagation()}
-            />
-          </Popconfirm>
-        </div>
-      </div>
-    );
-  };
-
-  const handleAddModule = async (values) => {
-    try {
-      await onAddModule?.(values, currentParentModule?.id);
-      setAddModalVisible(false);
-    } catch (error) {
-      console.error('添加子模块失败:', error);
-    }
-  };
-
-  const handleEditModule = async (values) => {
-    try {
-      await onEditModule?.(currentEditModule, values);
-      setEditModalVisible(false);
-    } catch (error) {
-      console.error('编辑失败:', error);
-    }
-  };
-
-  if (treeData.length === 0 && !loading) {
-    return (
-      <Card
-        title={
-          <Space align="center">
-            <AppstoreOutlined />
-            <Typography.Text strong>模块</Typography.Text>
-          </Space>
-        }
-        extra={
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => {
-              setCurrentParentModule(null);
-              setAddModalVisible(true);
-            }}
-            loading={loading}
-          >
-            新增模块
-          </Button>
-        }
+  const renderModuleActions = (module) => (
+    <div className="module-actions opacity-0 group-hover:opacity-100 transition-opacity">
+      <Button
+        type="text"
+        size="small"
+        icon={<PlusOutlined />}
+        onClick={(e) => {
+          e.stopPropagation();
+          setParentModule(module);
+          setIsCreateModalOpen(true);
+        }}
+        aria-label="添加子模块"
+      />
+      <Button
+        type="text"
+        size="small"
+        icon={<EditOutlined />}
+        onClick={(e) => {
+          e.stopPropagation();
+          setEditingModule(module);
+          setIsEditModalOpen(true);
+        }}
+        aria-label="编辑模块"
+      />
+      <Popconfirm
+        title={`确认删除【${module.title}】模块？`}
+        description="删除后无法恢复，请谨慎操作"
+        onConfirm={() => onDeleteModule(module.id)}
+        okText="确认删除"
+        cancelText="取消"
+        okButtonProps={{ danger: true }}
       >
-        <div className="flex items-center justify-center h-full">
-          <Empty
-            image={Empty.PRESENTED_IMAGE_SIMPLE}
-            description="暂无模块数据"
-            imageStyle={{ height: 60 }}
-          />
-        </div>
-      </Card>
+        <Button
+          type="text"
+          size="small"
+          icon={<DeleteOutlined />}
+          danger
+          onClick={(e) => e.stopPropagation()}
+          aria-label="删除模块"
+        />
+      </Popconfirm>
+    </div>
+  );
+
+  const renderModuleTitle = (module) => (
+    <div className="flex items-center justify-between w-full group">
+      <span className="truncate flex-1">{module.title}</span>
+      {renderModuleActions(module)}
+    </div>
+  );
+
+  const processModuleTree = (nodes) => 
+    nodes.map(node => ({
+      ...node,
+      title: renderModuleTitle(node),
+      children: node.children ? processModuleTree(node.children) : undefined,
+    }));
+
+  const handleCreateSubmit = async (values) => {
+    const success = await onCreateModule(values, parentModule?.id);
+    if (success) setIsCreateModalOpen(false);
+  };
+
+  const handleUpdateSubmit = async (values) => {
+    const success = await onUpdateModule(editingModule, values);
+    if (success) setIsEditModalOpen(false);
+  };
+
+  if (modules.length === 0 && !isLoading) {
+    return (
+      <ModuleTreeEmptyState 
+        onAddModule={onOpenCreateModal} 
+        isLoading={isLoading}
+      />
     );
   }
 
   return (
     <>
       <Card
-        title={
-          <Space align="center">
-            <AppstoreOutlined />
-            <Typography.Text strong>模块</Typography.Text>
-          </Space>
-        }
+        title={<ModuleTreeTitle />}
         extra={
           <Button
             type="primary"
             icon={<PlusOutlined />}
-            onClick={() => {
-              setCurrentParentModule(null);
-              setAddModalVisible(true);
-            }}
-            loading={loading}
+            onClick={onOpenCreateModal}
+            loading={isLoading}
+            aria-label="添加根模块"
           >
             新增模块
           </Button>
         }
-        loading={loading}
+        loading={isLoading}
       >
         <Tree
           blockNode
-          treeData={treeData}
-          titleRender={renderTreeNodeTitle}
+          treeData={processModuleTree(modules)}
           selectedKeys={selectedModule ? [selectedModule.key] : []}
           onSelect={onSelectModule}
           expandAction="click"
@@ -160,34 +130,55 @@ export const ModuleTree = ({
           showIcon={false}
           showLine={{
             showLeafIcon: (
-              <DeploymentUnitOutlined style={{ 
-                color: '#1890ff', 
-                fontSize: 14,
-                marginRight: 8 
-              }} />
+              <DeploymentUnitOutlined className="text-blue-500 text-sm mr-2" />
             ),
           }}
           fieldNames={{ title: 'title', key: 'id' }}
         />
       </Card>
 
-      {/* 编辑模块对话框 */}
-      <EditModuleModal
-        visible={editModalVisible}
-        onOk={handleEditModule}
-        onClose={() => setEditModalVisible(false)}
-        moduleData={currentEditModule}
-        loading={loading}
+      <ModuleEditModal
+        open={isEditModalOpen}
+        module={editingModule}
+        onClose={() => setIsEditModalOpen(false)}
+        onSubmit={handleUpdateSubmit}
       />
 
-      {/* 复用创建模块对话框 */}
-      <CreateModuleModal
-        visible={addModalVisible}
-        onOk={handleAddModule}
-        onClose={() => setAddModalVisible(false)}
-        parentModule={currentParentModule}
-        loading={loading}
+      <ModuleCreateModel
+        open={isCreateModalOpen}
+        parentModule={parentModule}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSubmit={handleCreateSubmit}
       />
     </>
   );
 };
+
+const ModuleTreeTitle = () => (
+  <div className="flex items-center">
+    <AppstoreOutlined className="mr-2" />
+    <span className="font-semibold">模块列表</span>
+  </div>
+);
+
+const ModuleTreeEmptyState = ({ onAddModule, isLoading }) => (
+  <Card
+    title={<ModuleTreeTitle />}
+    extra={
+      <Button
+        type="primary"
+        icon={<PlusOutlined />}
+        onClick={onAddModule}
+        loading={isLoading}
+      >
+        新增模块
+      </Button>
+    }
+  >
+    <Empty
+      image={Empty.PRESENTED_IMAGE_SIMPLE}
+      description="暂无模块数据"
+      imageStyle={{ height: 60 }}
+    />
+  </Card>
+);

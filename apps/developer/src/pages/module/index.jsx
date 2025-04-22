@@ -1,104 +1,112 @@
 // index.jsx
 import { useState } from 'react';
-import { App, Card, Col, Row, Space, Typography, message } from 'antd';
+import { App, Card, Col, Row, Space, Typography } from 'antd';
 import { useModuleTree } from './hooks/use-module-tree';
-import { CreateModuleModal } from './models/create-module';
-import { ROOT_BIZ_TREE_ID } from '@/config';
+import { ModuleCreateModel } from './models/module-create';
 import { ModuleTree } from './components/module-tree';
+import { ROOT_BIZ_TREE_ID } from '@/config';
 
-export const ModuleDevelopmentConsole = () => {
+export const ModuleManagement = () => {
   const { message } = App.useApp();
   const {
-    treeData,
-    loading,
-    addModule,
-    handleDeleteModule, // 假设你的useModuleTree hook中有这个方法
-    handleUpdateModule,
+    modules,
+    isLoading,
+    createModule,
+    updateModule,
+    deleteModule,
+    refreshModules,
+    selectedModule,
+    setSelectedModule,
   } = useModuleTree();
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedModule, setSelectedModule] = useState(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-  const handleAddModule = async (values, parentId = ROOT_BIZ_TREE_ID) => {
+  const handleCreateModule = async (values, parentId = ROOT_BIZ_TREE_ID) => {
     try {
-      await addModule(values, parentId);
+      await createModule(values, parentId);
       message.success(parentId ? '子模块添加成功' : '模块创建成功');
+      return true;
     } catch (error) {
-      console.error('创建失败', error);
       message.error(parentId ? '子模块添加失败' : '模块创建失败');
-      throw error; // 抛出错误让对话框保持打开
+      return false;
     }
   };
 
-  const onDeleteModule = async id => {
+  const handleDeleteModule = async (moduleId) => {
     try {
-      await handleDeleteModule(id);
+      await deleteModule(moduleId);
       message.success('删除成功');
-      // 如果删除的是当前选中的节点，清空选中状态
-      if (selectedModule && selectedModule.id === id) {
+      if (selectedModule?.id === moduleId) {
         setSelectedModule(null);
       }
     } catch (error) {
-      console.error('删除失败', error);
       message.error('删除失败');
     }
   };
 
-  const onSelectModule = (selectedKeys, { node }) => {
-    setSelectedModule(node);
-  };
-
-  const handleEditModule = async (module, values) => {
+  const handleUpdateModule = async (module, values) => {
     try {
-      await handleUpdateModule(module.id, values);
+      await updateModule(module.id, values);
       message.success('模块更新成功');
+      return true;
     } catch (error) {
-      console.error('更新失败', error);
       message.error('模块更新失败');
-      throw error; // 抛出错误让对话框保持打开
+      return false;
     }
   };
 
+  const handleSelectModule = (selectedKeys, { node }) => {
+    setSelectedModule(node);
+  };
+
   return (
-    <div className="module-development-console">
-      <Row gutter={[16, 16]}>
+    <div className="module-management">
+      <Row gutter={16}>
         <Col xs={24} sm={24} md={12} lg={8} xl={6}>
-        <ModuleTree
-            treeData={treeData}
-            loading={loading}
+          <ModuleTree
+            modules={modules}
+            isLoading={isLoading}
             selectedModule={selectedModule}
-            onSelectModule={onSelectModule}
-            onAddModule={handleAddModule}
-            onEditModule={handleEditModule}
-            onDeleteModule={onDeleteModule}
+            onSelectModule={handleSelectModule}
+            onCreateModule={handleCreateModule}
+            onUpdateModule={handleUpdateModule}
+            onDeleteModule={handleDeleteModule}
+            onOpenCreateModal={() => setIsCreateModalOpen(true)}
           />
         </Col>
 
         <Col xs={24} sm={24} md={12} lg={16} xl={18}>
-          <Card
-            title={
-              <Space align="center">
-                <Typography.Text strong>子节点管理</Typography.Text>
-                {selectedModule && (
-                  <Typography.Text type="secondary">
-                    (当前模块: {selectedModule.title})
-                  </Typography.Text>
-                )}
-              </Space>
-            }
-          >
-            {/* 内容区域 */}
-          </Card>
+          <ModuleDetailPanel selectedModule={selectedModule} />
         </Col>
       </Row>
 
-      <CreateModuleModal
-        visible={isModalVisible}
-        onOk={handleAddModule}
-        onClose={() => setIsModalVisible(false)}
+      <ModuleCreateModel
+        open={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSubmit={handleCreateModule}
         parentModule={selectedModule}
-        loading={false}
       />
     </div>
   );
 };
+
+const ModuleDetailPanel = ({ selectedModule }) => (
+  <Card
+    title={
+      <Space align="center">
+        <Typography.Text strong>模块详情</Typography.Text>
+        {selectedModule && (
+          <Typography.Text type="secondary">
+            (当前模块: {selectedModule.title})
+          </Typography.Text>
+        )}
+      </Space>
+    }
+  >
+    {selectedModule ? (
+      <div>模块详情内容</div>
+    ) : (
+      <div>请从左侧选择模块</div>
+    )}
+  </Card>
+);
