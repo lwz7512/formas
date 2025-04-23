@@ -15,7 +15,9 @@ export const ModuleTree = ({
   modules = [],
   isLoading = false,
   selectedModule,
+  expandedKeys = [],  // 接收 expandedKeys 属性
   onSelectModule,
+  onExpand,  // 接收 onExpand 回调
   onCreateModule,
   onUpdateModule,
   onDeleteModule,
@@ -123,7 +125,9 @@ export const ModuleTree = ({
         <Tree
           blockNode
           treeData={processModuleTree(modules)}
-          selectedKeys={selectedModule ? [selectedModule.key] : []}
+          selectedKeys={selectedModule ? [selectedModule.id] : []}  // 使用 id 而非 key
+          expandedKeys={expandedKeys}  // 传递 expandedKeys
+          onExpand={onExpand}  // 传递 onExpand 回调
           onSelect={onSelectModule}
           expandAction="click"
           selectable
@@ -133,7 +137,7 @@ export const ModuleTree = ({
               <DeploymentUnitOutlined className="text-blue-500 text-sm mr-2" />
             ),
           }}
-          fieldNames={{ title: 'title', key: 'id' }}
+          fieldNames={{ title: 'title', key: 'id' }}  // 确保 key 使用 id
         />
       </Card>
 
@@ -153,6 +157,8 @@ export const ModuleTree = ({
     </>
   );
 };
+
+// ... ModuleTreeTitle 和 ModuleTreeEmptyState 保持不变 ...
 
 const ModuleTreeTitle = () => (
   <div className="flex items-center">

@@ -1,6 +1,6 @@
 // index.jsx
-import { useState } from 'react';
-import { App, Card, Col, Row, Space, Typography } from 'antd';
+import { useEffect, useState } from 'react';
+import { App, Col, Row } from 'antd';
 
 import { useModuleTree } from './hooks/use-module-tree';
 
@@ -34,7 +34,7 @@ export const ModuleManagement = () => {
     }
   };
 
-  const handleDeleteModule = async (moduleId) => {
+  const handleDeleteModule = async moduleId => {
     try {
       await deleteModule(moduleId);
       message.success('删除成功');
@@ -57,8 +57,72 @@ export const ModuleManagement = () => {
     }
   };
 
+  // 从 localStorage 读取，并处理可能的无效值
+  const [initialSelectedModuleId, setInitialSelectedModuleId] = useState(() => {
+    try {
+      return localStorage.getItem('lastSelectedModuleId') || null;
+    } catch (e) {
+      console.warn('Failed to read localStorage:', e);
+      return null;
+    }
+  });
+
+  // 初始化选中状态（组件加载时）
+  useEffect(() => {
+    if (initialSelectedModuleId && modules.length > 0) {
+      const lastSelectedModule = findModuleById(
+        initialSelectedModuleId,
+        modules
+      );
+
+      if (lastSelectedModule) {
+        setSelectedModule(lastSelectedModule);
+        const parentKeys = getParentKeys(lastSelectedModule.id, modules);
+        console.log('Parent keys to expand:', parentKeys);
+        setExpandedKeys(parentKeys || []);
+      }
+    }
+  }, [modules, initialSelectedModuleId]);
+
+  // 新增状态：存储展开的节点keys
+  const [expandedKeys, setExpandedKeys] = useState([]);
+
+  // 辅助函数：根据ID查找模块
+  const findModuleById = (id, treeData) => {
+    for (const node of treeData) {
+      if (node.id === id) return node;
+      if (node.children) {
+        const found = findModuleById(id, node.children);
+        if (found) return found;
+      }
+    }
+    return null;
+  };
+
+  // 获取一个节点的所有父级key（递归实现）
+  const getParentKeys = (targetId, treeData, keys = []) => {
+    for (const node of treeData) {
+      if (node.id === targetId) return keys;
+      if (node.children) {
+        const found = getParentKeys(targetId, node.children, [
+          ...keys,
+          node.id,
+        ]);
+        if (found) return found;
+      }
+    }
+    return null;
+  };
+
+  // 更新选中状态时，存储到 localStorage
   const handleSelectModule = (selectedKeys, { node }) => {
+    console.log('Selected node:', node); // 验证节点数据结构
     setSelectedModule(node);
+    try {
+      localStorage.setItem('lastSelectedModuleId', node.id);
+    } catch (e) {
+      console.warn('Failed to save to localStorage:', e);
+    }
   };
 
   return (
@@ -69,6 +133,8 @@ export const ModuleManagement = () => {
             modules={modules}
             isLoading={isLoading}
             selectedModule={selectedModule}
+            expandedKeys={expandedKeys} // 传递展开状态
+            onExpand={setExpandedKeys} // 处理手动展开/折叠
             onSelectModule={handleSelectModule}
             onCreateModule={handleCreateModule}
             onUpdateModule={handleUpdateModule}
