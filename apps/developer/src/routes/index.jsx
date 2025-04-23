@@ -7,6 +7,7 @@ import {
   EXTERNAL_DATA_SOURCE_PATH,
   DATA_VIEW_PATH,
   MENU_MANAGE_PATH,
+  HOME_AFTER_LOGIN,
 } from '@/constants';
 import { GuestLayout, HeaderFooterLayout } from '@/layouts';
 
@@ -59,8 +60,9 @@ export const Routers = createBrowserRouter(
         },
       ],
     },
+    // == 登录成功后跳转的页面 ==
     {
-      path: '/auth/welcome',
+      path: HOME_AFTER_LOGIN,
       element: <HeaderFooterLayout />,
       errorElement: <ErrorPage />,
       children: [
