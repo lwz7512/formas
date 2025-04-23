@@ -22,6 +22,7 @@ export const MenuTreeNodeTitle = ({
   onDeleteNode,
 }) => {
   const { depth } = nodeData;
+
   return (
     <div className="flex items-center justify-between w-full group">
       <span className="truncate flex-1">{nodeData.title}</span>

@@ -58,6 +58,7 @@ export const MenuManagePage = () => {
               blockNode
               selectable
               treeData={treeSelectData}
+              expandAction="click"
               titleRender={nodeData => {
                 return (
                   <MenuTreeNodeTitle
