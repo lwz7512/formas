@@ -55,6 +55,7 @@ export const FormTable = ({
     {
       title: '操作',
       key: 'action',
+      width: 350, // 设置固定宽度
       render: (_, record) => (
         <Space size="middle">
           <Typography.Link onClick={() => handleEdit(record)}>

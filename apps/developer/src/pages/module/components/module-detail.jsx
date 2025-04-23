@@ -1,7 +1,7 @@
 // components/module-detail.jsx
 import { useState } from 'react';
 import { Button, Empty, Space, Tabs, Typography } from 'antd';
-import { PlusOutlined, TableOutlined } from '@ant-design/icons';
+import { PlusOutlined, ProfileOutlined, TableOutlined } from '@ant-design/icons';
 import { useView } from '../hooks/use-view';
 import { useForm } from '../hooks/use-form';
 import { ViewTable } from './view-table';
@@ -82,7 +82,7 @@ export const ModuleDetailPanel = ({ selectedModule }) => {
             key: 'forms',
             label: (
               <Space>
-                <TableOutlined />
+                <ProfileOutlined />
                 表单
               </Space>
             ),

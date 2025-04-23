@@ -1,7 +1,7 @@
 // hooks/use-view.js
 import { useState, useEffect } from 'react';
 import { notification } from 'antd';
-import { fetchDataviewList, deleteDataview } from '@/api/dataview';
+import { fetchDataviewList, deleteDataview, updateDataview } from '@/api/dataview';
 
 export const useView = (moduleId) => {
   const [loading, setLoading] = useState(false);
@@ -38,6 +38,22 @@ export const useView = (moduleId) => {
     }
   };
 
+  // 修改视图
+  const handleUpdate = async (viewId, values) => {
+    try {
+      setLoading(true);
+      await updateDataview(viewId, values); // 假设有updateView API函数
+      await fetchViews(moduleId);
+      notification.success({ message: '视图更新成功' });
+      return true;
+    } catch (error) {
+      notification.error({ message: '更新视图失败' });
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // 初始化加载数据
   useEffect(() => {
     if (moduleId) {
@@ -49,6 +65,7 @@ export const useView = (moduleId) => {
     views,
     loading,
     handleDelete,
+    handleUpdate,
     refreshViews: fetchViews,
   };
 };

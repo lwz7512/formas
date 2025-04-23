@@ -1,11 +1,32 @@
 // components/view-table.jsx
+import { useState } from 'react';
 import { Table, Button, Popconfirm, Space } from 'antd';
 import { useView } from '../hooks/use-view';
+import { DataviewEditModel } from '../models/dataview-edit';
 
 export const ViewTable = ({ moduleId }) => {
-  const { views, loading, handleDelete } = useView(moduleId);
+  const { views, loading, handleDelete, handleUpdate } = useView(moduleId);
+  const [editingView, setEditingView] = useState(null);
+
+  const handleEdit = (record) => {
+    setEditingView(record);
+  };
+
+  const handleSave = async (values) => {
+    try {
+      await handleUpdate(editingView.id, values);
+      setEditingView(null);
+    } catch (error) {
+      console.error('更新失败:', error);
+    }
+  };
 
   const columns = [
+    {
+      title: '序号',
+      dataIndex: 'sequence',
+      key: 'sequence',
+    },
     {
       title: '标题',
       dataIndex: 'title',
@@ -13,8 +34,8 @@ export const ViewTable = ({ moduleId }) => {
     },
     {
       title: '关联表单',
-      dataIndex: 'formId',
-      key: 'formId',
+      dataIndex: 'formTitle',
+      key: 'formTitle',
     },
     {
       title: '备注',
@@ -24,9 +45,12 @@ export const ViewTable = ({ moduleId }) => {
     {
       title: '操作',
       key: 'action',
+      width: 120, // 设置固定宽度
       render: (_, record) => (
         <Space size="middle">
-          <Button type="link">编辑</Button>
+          <Button type="link" onClick={() => handleEdit(record)}>
+            编辑
+          </Button>
           <Popconfirm
             title="确定要删除此视图吗?"
             onConfirm={() => handleDelete(record.id)}
@@ -41,13 +65,22 @@ export const ViewTable = ({ moduleId }) => {
   ];
 
   return (
-    <Table
-      columns={columns}
-      dataSource={views}
-      rowKey="id"
-      bordered={false}
-      size="middle"
-      loading={loading}
-    />
+    <>
+      <Table
+        columns={columns}
+        dataSource={views}
+        rowKey="id"
+        bordered={false}
+        size="middle"
+        loading={loading}
+      />
+
+      <DataviewEditModel
+        visible={!!editingView}
+        record={editingView}
+        onSave={handleSave}
+        onCancel={() => setEditingView(null)}
+      />
+    </>
   );
 };
