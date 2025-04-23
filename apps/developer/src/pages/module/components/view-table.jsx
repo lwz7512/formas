@@ -44,24 +44,36 @@ export const ViewTable = ({ moduleId }) => {
     },
     {
       title: '操作',
-      key: 'action',
-      width: 120, // 设置固定宽度
+      width: 120,
       render: (_, record) => (
-        <Space size="middle">
-          <Button type="link" onClick={() => handleEdit(record)}>
+        <Space size="small">
+          <Button 
+            type="link" 
+            size="small"
+            onClick={() => handleEdit(record)}
+            style={{ padding: '0 4px' }}
+          >
             编辑
           </Button>
           <Popconfirm
             title="确定要删除此视图吗?"
             onConfirm={() => handleDelete(record.id)}
+            okText="删除"
+            cancelText="取消"
+            okButtonProps={{ danger: true }}
           >
-            <Button type="link" danger>
+            <Button 
+              type="link" 
+              danger 
+              size="small"
+              style={{ padding: '0 4px' }}
+            >
               删除
-            </Button>
+          </Button>
           </Popconfirm>
         </Space>
-      ),
-    },
+      )
+    }
   ];
 
   return (

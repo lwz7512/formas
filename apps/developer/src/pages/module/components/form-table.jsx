@@ -54,36 +54,50 @@ export const FormTable = ({
     },
     {
       title: '操作',
-      key: 'action',
-      width: 350, // 设置固定宽度
+      width: 250,
       render: (_, record) => (
-        <Space size="middle">
-          <Typography.Link onClick={() => handleEdit(record)}>
+        <Space size={8} wrap>
+          {/* 1. 编辑 - 链接样式（次要操作） */}
+          <Typography.Link 
+            onClick={() => handleEdit(record)}
+            style={{ paddingRight: 8 }}
+          >
             编辑
           </Typography.Link>
+    
+          {/* 2. 表单设计 - 主按钮样式（核心操作） */}
           <Button
             size="small"
+            type="primary"
+            ghost  // 半透明效果，降低视觉重量
             onClick={() => openFormDesigner(record.id)}
           >
-            表单设计
+            设计
           </Button>
+    
+          {/* 3. 生成视图 - 默认按钮样式（重要操作） */}
           <Button
             size="small"
             onClick={() => onGenerateView(record.id)}
           >
             生成视图
           </Button>
+    
+          {/* 4. 删除 - 危险链接样式（需警示） */}
           <Popconfirm
             title="确定要删除此表单吗?"
             onConfirm={() => onDelete(record.id)}
+            okText="删除"
+            cancelText="取消"
+            placement="topRight"
           >
-            <Button type="link" danger>
+            <Typography.Link type="danger">
               删除
-            </Button>
+            </Typography.Link>
           </Popconfirm>
         </Space>
-      ),
-    },
+      )
+    }
   ];
 
   return (
