@@ -26,6 +26,9 @@ export const useXternlFormDesigner = message => {
       if (!formId) return console.warn(`## no formid found in page URL!`);
       if (!evt.data) return console.warn(`## no schema data found!`);
 
+      console.log(`>> to update form schema...`);
+      console.log(evt.data);
+
       const resp = await updateFormDefineSchema({
         key: formId,
         schema: evt.data,
