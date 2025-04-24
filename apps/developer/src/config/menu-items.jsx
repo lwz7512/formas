@@ -38,11 +38,6 @@ export const devloperMenuItems = [
     icon: <ClusterOutlined />,
   },
   {
-    label: 'App Define',
-    key: FORM_DEFINE_PATH,
-    icon: <FormOutlined />,
-  },
-  {
     label: 'Data Source',
     key: EXTERNAL_DATA_SOURCE_PATH,
     icon: <DatabaseOutlined />,

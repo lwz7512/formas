@@ -1,11 +1,11 @@
 // hooks/use-module-tree.js
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { message } from 'antd';
-import { 
-  fetchModuleTree, 
-  createModule as apiCreateModule, 
-  updateModule as apiUpdateModule, 
-  deleteModule as apiDeleteModule 
+import {
+  fetchModuleTree,
+  createModule as apiCreateModule,
+  updateModule as apiUpdateModule,
+  deleteModule as apiDeleteModule,
 } from '@/api/modules';
 
 export const useModuleTree = () => {
@@ -54,7 +54,7 @@ export const useModuleTree = () => {
     }
   };
 
-  const deleteModule = async (moduleId) => {
+  const deleteModule = async moduleId => {
     try {
       setState(prev => ({ ...prev, isLoading: true }));
       await apiDeleteModule(moduleId);
@@ -67,9 +67,14 @@ export const useModuleTree = () => {
     }
   };
 
-  const setSelectedModule = (module) => {
+  /**
+   * 使用 useCallback 包装 setSelectedModule to keep the same reference!
+   * 否则，selectedModule 的引用会发生变化，导致组件重新渲染
+   * @date 2025-04-23
+   */
+  const setSelectedModule = useCallback(module => {
     setState(prev => ({ ...prev, selectedModule: module }));
-  };
+  }, []);
 
   useEffect(() => {
     fetchModules();

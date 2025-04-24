@@ -1,5 +1,5 @@
 // index.jsx
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { App, Col, Row } from 'antd';
 
 import { useModuleTree } from './hooks/use-module-tree';
@@ -8,6 +8,32 @@ import { ModuleCreateModel } from './models/module-create';
 import { ModuleTree } from './components/module-tree';
 import { ModuleDetailPanel } from './components/module-detail';
 import { ROOT_BIZ_TREE_ID } from '@/config';
+
+// == NO NEED TO PUT IT IN HOOKS, OR PRODUCE UNNECESSARY RERENDERS INSIDE HOOKS ==
+// 辅助函数：根据ID查找模块
+const findModuleById = (id, treeData) => {
+  for (const node of treeData) {
+    if (node.id === id) return node;
+    if (node.children) {
+      const found = findModuleById(id, node.children);
+      if (found) return found;
+    }
+  }
+  return null;
+};
+
+// == NO NEED TO PUT IT IN HOOKS, OR PRODUCE UNNECESSARY RERENDERS INSIDE HOOKS ==
+// 获取一个节点的所有父级key（递归实现）
+const getParentKeys = (targetId, treeData, keys = []) => {
+  for (const node of treeData) {
+    if (node.id === targetId) return keys;
+    if (node.children) {
+      const found = getParentKeys(targetId, node.children, [...keys, node.id]);
+      if (found) return found;
+    }
+  }
+  return null;
+};
 
 export const ModuleManagement = () => {
   const { message } = App.useApp();
@@ -22,6 +48,19 @@ export const ModuleManagement = () => {
   } = useModuleTree();
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  // 新增状态：存储展开的节点keys
+  const [expandedKeys, setExpandedKeys] = useState([]);
+
+  // 更新选中状态时，存储到 localStorage
+  const handleSelectModule = (selectedKeys, { node }) => {
+    console.log('Selected node:', node); // 验证节点数据结构
+    setSelectedModule(node);
+    try {
+      localStorage.setItem('lastSelectedModuleId', node.id);
+    } catch (e) {
+      console.warn('Failed to save to localStorage:', e);
+    }
+  };
 
   const handleCreateModule = async (values, parentId = ROOT_BIZ_TREE_ID) => {
     try {
@@ -58,14 +97,25 @@ export const ModuleManagement = () => {
   };
 
   // 从 localStorage 读取，并处理可能的无效值
-  const [initialSelectedModuleId, setInitialSelectedModuleId] = useState(() => {
+  // const [initialSelectedModuleId, setInitialSelectedModuleId] = useState(() => {
+  //   try {
+  //     return localStorage.getItem('lastSelectedModuleId') || null;
+  //   } catch (e) {
+  //     console.warn('Failed to read localStorage:', e);
+  //     return null;
+  //   }
+  // });
+  // more react & efficient way:
+  // 使用 useMemo 包装，避免重复读取 localStorage
+  // @date 2025-04-23
+  const initialSelectedModuleId = useMemo(() => {
     try {
       return localStorage.getItem('lastSelectedModuleId') || null;
     } catch (e) {
       console.warn('Failed to read localStorage:', e);
       return null;
     }
-  });
+  }, []);
 
   // 初始化选中状态（组件加载时）
   useEffect(() => {
@@ -82,48 +132,7 @@ export const ModuleManagement = () => {
         setExpandedKeys(parentKeys || []);
       }
     }
-  }, [modules, initialSelectedModuleId]);
-
-  // 新增状态：存储展开的节点keys
-  const [expandedKeys, setExpandedKeys] = useState([]);
-
-  // 辅助函数：根据ID查找模块
-  const findModuleById = (id, treeData) => {
-    for (const node of treeData) {
-      if (node.id === id) return node;
-      if (node.children) {
-        const found = findModuleById(id, node.children);
-        if (found) return found;
-      }
-    }
-    return null;
-  };
-
-  // 获取一个节点的所有父级key（递归实现）
-  const getParentKeys = (targetId, treeData, keys = []) => {
-    for (const node of treeData) {
-      if (node.id === targetId) return keys;
-      if (node.children) {
-        const found = getParentKeys(targetId, node.children, [
-          ...keys,
-          node.id,
-        ]);
-        if (found) return found;
-      }
-    }
-    return null;
-  };
-
-  // 更新选中状态时，存储到 localStorage
-  const handleSelectModule = (selectedKeys, { node }) => {
-    console.log('Selected node:', node); // 验证节点数据结构
-    setSelectedModule(node);
-    try {
-      localStorage.setItem('lastSelectedModuleId', node.id);
-    } catch (e) {
-      console.warn('Failed to save to localStorage:', e);
-    }
-  };
+  }, [modules, initialSelectedModuleId, setSelectedModule]);
 
   return (
     <div className="module-management">

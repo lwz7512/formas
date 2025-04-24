@@ -55,6 +55,10 @@ export const useFormDesigner = () => {
 
     const key = params.get('formid');
     const token = params.get('token');
+
+    console.log(`## got formid from url: ${key}`);
+    console.log(`## got token from url: ${token}`);
+
     // cache toke first for later querying...
     if (token) {
       // console.log(`## got token from url!`);
@@ -62,12 +66,24 @@ export const useFormDesigner = () => {
     }
 
     if (key && token) {
+      console.log(`## fetching form: ${key} schema from server...`);
       fetchFormSchema(key).then(resp => {
         if (!resp.data) return console.warn('## no form data returned!');
         const { schema } = resp.data;
+        console.log(`## got schema from server:`);
+        console.log(schema);
         if (schema) {
           // ! FIXME: convert to js obj:
-          setFormSchema(JSON.parse(schema)); // show saved schema
+          try {
+            console.log(`## converting schema to js obj...`);
+            const jsSchema = JSON.parse(schema);
+            console.log(`## got valid json schema:`);
+            console.log(jsSchema);
+            console.log(`## showing form designer with schema...`);
+            setFormSchema(jsSchema);
+          } catch (error) {
+            console.error(`## error converting schema to js obj: ${error}`);
+          }
         }
       });
     }
