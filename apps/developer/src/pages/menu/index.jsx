@@ -104,6 +104,7 @@ export const MenuManagePage = () => {
         handleChildMenuCreation={handleChildMenuCreation}
         handleChildModalClose={closeChildMenuModal}
         handleMenuObjectChange={handleChildMenuObjectChange}
+        dataviewOptions={formattedTreeData}
       />
 
       {/* 编辑菜单对话框 */}
