@@ -11,6 +11,13 @@ export const fetchDataviewList = async (moduleId) => {
   return response;
 };
 
+// 获取数据视图下拉树
+export const fetchDataviewTree = async () => {
+  const response = await httpClient.get('/formas/dataviews/module-tree', {
+  });
+  return response;
+};
+
 export const deleteDataview = async id => {
   const response = await httpClient.delete(`/formas/dataviews/${id}`);
   return response.data;

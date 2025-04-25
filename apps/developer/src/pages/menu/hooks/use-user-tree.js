@@ -1,6 +1,6 @@
 // hooks/use-menu-tree-query.js
 import { useState, useCallback, useEffect } from 'react';
-import { fetchMenuTree } from '@/api/api-menu';
+import { fetchMenuTree } from '@/api/menu';
 import { ROOT_MENU_PID } from '@/config';
 
 export const useMenuTreeQuery = () => {
