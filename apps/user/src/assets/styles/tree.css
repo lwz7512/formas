@@ -1,0 +1,9 @@
+.ant-tree-title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.tree-node-actions {
+  display: flex;
+  gap: 4px;
+}

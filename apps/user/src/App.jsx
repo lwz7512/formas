@@ -1,15 +1,45 @@
-import React from 'react';
-import { Button, Typography } from 'antd';
+import { RouterProvider } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
+import { useSelector } from 'react-redux';
 
-const { Title, Paragraph, Text, Link } = Typography;
+import { ConfigProvider } from 'antd';
 
-const App = () => (
-  <div className="App">
-    <Title level={2}>Formas - user portal</Title>
-    <Button type="primary">Button</Button>
-    <Button type="primary">Lets Go!</Button>
-    <h1 className="text-3xl font-bold underline">Hello Dear Users!</h1>
-  </div>
-);
+import { adjustableTheme } from './constants';
+import { StylesContext } from './context';
+import { Routers } from './routes';
+
+function App() {
+  const { mytheme } = useSelector(state => state.theme);
+
+  return (
+    <HelmetProvider>
+      <ConfigProvider theme={adjustableTheme(mytheme)}>
+        <StylesContext.Provider
+          value={{
+            rowProps: {
+              gutter: [
+                { xs: 8, sm: 16, md: 24, lg: 32 },
+                { xs: 8, sm: 16, md: 24, lg: 32 },
+              ],
+            },
+            carouselProps: {
+              autoplay: true,
+              dots: true,
+              dotPosition: 'bottom',
+              infinite: true,
+              slidesToShow: 3,
+              slidesToScroll: 1,
+            },
+          }}
+        >
+          <RouterProvider
+            router={Routers}
+            future={{ v7_startTransition: true }}
+          />
+        </StylesContext.Provider>
+      </ConfigProvider>
+    </HelmetProvider>
+  );
+}
 
 export default App;

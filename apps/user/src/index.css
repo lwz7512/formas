@@ -1,3 +1,18 @@
+@import './assets/styles/app.css';
+@import './assets/styles/table.css';
+@import './assets/styles/tree.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+:root {
+  --primary-color: #fff;
+  --secondary-color: #000;
+  --ant-color-link: #1677ff;
+}
+
+a {
+  color: var(--ant-color-link);
+}

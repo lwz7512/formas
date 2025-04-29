@@ -1,0 +1,150 @@
+import { md5 } from 'js-md5';
+
+import { usePostData, useDeleteData } from '.';
+
+import { SERVICE_GATE_API as host } from '@/config';
+
+/**
+ * ========= WORKING =============
+ *            登录
+ * ===========HOOK================
+ * @param {string} loginName
+ * @param {string} password normal password to encrypt with MD5
+ * @returns
+ */
+export const useLogin = (loginName, password) => {
+  const md5pwd = md5(password);
+  const { data, error, loading, trigger } = usePostData(
+    `${host}/api/auth/v5/login`,
+    {
+      loginName,
+      md5pwd, // 请使用md5(pwd)加密后传入此参数
+    }
+  );
+  const send = async () => {
+    const result = await trigger();
+    if (!result) {
+      console.error('## login failed!');
+      return null;
+    }
+    const { data } = result;
+    // got token and cache it for authentication in later request!
+    if (data) {
+      localStorage.setItem('formas.jwt', data);
+      localStorage.setItem('formas.lastLogin', new Date().toISOString());
+    } else {
+      console.warn(`## login failed, no token returned!`);
+    }
+    return result;
+  };
+  return { data, error, loading, send };
+};
+
+/**
+ * FIXME: use a right vanilla post function!
+ * @date 2024/12/04
+ * 登出
+ */
+export const useLogout = () => {
+  const { data, error, loading, doDelete } = useDeleteData(
+    `${host}/api/auth/v5/logout`
+  );
+  return { data, error, loading, logout: doDelete };
+};
+
+/**
+ * FIXME: use a right vanilla post function!
+ * @date 2024/12/04
+ * 修改密码
+ * @param {*} oldPwd 请使用md5(pwd)加密后传入此参数
+ * @param {*} newPwd 请使用md5(pwd)加密后传入此参数
+ * @returns
+ */
+export const useChangePassword = (oldPwd, newPwd) => {
+  const { data, error, loading } = usePostData(
+    `${host}/api/auth/v5/change-pwd`,
+    {
+      oldPwd: oldPwd,
+      newPwd: newPwd,
+    }
+  );
+  return { data, error, loading };
+};
+
+/**
+ * FIXME: use a right vanilla post function!
+ * @date 2024/12/04
+ * 发送注册账号验证码
+ * @param {*} loginName
+ * @param {*} type 类型: phone,email
+ * @returns
+ */
+export const useSendSignupCaptcha = (loginName, type) => {
+  const { data, error, loading } = usePostData(
+    `${host}/api/auth/v5/signup/verify-code`,
+    {
+      loginName: loginName,
+      type: type,
+    }
+  );
+  return { data, error, loading };
+};
+
+/**
+ * FIXME: use a right vanilla post function!
+ * @date 2024/12/04
+ * 注册账号
+ * @param {*} loginName
+ * @param {*} type 类型: username,phone,email,wx,dingtalk
+ * @param {*} code 验证码
+ * @param {*} password 请使用md5(pwd)加密后传入此参数
+ * @returns
+ */
+export const useSignup = (loginName, type, code, password) => {
+  const { data, error, loading } = usePostData(`${host}/api/auth/v5/signup`, {
+    loginName: loginName,
+    type: type,
+    code: code,
+    md5pwd: password,
+  });
+  return { data, error, loading };
+};
+
+/**
+ * FIXME: use a right vanilla post function!
+ * @date 2024/12/04
+ * 发送丢失密码验证码
+ * @param {*} loginName
+ * @param {*} type 类型: phone,email
+ * @returns
+ */
+export const useSendLostpwdCaptcha = (loginName, type) => {
+  const { data, error, loading } = usePostData(
+    `${host}/api/auth/v5/lostpwd/verify-code`,
+    {
+      loginName: loginName,
+      type: type,
+    }
+  );
+  return { data, error, loading };
+};
+
+/**
+ * FIXME: use a right vanilla post function!
+ * @date 2024/12/04
+ * 丢失密码，重置密码
+ * @param {*} loginName
+ * @param {*} type 类型: phone,email
+ * @param {*} code 验证码
+ * @param {*} password 请使用md5(pwd)加密后传入此参数
+ * @returns
+ */
+export const useLostpwd = (loginName, type, code, password) => {
+  const { data, error, loading } = usePostData(`${host}/api/auth/v5/lostpwd`, {
+    loginName: loginName,
+    type: type,
+    code: code,
+    md5pwd: password,
+  });
+  return { data, error, loading };
+};
