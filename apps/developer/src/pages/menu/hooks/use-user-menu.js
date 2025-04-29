@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { createMenu, updateMenu, removeMenu } from '@/api/api-menu';
+import { createMenu, updateMenu, removeMenu } from '@/api/menu';
 
 import { ROOT_MENU_PID } from '@/config';
 

@@ -4,7 +4,9 @@ import { MenuOutlined, PlusOutlined } from '@ant-design/icons';
 import { MenuTreeNodeTitle } from './components/tree-node';
 import { AddChildMenuModal } from './modals/create-child-menu';
 import { EditChildMenuModal } from './modals/update-child-menu';
+
 import { useUserMenu } from './hooks/use-user-menu';
+import { useDataviewTree } from './hooks/use-dataview-tree';
 
 export const MenuManagePage = () => {
   const {
@@ -26,6 +28,22 @@ export const MenuManagePage = () => {
     handleChildMenuObjectChange({ parentId: null }); // 设置parentId为null表示根菜单
     showChildMenuModal();
   };
+
+  const { dataviewTree, dataviewTreeSelectData, loadDataviewTree } = useDataviewTree();
+
+  // 如果需要转换格式，可以在组件内处理
+  const formattedTreeData = dataviewTree.map(item => ({
+    title: item.title,
+    value: item.id,
+    selected: item.selected,
+    disabled: item.disabled,
+    children: item.children?.map(child => ({
+      title: child.title,
+      value: child.id,
+      selected: child.selected,
+      disabled: child.disabled,
+    })),
+  }));
 
   return (
     <div className="biz-tree-config-page">
@@ -51,7 +69,7 @@ export const MenuManagePage = () => {
             }
             bodyStyle={{
               padding: '20px 20px 20px 0',
-              margin: 0
+              margin: 0,
             }}
           >
             <Tree
@@ -86,6 +104,7 @@ export const MenuManagePage = () => {
         handleChildMenuCreation={handleChildMenuCreation}
         handleChildModalClose={closeChildMenuModal}
         handleMenuObjectChange={handleChildMenuObjectChange}
+        dataviewOptions={formattedTreeData}
       />
 
       {/* 编辑菜单对话框 */}
@@ -95,6 +114,7 @@ export const MenuManagePage = () => {
         handleChildMenuUpdate={handleEditChildMenu}
         handleChildModalClose={closeChildMenuModal}
         handleMenuObjectChange={handleChildMenuObjectChange}
+        dataviewOptions={formattedTreeData}
       />
     </div>
   );
