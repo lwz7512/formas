@@ -17,7 +17,7 @@ import {
  */
 export const devloperMenuItems = [
   {
-    label: 'Default Page',
+    label: 'Home Page',
     key: '/auth/welcome',
     icon: <AppstoreOutlined />,
   },

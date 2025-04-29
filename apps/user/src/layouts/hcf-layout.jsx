@@ -37,7 +37,7 @@ export const HCFLayout = ({ children }) => {
 
   return (
     <App>
-      <Layout className="layout">
+      <Layout className="layout hcf-layout">
         <Header>
           <div className="logo">Formas Lowcode</div>
           <Menu
