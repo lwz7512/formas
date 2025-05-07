@@ -55,6 +55,20 @@ export const ViewTable = ({ moduleId }) => {
           >
             编辑
           </Button>
+          <Button
+            size="small"
+            type="primary"
+            ghost  // 半透明效果，降低视觉重量
+            // onClick={() => openFormDesigner(record.id)}
+          >
+            设计
+          </Button>
+          <Button
+            size="small"
+            // onClick={() => onGenerateView(record.id)}
+          >
+            自定义查询
+          </Button>
           <Popconfirm
             title="确定要删除此视图吗?"
             onConfirm={() => handleDelete(record.id)}

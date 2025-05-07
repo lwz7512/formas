@@ -54,7 +54,7 @@ export const FormTable = ({
     },
     {
       title: '操作',
-      width: 250,
+      width: 300,
       render: (_, record) => (
         <Space size={8} wrap>
           {/* 1. 编辑 - 链接样式（次要操作） */}
@@ -82,7 +82,16 @@ export const FormTable = ({
           >
             生成视图
           </Button>
-    
+
+          <Button
+            size="small"
+            type="primary"
+            ghost  // 半透明效果，降低视觉重量
+            // onClick={() => openFormDesigner(record.id)}
+          >
+            触发器
+          </Button>
+
           {/* 4. 删除 - 危险链接样式（需警示） */}
           <Popconfirm
             title="确定要删除此表单吗?"
