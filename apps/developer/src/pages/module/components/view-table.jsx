@@ -2,22 +2,39 @@
 import { useState } from 'react';
 import { Table, Button, Popconfirm, Space } from 'antd';
 import { useView } from '../hooks/use-view';
-import { DataviewEditModel } from '../models/dataview-edit';
+import { DataviewEditModel } from '../modals/dataview-edit';
+import { DataviewTemplateModal } from '../modals/dataview-template';
+import { useDataviewTemplate } from '../hooks/use-dataview-template';
 
 export const ViewTable = ({ moduleId }) => {
   const { views, loading, handleDelete, handleUpdate } = useView(moduleId);
   const [editingView, setEditingView] = useState(null);
 
-  const handleEdit = (record) => {
+  const handleEdit = record => {
     setEditingView(record);
   };
 
-  const handleSave = async (values) => {
+  const handleSave = async values => {
     try {
       await handleUpdate(editingView.id, values);
       setEditingView(null);
     } catch (error) {
       console.error('更新失败:', error);
+    }
+  };
+
+  const {
+    currentView,
+    loading: dataviewTemplateLoading,
+    openModal: openDataviewTemplateModal,
+    handleSaveTemplate,
+    closeModal: closeDataviewTemplateModal,
+  } = useDataviewTemplate(moduleId);
+
+  const handleSaveDataviewTemplate = async values => {
+    const success = await handleSaveTemplate(currentView.id, values);
+    if (success) {
+      closeDataviewTemplateModal();
     }
   };
 
@@ -47,8 +64,8 @@ export const ViewTable = ({ moduleId }) => {
       width: 120,
       render: (_, record) => (
         <Space size="small">
-          <Button 
-            type="link" 
+          <Button
+            type="link"
             size="small"
             onClick={() => handleEdit(record)}
             style={{ padding: '0 4px' }}
@@ -58,14 +75,14 @@ export const ViewTable = ({ moduleId }) => {
           <Button
             size="small"
             type="primary"
-            ghost  // 半透明效果，降低视觉重量
+            ghost // 半透明效果，降低视觉重量
             // onClick={() => openFormDesigner(record.id)}
           >
             设计
           </Button>
           <Button
             size="small"
-            // onClick={() => onGenerateView(record.id)}
+            onClick={() => openDataviewTemplateModal(record)}
           >
             自定义查询
           </Button>
@@ -76,18 +93,18 @@ export const ViewTable = ({ moduleId }) => {
             cancelText="取消"
             okButtonProps={{ danger: true }}
           >
-            <Button 
-              type="link" 
-              danger 
+            <Button
+              type="link"
+              danger
               size="small"
               style={{ padding: '0 4px' }}
             >
               删除
-          </Button>
+            </Button>
           </Popconfirm>
         </Space>
-      )
-    }
+      ),
+    },
   ];
 
   return (
@@ -106,6 +123,14 @@ export const ViewTable = ({ moduleId }) => {
         record={editingView}
         onSave={handleSave}
         onCancel={() => setEditingView(null)}
+      />
+
+      <DataviewTemplateModal
+        visible={!!currentView}
+        record={currentView}
+        onSave={handleSaveDataviewTemplate}
+        onCancel={closeDataviewTemplateModal}
+        loading={dataviewTemplateLoading}
       />
     </>
   );

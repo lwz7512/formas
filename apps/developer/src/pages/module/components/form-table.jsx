@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Table, Typography, Button, Popconfirm, Space } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { FORM_DEFINE_PATH } from '@/constants';
-import { FormEditModal } from '../models/form-edit';
+import { FormEditModal } from '../modals/form-edit';
 
 export const FormTable = ({ 
   forms, 

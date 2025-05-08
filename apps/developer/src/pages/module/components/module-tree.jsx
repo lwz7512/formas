@@ -8,8 +8,8 @@ import {
   DeleteOutlined,
   DeploymentUnitOutlined
 } from '@ant-design/icons';
-import { ModuleCreateModel } from '../models/module-create';
-import { ModuleEditModal } from '../models/module-edit';
+import { ModuleCreateModel } from '../modals/module-create';
+import { ModuleEditModal } from '../modals/module-edit';
 
 export const ModuleTree = ({
   modules = [],

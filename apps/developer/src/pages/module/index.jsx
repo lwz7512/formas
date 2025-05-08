@@ -4,7 +4,7 @@ import { App, Col, Row } from 'antd';
 
 import { useModuleTree } from './hooks/use-module-tree';
 
-import { ModuleCreateModel } from './models/module-create';
+import { ModuleCreateModel } from './modals/module-create';
 import { ModuleTree } from './components/module-tree';
 import { ModuleDetailPanel } from './components/module-detail';
 import { ROOT_BIZ_TREE_ID } from '@/config';

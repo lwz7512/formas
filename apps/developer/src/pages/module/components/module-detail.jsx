@@ -6,7 +6,7 @@ import { useView } from '../hooks/use-view';
 import { useForm } from '../hooks/use-form';
 import { ViewTable } from './view-table';
 import { FormTable } from './form-table';
-import { FormCreateModel } from '../models/form-create';
+import { FormCreateModel } from '../modals/form-create';
 
 export const ModuleDetailPanel = ({ selectedModule }) => {
   const [activeTab, setActiveTab] = useState('forms');
