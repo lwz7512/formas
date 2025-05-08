@@ -1,15 +1,24 @@
+// modals/dataview-template.jsx
 import { Modal, Button, message } from 'antd';
 import CodeMirror from '@uiw/react-codemirror';
 import { python } from '@codemirror/lang-python';
 import { githubDark } from '@uiw/codemirror-themes-all';
-import { useState, forwardRef, useImperativeHandle } from 'react';
+import { useState, forwardRef, useImperativeHandle, useEffect } from 'react';
 
 export const DataviewTemplateModal = forwardRef(
   ({ visible, record, onSave, onCancel, loading }, ref) => {
     const [pythonCode, setPythonCode] = useState(
-      record?.pythonCode ||
-        '# 请输入Python查询代码\n# 例如: df.query("age > 30")\n'
+      '# 请输入Python查询代码\n# 例如: df.query("age > 30")\n'
     );
+
+    // 当record变化时更新代码
+    useEffect(() => {
+      if (record) {
+        setPythonCode(record);
+      } else {
+        setPythonCode('# 请输入Python查询代码\n# 例如: df.query("age > 30")\n');
+      }
+    }, [record]);
 
     // 暴露方法给父组件
     useImperativeHandle(ref, () => ({
@@ -18,14 +27,7 @@ export const DataviewTemplateModal = forwardRef(
     }));
 
     const handleSave = async () => {
-      if (!queryName.trim()) {
-        message.error('请输入查询名称');
-        return;
-      }
-      if (
-        !pythonCode.trim() ||
-        pythonCode.trim() === '# 请输入Python查询代码'
-      ) {
+      if (!pythonCode.trim() || pythonCode.trim() === '# 请输入Python查询代码') {
         message.error('请输入有效的Python代码');
         return;
       }

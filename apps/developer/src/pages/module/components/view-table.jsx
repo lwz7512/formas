@@ -25,6 +25,7 @@ export const ViewTable = ({ moduleId }) => {
 
   const {
     currentView,
+    templateData,
     loading: dataviewTemplateLoading,
     openModal: openDataviewTemplateModal,
     handleSaveTemplate,
@@ -32,7 +33,7 @@ export const ViewTable = ({ moduleId }) => {
   } = useDataviewTemplate(moduleId);
 
   const handleSaveDataviewTemplate = async values => {
-    const success = await handleSaveTemplate(currentView.id, values);
+    const success = await handleSaveTemplate(currentView, values);
     if (success) {
       closeDataviewTemplateModal();
     }
@@ -82,7 +83,7 @@ export const ViewTable = ({ moduleId }) => {
           </Button>
           <Button
             size="small"
-            onClick={() => openDataviewTemplateModal(record)}
+            onClick={() => openDataviewTemplateModal(record.id)}
           >
             自定义查询
           </Button>
@@ -127,7 +128,7 @@ export const ViewTable = ({ moduleId }) => {
 
       <DataviewTemplateModal
         visible={!!currentView}
-        record={currentView}
+        record={templateData}
         onSave={handleSaveDataviewTemplate}
         onCancel={closeDataviewTemplateModal}
         loading={dataviewTemplateLoading}
