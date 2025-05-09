@@ -4,34 +4,52 @@ import { Table, Typography, Button, Popconfirm, Space } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { FORM_DEFINE_PATH } from '@/constants';
 import { FormEditModal } from '../modals/form-edit';
+import { FormTemplateModal } from '../modals/form-template';
+import { useFormTemplate } from '../hooks/use-form-template';
 
-export const FormTable = ({ 
-  forms, 
-  loading, 
-  onEdit, 
-  onDelete, 
-  onGenerateView 
+export const FormTable = ({
+  forms,
+  loading,
+  onEdit,
+  onDelete,
+  onGenerateView,
 }) => {
   const [editingRecord, setEditingRecord] = useState(null);
   const navigate = useNavigate();
 
   // 打开表单设计器
-  const openFormDesigner = (formId) => {
+  const openFormDesigner = formId => {
     navigate(`${FORM_DEFINE_PATH}/designer?formid=${formId}`);
   };
 
   // 打开编辑对话框
-  const handleEdit = (record) => {
+  const handleEdit = record => {
     setEditingRecord(record);
   };
 
   // 保存编辑
-  const handleSave = async (values) => {
+  const handleSave = async values => {
     try {
       await onEdit({ ...editingRecord, ...values });
       setEditingRecord(null);
     } catch (error) {
       console.error('保存失败:', error);
+    }
+  };
+
+  const {
+    currentForm,
+    templateData,
+    loading: formTemplateLoading,
+    openModal: openFormTemplateModal,
+    handleSaveTemplate,
+    closeModal: closeFormTemplateModal,
+  } = useFormTemplate();
+
+  const handleSaveFormTemplate = async values => {
+    const success = await handleSaveTemplate(currentForm, values);
+    if (success) {
+      closeFormTemplateModal();
     }
   };
 
@@ -58,36 +76,33 @@ export const FormTable = ({
       render: (_, record) => (
         <Space size={8} wrap>
           {/* 1. 编辑 - 链接样式（次要操作） */}
-          <Typography.Link 
+          <Typography.Link
             onClick={() => handleEdit(record)}
             style={{ paddingRight: 8 }}
           >
             编辑
           </Typography.Link>
-    
+
           {/* 2. 表单设计 - 主按钮样式（核心操作） */}
           <Button
             size="small"
             type="primary"
-            ghost  // 半透明效果，降低视觉重量
+            ghost // 半透明效果，降低视觉重量
             onClick={() => openFormDesigner(record.id)}
           >
             设计
           </Button>
-    
+
           {/* 3. 生成视图 - 默认按钮样式（重要操作） */}
-          <Button
-            size="small"
-            onClick={() => onGenerateView(record.id)}
-          >
+          <Button size="small" onClick={() => onGenerateView(record.id)}>
             生成视图
           </Button>
 
           <Button
             size="small"
             type="primary"
-            ghost  // 半透明效果，降低视觉重量
-            // onClick={() => openFormDesigner(record.id)}
+            ghost // 半透明效果，降低视觉重量
+            onClick={() => openFormTemplateModal(record.id)}
           >
             触发器
           </Button>
@@ -100,13 +115,11 @@ export const FormTable = ({
             cancelText="取消"
             placement="topRight"
           >
-            <Typography.Link type="danger">
-              删除
-            </Typography.Link>
+            <Typography.Link type="danger">删除</Typography.Link>
           </Popconfirm>
         </Space>
-      )
-    }
+      ),
+    },
   ];
 
   return (
@@ -126,6 +139,14 @@ export const FormTable = ({
         record={editingRecord}
         onSave={handleSave}
         onCancel={() => setEditingRecord(null)}
+      />
+
+      <FormTemplateModal
+        visible={!!currentForm}
+        record={templateData}
+        onSave={handleSaveFormTemplate}
+        onCancel={closeFormTemplateModal}
+        loading={formTemplateLoading}
       />
     </>
   );
