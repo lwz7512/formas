@@ -15,7 +15,15 @@ import './styles.css';
 //   bgColor?: CSSProperties['backgroundColor'];
 // } & Partial<FlexProps>;
 
-export const Logo = ({ asLink, color, href, imgSize, bgColor, ...others }) => {
+export const Logo = ({
+  asLink,
+  color,
+  href,
+  imgSize,
+  bgColor,
+  appName,
+  ...others
+}) => {
   return asLink ? (
     <Link to={href || '#'} className="logo-link">
       <div className="flex items-center gap-2">
@@ -36,7 +44,7 @@ export const Logo = ({ asLink, color, href, imgSize, bgColor, ...others }) => {
             borderRadius: 1,
           }}
         >
-          Formas - DevTool
+          Formas - {appName || `DevTool`}
         </Typography.Title>
       </div>
     </Link>

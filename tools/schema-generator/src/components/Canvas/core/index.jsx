@@ -138,7 +138,7 @@ const FR = ({ id = '#', preview, displaySchema }) => {
   const childrenElement =
     item.children && item.children.length > 0 ? (
       <ul className={`flex flex-wrap pl0`}>
-        <RenderChildren children={item.children} />
+        <RenderChildren children={item.children} FR={FR} />
       </ul>
     ) : null;
 

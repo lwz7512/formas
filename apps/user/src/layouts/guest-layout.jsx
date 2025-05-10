@@ -99,7 +99,12 @@ export const GuestLayout = () => {
             zIndex: 1,
           }}
         >
-          <Logo color="white" asLink href={ROOTS_LANDING} />
+          <Logo
+            appName="User Portal"
+            color="white"
+            asLink
+            href={ROOTS_LANDING}
+          />
           {!isMobile ? (
             <>
               <div className="flex gap-1">

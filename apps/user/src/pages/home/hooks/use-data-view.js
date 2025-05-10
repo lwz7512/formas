@@ -10,8 +10,6 @@ import {
 
 export const useDataView = () => {
   const [dataview, setDataview] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   // load dataview instance list and detail from tree node select
   const treeNodeSelectHandler = async (_, { node }) => {
@@ -30,8 +28,6 @@ export const useDataView = () => {
 
   return {
     dataview,
-    loading,
-    error,
     treeNodeSelectHandler,
   };
 };

@@ -3,36 +3,24 @@ import { Table } from 'antd';
 const dataSource = [
   {
     key: '1',
-    name: 'Mike',
-    age: 32,
-    address: '10 Downing Street',
-  },
-  {
-    key: '2',
-    name: 'John',
-    age: 42,
-    address: '10 Downing Street',
+    name: 'select tree node...',
   },
 ];
 
-const columns = [
+const sampleColumns = [
   {
-    title: 'Name',
+    title: 'Next Step',
     dataIndex: 'name',
     key: 'name',
   },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
-  },
-  {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
-  },
 ];
 
-export const ViewInstanceTable = () => {
-  return <Table dataSource={dataSource} columns={columns} />;
+export const ViewInstanceTable = ({ columns }) => {
+  if (!columns) {
+    return <Table dataSource={dataSource} columns={sampleColumns} />;
+  }
+  // console.log(columns);
+  const reOrderedColumns = [...columns].reverse();
+  // console.log('reOrderedColumns', reOrderedColumns);
+  return <Table dataSource={dataSource} columns={reOrderedColumns} />;
 };
