@@ -18,8 +18,9 @@ import { CreateFormInstanceModal } from './modals/create-form-instance';
 
 export const HomePage = () => {
   const { treeSelectData } = useMenuTreeQuery();
-  const { dataview, treeNodeSelectHandler } = useDataView();
-  const { isModalOpen, handleOk, handleCancel, openModal } = useFormInstance();
+  const { dataview, rows, treeNodeSelectHandler, refreshTable } = useDataView();
+  const { isModalOpen, handleOk, handleCancel, openModal } =
+    useFormInstance(refreshTable);
 
   return (
     <div className="home-page-user">
@@ -51,7 +52,7 @@ export const HomePage = () => {
               </Button>
             )}
           </div>
-          <ViewInstanceTable columns={dataview?.columns} />
+          <ViewInstanceTable columns={dataview?.columns} rows={rows} />
         </Col>
       </Row>
       <CreateFormInstanceModal

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Modal, Form, Input } from 'antd';
 
-const { TextArea } = Input;
+// const { TextArea } = Input;
 
 export const CreateFormInstanceModal = ({
   visible,
@@ -11,14 +11,14 @@ export const CreateFormInstanceModal = ({
 }) => {
   const [form] = Form.useForm();
 
-  const { columns } = dataview || { columns: [] };
+  const emptyDataview = { columns: [], formId: '' };
+  const { columns, formId } = dataview || emptyDataview;
 
   const noIDColumns = columns.filter(column => column.key !== 'id');
 
   const handleSubmit = async () => {
     const values = await form.validateFields();
-    console.log(values);
-    // onSubmit(values);
+    onOk(values, formId);
   };
 
   return (

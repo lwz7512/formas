@@ -2,7 +2,7 @@
  * 数据视图的钩子
  */
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   fetchDataviewInstanceList,
   fetchDataviewDetail,
@@ -10,24 +10,44 @@ import {
 
 export const useDataView = () => {
   const [dataview, setDataview] = useState(null);
+  const [rows, setRows] = useState([]);
 
-  // load dataview instance list and detail from tree node select
+  /**
+   * 树节点选择处理
+   * @param {Object} _ - 事件对象
+   * @param {Object} node - 选中的节点
+   */
   const treeNodeSelectHandler = async (_, { node }) => {
     if (node.type === 'dataview') {
-      // console.log('view node', node);
       // get dataview instance list by dataview id, mainly for table view rows
       const { datas: rows } = await fetchDataviewInstanceList(node.value);
-      console.log('dataview rows', rows);
+      const validRows = rows.map(row => ({
+        key: row.id,
+        ...row,
+      }));
+      setRows(validRows);
+
+      // get dataview detail by dataview id, mainly for table view columns
       const { data: dataviewDetail } = await fetchDataviewDetail(node.value);
-      console.log('dataviewDetail', dataviewDetail);
       setDataview(dataviewDetail);
     } else {
       console.log(`>>> clicke on: ${node.type}`);
     }
   };
 
+  const refreshFormInstanceTable = async () => {
+    const { datas: rows } = await fetchDataviewInstanceList(dataview.id);
+    const validRows = rows.map(row => ({
+      key: row.id,
+      ...row,
+    }));
+    setRows(validRows);
+  };
+
   return {
     dataview,
+    rows,
     treeNodeSelectHandler,
+    refreshTable: refreshFormInstanceTable,
   };
 };

@@ -3,7 +3,7 @@ import { Table } from 'antd';
 const dataSource = [
   {
     key: '1',
-    name: 'select tree node...',
+    name: 'select tree node from left side...',
   },
 ];
 
@@ -15,12 +15,11 @@ const sampleColumns = [
   },
 ];
 
-export const ViewInstanceTable = ({ columns }) => {
+export const ViewInstanceTable = ({ columns, rows }) => {
   if (!columns) {
     return <Table dataSource={dataSource} columns={sampleColumns} />;
   }
-  // console.log(columns);
+  // make a copy of columns and reverse it to looks better
   const reOrderedColumns = [...columns].reverse();
-  // console.log('reOrderedColumns', reOrderedColumns);
-  return <Table dataSource={dataSource} columns={reOrderedColumns} />;
+  return <Table dataSource={rows} columns={reOrderedColumns} />;
 };

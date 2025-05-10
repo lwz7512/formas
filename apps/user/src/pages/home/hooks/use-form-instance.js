@@ -1,10 +1,14 @@
 import { useState } from 'react';
 
-export const useFormInstance = () => {
+import { createFormInstance } from '@/api/form-instance';
+
+export const useFormInstance = createCallback => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleOk = () => {
+  const handleOk = async (values, formId) => {
+    await createFormInstance(formId, values);
     setIsModalOpen(false);
+    createCallback();
   };
 
   const handleCancel = () => {
