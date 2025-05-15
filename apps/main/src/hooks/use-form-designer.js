@@ -47,8 +47,8 @@ export const useFormDesigner = () => {
 
   const schemaChangeHandler = schema => {
     setFormSchema(schema);
-    // console.log(`>>> current schema:`);
-    // console.log(schema);
+    console.log(`>>> current schema:`);
+    console.log(schema);
   };
 
   // TODO: fetch form schema saved in database by `formid` & `token` ....

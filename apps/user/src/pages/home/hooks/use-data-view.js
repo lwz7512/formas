@@ -8,7 +8,7 @@ import {
   fetchDataviewDetail,
 } from '@/api/dataview-instance';
 
-export const useDataView = () => {
+export const useDataView = toast => {
   const [dataview, setDataview] = useState(null);
   const [rows, setRows] = useState([]);
 
@@ -26,12 +26,13 @@ export const useDataView = () => {
         ...row,
       }));
       setRows(validRows);
+      toast.success(`load rows: ${validRows.length}`);
 
       // get dataview detail by dataview id, mainly for table view columns
       const { data: dataviewDetail } = await fetchDataviewDetail(node.value);
       setDataview(dataviewDetail);
     } else {
-      console.log(`>>> clicke on: ${node.type}`);
+      toast.warning(`Click on: ${node.type}`);
     }
   };
 

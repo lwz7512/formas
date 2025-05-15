@@ -1,6 +1,4 @@
-import { useState } from 'react';
-
-import { Button, Card, Col, Row, Space, Typography, Tree } from 'antd';
+import { App, Button, Card, Col, Row, Space, Typography, Tree } from 'antd';
 import { MenuOutlined, PlusOutlined } from '@ant-design/icons';
 
 import { ViewInstanceTable } from './components/table';
@@ -17,8 +15,11 @@ import { CreateFormInstanceModal } from './modals/create-form-instance';
  */
 
 export const HomePage = () => {
+  const { message } = App.useApp();
+
   const { treeSelectData } = useMenuTreeQuery();
-  const { dataview, rows, treeNodeSelectHandler, refreshTable } = useDataView();
+  const { dataview, rows, treeNodeSelectHandler, refreshTable } =
+    useDataView(message);
   const { isModalOpen, handleOk, handleCancel, openModal } =
     useFormInstance(refreshTable);
 
