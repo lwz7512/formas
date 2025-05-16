@@ -6,11 +6,18 @@ import { DataviewEditModel } from '../modals/dataview-edit';
 import { DataviewTemplateModal } from '../modals/dataview-template';
 import { useDataviewTemplate } from '../hooks/use-dataview-template';
 import ViewDesignerModal from '../modals/dataview-designer';
+// import ViewDesignerWithTabs from '../modals/dataview-designer-with-tabs';
 import { useDataviewColumn } from '../hooks/use-dataview-column';
 
 export const ViewTable = ({ moduleId }) => {
   const { views, loading, handleDelete, handleUpdate } = useView(moduleId);
   const [editingView, setEditingView] = useState(null);
+  const [designerState, setDesignerState] = useState({
+    visible: false,
+    viewId: null,
+    columns: [],
+    previewData: [],
+  });
 
   const handleEdit = record => {
     setEditingView(record);
