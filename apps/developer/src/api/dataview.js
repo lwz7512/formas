@@ -1,20 +1,24 @@
 // src/api/dataview.js
 import httpClient from '@/utils/http-client';
 
-export const fetchDataviewList = async (moduleId) => {
+export const fetchDataviewList = async moduleId => {
   const response = await httpClient.post('/formas/dataviews/filter', {
     currPage: 1,
     pageSize: 1000,
     orders: [{ column: 'sequence', dir: 'asc' }],
-    searchs: [{ column: 'moduleId', op: 'eq', value: moduleId }]
+    searchs: [{ column: 'moduleId', op: 'eq', value: moduleId }],
   });
+  return response;
+};
+
+export const fetchDataview = async viewId => {
+  const response = await httpClient.get(`/formas/dataviews/${viewId}`, {});
   return response;
 };
 
 // 获取数据视图下拉树
 export const fetchDataviewTree = async () => {
-  const response = await httpClient.get('/formas/dataviews/module-tree', {
-  });
+  const response = await httpClient.get('/formas/dataviews/module-tree', {});
   return response;
 };
 
@@ -35,4 +39,10 @@ export const deleteDataview = async id => {
  */
 export const updateDataview = async (viewId, viewData) => {
   return httpClient.put(`/formas/dataviews/${viewId}`, viewData);
+};
+
+export const updateDataviewColumnConfig = async (viewId, columnConfig) => {
+  return httpClient.put(`/formas/dataviews/${viewId}/column-config`, {
+    columnConfig: columnConfig,
+  });
 };

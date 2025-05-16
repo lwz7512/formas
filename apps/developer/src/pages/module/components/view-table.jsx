@@ -6,6 +6,7 @@ import { DataviewEditModel } from '../modals/dataview-edit';
 import { DataviewTemplateModal } from '../modals/dataview-template';
 import { useDataviewTemplate } from '../hooks/use-dataview-template';
 import ViewDesignerModal from '../modals/dataview-designer';
+import { useDataviewColumn } from '../hooks/use-dataview-column';
 
 export const ViewTable = ({ moduleId }) => {
   const { views, loading, handleDelete, handleUpdate } = useView(moduleId);
@@ -39,6 +40,16 @@ export const ViewTable = ({ moduleId }) => {
       closeDataviewTemplateModal();
     }
   };
+
+  // 使用设计器hooks
+  const {
+    designerVisible,
+    loading: designerLoading,
+    columnConfig,
+    openDesigner,
+    closeDesigner,
+    handleSaveColumnConfig,
+  } = useDataviewColumn();
 
   const columns = [
     {
@@ -78,7 +89,7 @@ export const ViewTable = ({ moduleId }) => {
             size="small"
             type="primary"
             ghost // 半透明效果，降低视觉重量
-            onClick={() => openDesigner(record)}  // 添加点击事件
+            onClick={() => openDesigner(record)} // 添加点击事件
           >
             设计
           </Button>
@@ -109,51 +120,13 @@ export const ViewTable = ({ moduleId }) => {
     },
   ];
 
-  const [columnConfig, setColumnConfig] = useState({
-    columns: [
-      { dataIndex: 'id', title: 'ID', type: 'text', visible: true, width: 100 },
-      { dataIndex: 'name', title: '姓名', type: 'text', visible: true },
-      { dataIndex: 'age', title: '年龄', type: 'number', visible: true },
-      { dataIndex: 'gender', title: '性别', type: 'text', visible: false },
-      { dataIndex: 'email', title: '邮箱', type: 'text', visible: true },
-    ],
-    selectedColumns: [],
-  });
-
-  // 添加状态控制设计器对话框
-  const [designerVisible, setDesignerVisible] = useState(false);
-  const [currentDesignView, setCurrentDesignView] = useState(null);
-
-  // 打开设计器的方法
-  const openDesigner = (view) => {
-    setCurrentDesignView(view);
-    setDesignerVisible(true);
-    
-    // 这里可以根据view.id加载特定的列配置
-    // 例如: const config = await loadViewConfig(view.id);
-    // setColumnConfig(config);
-  };
-
-  // 关闭设计器的方法
-  const closeDesigner = () => {
-    setDesignerVisible(false);
-    setCurrentDesignView(null);
-  };
-
   // 保存列配置的处理函数
-  const handleSaveColumnConfig = async (columns, selectedColumns) => {
+  const onSaveColumnConfig = async (columns, selectedColumns) => {
     try {
-      // 这里可以添加保存到后端逻辑
-      // await saveViewConfig(currentDesignView.id, { columns, selectedColumns });
-      
-      setColumnConfig({ columns, selectedColumns });
-      console.log('保存的列配置:', columns);
-      console.log('选中的列:', selectedColumns);
-      message.success('视图配置保存成功');
+      await handleSaveColumnConfig({ columns, selectedColumns });
       closeDesigner();
     } catch (error) {
       console.error('保存失败:', error);
-      message.error('保存视图配置失败');
     }
   };
 
@@ -185,10 +158,11 @@ export const ViewTable = ({ moduleId }) => {
 
       <ViewDesignerModal
         visible={designerVisible}
-        initialColumns={columnConfig.columns}
-        onSave={handleSaveColumnConfig}
+        initialColumns={columnConfig?.columns}
+        onSave={onSaveColumnConfig}
         onCancel={closeDesigner}
-        viewId={currentDesignView?.id}
+        viewId={editingView?.id}
+        loading={designerLoading}
       />
     </>
   );

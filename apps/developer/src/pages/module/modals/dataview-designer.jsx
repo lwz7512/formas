@@ -1,5 +1,5 @@
 // modals/dataview-designer.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Divider, Modal, Space, message } from 'antd';
 import ViewDesignerColumnManager from '../components/column-manager';
 
@@ -7,15 +7,19 @@ const ViewDesignerModal = ({
   visible, 
   initialColumns, 
   onSave, 
-  onCancel 
+  onCancel,
+  loading,
+  viewId
 }) => {
   const [columns, setColumns] = useState(initialColumns || []);
   const [selectedColumns, setSelectedColumns] = useState([]);
 
-  // 初始化数据
-  React.useEffect(() => {
-    setColumns(initialColumns || []);
-  }, [initialColumns]);
+  useEffect(() => {
+    if (visible && initialColumns) {
+      setColumns(initialColumns);
+      setSelectedColumns(initialColumns.filter(col => col.visible));
+    }
+  }, [visible, initialColumns]);
 
   const handleOk = () => {
     if (selectedColumns.length === 0) {
