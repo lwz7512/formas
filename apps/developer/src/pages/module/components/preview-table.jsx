@@ -29,9 +29,9 @@ export const PreviewDataTable = ({
           columns={processedColumns}
           dataSource={data}
           loading={loading}
-          pagination={{ pageSize: 5 }}
+          pagination={{ pageSize: 10 }}
           scroll={{ y: 'calc(60vh - 180px)' }}
-          rowKey={(record, index) => index}
+          rowKey="id"
         />
       ) : (
         <Empty 

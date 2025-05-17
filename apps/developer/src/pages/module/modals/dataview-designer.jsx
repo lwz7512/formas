@@ -3,17 +3,18 @@ import React, { useState, useEffect } from 'react';
 import { Badge, Button, Divider, Modal, Space, Tabs, message } from 'antd';
 import { SyncOutlined, EyeOutlined, SettingOutlined } from '@ant-design/icons';
 import ViewDesignerColumnManager from '../components/column-manager';
-import {PreviewDataTable} from '../components/preview-table';
+import { PreviewDataTable } from '../components/preview-table';
 
-const ViewDesignerModal = ({ 
-  visible, 
-  initialColumns, 
-  onSave, 
+const ViewDesignerModal = ({
+  visible,
+  initialColumns,
+  onSave,
   onCancel,
   loading,
   viewId,
   previewData = [],
-  previewLoading = false
+  previewLoading = false,
+  onLoadPreviewData,
 }) => {
   const [columns, setColumns] = useState(initialColumns || []);
   const [selectedColumns, setSelectedColumns] = useState([]);
@@ -96,8 +97,8 @@ const ViewDesignerModal = ({
           padding: '16px 24px',
           height: '70vh',
           display: 'flex',
-          flexDirection: 'column'
-        }
+          flexDirection: 'column',
+        },
       }}
       footer={
         <Space>
@@ -111,9 +112,10 @@ const ViewDesignerModal = ({
           </Button>
           <Button
             icon={<SyncOutlined />}
-            onClick={() =>
-              setActiveKey(activeKey === 'config' ? 'preview' : 'config')
-            }
+            onClick={() => {
+              setActiveKey(activeKey === 'config' ? 'preview' : 'config');
+              onLoadPreviewData();
+            }}
           >
             切换{activeKey === 'config' ? '预览' : '配置'}
           </Button>

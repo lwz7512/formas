@@ -1,7 +1,8 @@
 // hooks/use-dataview-column.js
 import { useCallback, useState } from 'react';
 import { message } from 'antd';
-import { fetchDataview, updateDataviewColumnConfig } from '@/api/dataview'; // 假设有这个API
+import { fetchDataview, updateDataviewColumnConfig } from '@/api/dataview';
+import { fetchDataviewInstanceList } from '@/api/dataview-instance';
 
 export const useDataviewColumn = () => {
   const [currentViewId, setCurrentViewId] = useState(null); // 新增状态管理当前视图ID
@@ -11,8 +12,24 @@ export const useDataviewColumn = () => {
     columns: [],
     selectedColumns: [],
   });
+  const [previewData, setPreviewData] = useState([]);
 
-  // 修改loadColumnConfig实现
+  // 获取列配置信息
+  const loadPreviewData = useCallback(
+    async previewData => {
+      try {
+        if (!currentViewId) return;
+        setLoading(true);
+        const response = await fetchDataviewInstanceList(currentViewId);
+        setPreviewData(response.datas);
+        return response.datas;
+      } finally {
+        setLoading(false);
+      }
+    }
+  );
+
+  // 获取列配置信息
   const loadColumnConfig = useCallback(
     async currentViewId => {
       try {
@@ -53,17 +70,24 @@ export const useDataviewColumn = () => {
   );
 
   // 保存视图列设计配置
-  const handleSaveColumnConfig = useCallback(async (config) => {
-    if (!currentViewId) return;
-    await updateDataviewColumnConfig(currentViewId, config);
-  }, [currentViewId]);
+  const handleSaveColumnConfig = useCallback(
+    async config => {
+      if (!currentViewId) return;
+      const response = await updateDataviewColumnConfig(currentViewId, config);
+      message.success(response.errMsg || '列配置保存成功');
+    },
+    [currentViewId]
+  );
 
   // 打开设计器并加载配置
-  const openDesigner = useCallback(async (view) => {
-    setCurrentViewId(view.id); // 存储当前视图ID
-    setDesignerVisible(true);
-    await loadColumnConfig(view.id); // 使用视图ID加载配置
-  }, [loadColumnConfig]);
+  const openDesigner = useCallback(
+    async view => {
+      setCurrentViewId(view.id); // 存储当前视图ID
+      setDesignerVisible(true);
+      await loadColumnConfig(view.id); // 使用视图ID加载配置
+    },
+    [loadColumnConfig]
+  );
 
   // 关闭设计器
   const closeDesigner = () => {
@@ -76,6 +100,8 @@ export const useDataviewColumn = () => {
     columnConfig, // 确保包含columns和selectedColumns
     openDesigner,
     closeDesigner,
-    handleSaveColumnConfig
+    handleSaveColumnConfig,
+    previewData,
+    loadPreviewData,
   };
 };

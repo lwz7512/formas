@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Button, Empty, Space, Tabs, Typography } from 'antd';
 import { PlusOutlined, ProfileOutlined, TableOutlined } from '@ant-design/icons';
-import { useView } from '../hooks/use-view';
+import { useView } from '../hooks/use-dataview';
 import { useForm } from '../hooks/use-form';
 import { ViewTable } from './view-table';
 import { FormTable } from './form-table';

@@ -1,23 +1,16 @@
 // components/view-table.jsx
 import { useState } from 'react';
 import { Table, Button, Popconfirm, Space } from 'antd';
-import { useView } from '../hooks/use-view';
+import { useView } from '../hooks/use-dataview';
 import { DataviewEditModel } from '../modals/dataview-edit';
 import { DataviewTemplateModal } from '../modals/dataview-template';
 import { useDataviewTemplate } from '../hooks/use-dataview-template';
 import ViewDesignerModal from '../modals/dataview-designer';
-// import ViewDesignerWithTabs from '../modals/dataview-designer-with-tabs';
 import { useDataviewColumn } from '../hooks/use-dataview-column';
 
 export const ViewTable = ({ moduleId }) => {
   const { views, loading, handleDelete, handleUpdate } = useView(moduleId);
   const [editingView, setEditingView] = useState(null);
-  const [designerState, setDesignerState] = useState({
-    visible: false,
-    viewId: null,
-    columns: [],
-    previewData: [],
-  });
 
   const handleEdit = record => {
     setEditingView(record);
@@ -56,6 +49,8 @@ export const ViewTable = ({ moduleId }) => {
     openDesigner,
     closeDesigner,
     handleSaveColumnConfig,
+    previewData,
+    loadPreviewData,
   } = useDataviewColumn();
 
   const columns = [
@@ -131,7 +126,7 @@ export const ViewTable = ({ moduleId }) => {
   const onSaveColumnConfig = async (columns, selectedColumns) => {
     try {
       await handleSaveColumnConfig({ columns, selectedColumns });
-      closeDesigner();
+      // closeDesigner();
     } catch (error) {
       console.error('保存失败:', error);
     }
@@ -170,6 +165,8 @@ export const ViewTable = ({ moduleId }) => {
         onCancel={closeDesigner}
         viewId={editingView?.id}
         loading={designerLoading}
+        previewData={previewData}
+        onLoadPreviewData={loadPreviewData}
       />
     </>
   );
