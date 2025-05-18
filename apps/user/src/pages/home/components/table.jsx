@@ -1,13 +1,13 @@
 import { Table } from 'antd';
 
-const dataSource = [
+const dumyDataSource = [
   {
     key: '1',
     name: 'select tree node from left side...',
   },
 ];
 
-const sampleColumns = [
+const dumyColumns = [
   {
     title: 'Next Step',
     dataIndex: 'name',
@@ -17,9 +17,9 @@ const sampleColumns = [
 
 export const ViewInstanceTable = ({ columns, rows }) => {
   if (!columns) {
-    return <Table dataSource={dataSource} columns={sampleColumns} />;
+    return <Table columns={dumyColumns} dataSource={dumyDataSource} />;
   }
   // make a copy of columns and reverse it to looks better
   const reOrderedColumns = [...columns].reverse();
-  return <Table dataSource={rows} columns={reOrderedColumns} />;
+  return <Table columns={reOrderedColumns} dataSource={rows} />;
 };

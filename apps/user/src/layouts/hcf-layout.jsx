@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { App, Breadcrumb, Layout, Menu } from 'antd';
+import { Breadcrumb, Layout, Menu } from 'antd';
 
 import { devloperMenuItems } from '@/config/menu-items';
 
@@ -36,7 +36,7 @@ export const HCFLayout = ({ children }) => {
   };
 
   return (
-    <App>
+    <div className="hcf-layout">
       <Layout className="layout hcf-layout">
         <Header>
           <div className="logo">Formas Lowcode</div>
@@ -77,6 +77,6 @@ export const HCFLayout = ({ children }) => {
           Formas-Devtools ©2025 Created by Formas team
         </Footer>
       </Layout>
-    </App>
+    </div>
   );
 };

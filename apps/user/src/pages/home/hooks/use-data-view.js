@@ -6,11 +6,13 @@ import { useState } from 'react';
 import {
   fetchDataviewInstanceList,
   fetchDataviewDetail,
+  fetchFormSchema,
 } from '@/api/dataview-instance';
 
-export const useDataView = toast => {
+export const useDataView = () => {
   const [dataview, setDataview] = useState(null);
   const [rows, setRows] = useState([]);
+  const [schema, setSchema] = useState(null);
 
   /**
    * 树节点选择处理
@@ -26,13 +28,21 @@ export const useDataView = toast => {
         ...row,
       }));
       setRows(validRows);
-      toast.success(`load rows: ${validRows.length}`);
+      // toast.success(`load rows: ${validRows.length}`);
 
       // get dataview detail by dataview id, mainly for table view columns
+      // dataviewDetail 中包含 `formId`!
+      // TODO: 这里需要优化，因为 dataviewDetail 和 formSchema 是同时获取的，可以合并成一个请求
       const { data: dataviewDetail } = await fetchDataviewDetail(node.value);
       setDataview(dataviewDetail);
+
+      // get form `schema` definition(from form designer) by form id
+      const {
+        data: { schema },
+      } = await fetchFormSchema(dataviewDetail.formId);
+      setSchema(JSON.parse(schema));
     } else {
-      toast.warning(`Click on: ${node.type}`);
+      // toast.warning(`Click on: ${node.type}`);
     }
   };
 
@@ -48,6 +58,7 @@ export const useDataView = toast => {
   return {
     dataview,
     rows,
+    schema,
     treeNodeSelectHandler,
     refreshTable: refreshFormInstanceTable,
   };

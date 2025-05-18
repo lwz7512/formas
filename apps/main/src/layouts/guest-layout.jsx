@@ -1,15 +1,6 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
-// import { useNavigate } from "react-router-dom";
-import {
-  Button,
-  Drawer,
-  // Flex,
-  // FloatButton,
-  Layout,
-  // theme,
-  Tooltip,
-} from 'antd';
+import { Button, Drawer, Layout, Tooltip } from 'antd';
 import {
   CSSTransition,
   SwitchTransition,

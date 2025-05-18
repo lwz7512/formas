@@ -1,16 +1,7 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  App,
-  Button,
-  Drawer,
-  // Flex,
-  // FloatButton,
-  Layout,
-  // theme,
-  Tooltip,
-} from 'antd';
+import { Button, Drawer, Layout, Tooltip } from 'antd';
 import {
   CSSTransition,
   SwitchTransition,
@@ -75,7 +66,7 @@ export const GuestLayout = () => {
   }, [navigate]);
 
   return (
-    <App>
+    <div className="guest-layout">
       <NProgress isAnimating={isLoading} key={location.key} />
       <Layout
         className="layout"
@@ -228,6 +219,6 @@ export const GuestLayout = () => {
           </div>
         </>
       </Drawer>
-    </App>
+    </div>
   );
 };

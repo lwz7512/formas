@@ -1,19 +1,18 @@
 import { RouterProvider } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 
 import { ConfigProvider } from 'antd';
 
-import { adjustableTheme } from './constants';
 import { StylesContext } from './context';
 import { Routers } from './routes';
 
 function App() {
-  const { mytheme } = useSelector(state => state.theme);
+  // const { mytheme } = useSelector(state => state.theme);
 
   return (
     <HelmetProvider>
-      <ConfigProvider theme={adjustableTheme(mytheme)}>
+      <ConfigProvider>
         <StylesContext.Provider
           value={{
             rowProps: {

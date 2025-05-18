@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
-import { Button, Modal, Form, Input } from 'antd';
-
-// const { TextArea } = Input;
+import { Modal } from 'antd';
+// use form-render to render the form with schema
+// @2025-05-18
+import FormRender, { useForm } from '@formas/form-render';
 
 export const CreateFormInstanceModal = ({
   visible,
   onOk,
   onCancel,
   dataview,
+  schema,
 }) => {
-  const [form] = Form.useForm();
+  const form = useForm();
 
   const emptyDataview = { columns: [], formId: '' };
-  const { columns, formId } = dataview || emptyDataview;
-
-  const noIDColumns = columns.filter(column => column.key !== 'id');
+  const { formId } = dataview || emptyDataview;
 
   const handleSubmit = async () => {
     const values = await form.validateFields();
+    // console.log('values', values);
     onOk(values, formId);
   };
 
@@ -29,19 +29,7 @@ export const CreateFormInstanceModal = ({
       onOk={handleSubmit}
       onCancel={onCancel}
     >
-      <Form form={form} layout="vertical" className="mt-6">
-        {noIDColumns.map(column => (
-          <Form.Item
-            key={column.key}
-            label={column.title}
-            className="mb-2"
-            name={column.name}
-            rules={[{ required: true, message: '请输入' + column.label }]}
-          >
-            <Input placeholder={column.placeholder} />
-          </Form.Item>
-        ))}
-      </Form>
+      <FormRender schema={schema} form={form} />
     </Modal>
   );
 };

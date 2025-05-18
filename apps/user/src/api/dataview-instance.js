@@ -23,3 +23,14 @@ export const fetchDataviewDetail = async dataviewId => {
   const response = await httpClient.get(`/formas/dataviews/${dataviewId}`, {});
   return response;
 };
+
+/**
+ * query schema json for defined form
+ * @param {string} key form id
+ * @returns
+ */
+export const fetchFormSchema = async key => {
+  const url = `/formas/forms/${key}`;
+  const result = await httpClient.get(url);
+  return result;
+};

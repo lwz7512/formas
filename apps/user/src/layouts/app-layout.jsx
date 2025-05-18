@@ -1,5 +1,5 @@
 import {
-  App,
+  // App,
   Button,
   Dropdown,
   Input,
@@ -112,7 +112,7 @@ export const AppLayout = ({ children }) => {
   }, []);
 
   return (
-    <App>
+    <div className="app-layout">
       <NProgress isAnimating={isLoading} key={location.key} />
       <Layout
         style={{
@@ -260,6 +260,6 @@ export const AppLayout = ({ children }) => {
           />
         </Layout>
       </Layout>
-    </App>
+    </div>
   );
 };
