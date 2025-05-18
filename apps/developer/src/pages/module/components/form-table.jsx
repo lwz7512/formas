@@ -7,6 +7,10 @@ import { FormEditModal } from '../modals/form-edit';
 import { FormTemplateModal } from '../modals/form-template';
 import { useFormTemplate } from '../hooks/use-form-template';
 
+/**
+ * Form tab content for module detail page
+ * @date 2025-05-18
+ */
 export const FormTable = ({
   forms,
   loading,

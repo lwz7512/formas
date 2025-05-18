@@ -1,5 +1,31 @@
 import { USER_SESSION_VALID_TIME } from '../config';
 
+// == NO NEED TO PUT IT IN HOOKS, OR PRODUCE UNNECESSARY RERENDERS INSIDE HOOKS ==
+// 辅助函数：根据ID查找模块
+export const findModuleById = (id, treeData) => {
+  for (const node of treeData) {
+    if (node.id === id) return node;
+    if (node.children) {
+      const found = findModuleById(id, node.children);
+      if (found) return found;
+    }
+  }
+  return null;
+};
+
+// == NO NEED TO PUT IT IN HOOKS, OR PRODUCE UNNECESSARY RERENDERS INSIDE HOOKS ==
+// 获取一个节点的所有父级key（递归实现）
+export const getParentKeys = (targetId, treeData, keys = []) => {
+  for (const node of treeData) {
+    if (node.id === targetId) return keys;
+    if (node.children) {
+      const found = getParentKeys(targetId, node.children, [...keys, node.id]);
+      if (found) return found;
+    }
+  }
+  return null;
+};
+
 /**
  * check if the user is logged in and the login time is valid
  * @returns {boolean}

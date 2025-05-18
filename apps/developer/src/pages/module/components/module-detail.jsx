@@ -1,19 +1,23 @@
 // components/module-detail.jsx
 import { useState } from 'react';
-import { Button, Empty, Space, Tabs, Typography } from 'antd';
-import { PlusOutlined, ProfileOutlined, TableOutlined } from '@ant-design/icons';
+import { Button, Empty, Tabs, Typography } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import { useView } from '../hooks/use-dataview';
 import { useForm } from '../hooks/use-form';
 import { ViewTable } from './view-table';
 import { FormTable } from './form-table';
 import { FormCreateModel } from '../modals/form-create';
+import { FormTabLabel, ViewTabLabel } from './widget';
 
+/**
+ * Tabs content for form_tab | view_tab
+ */
 export const ModuleDetailPanel = ({ selectedModule }) => {
   const [activeTab, setActiveTab] = useState('forms');
-  
+
   // 视图相关逻辑
   const view = useView(selectedModule?.id);
-  
+
   // 表单相关逻辑
   const {
     forms,
@@ -25,11 +29,11 @@ export const ModuleDetailPanel = ({ selectedModule }) => {
     handleCreate,
     handleUpdate,
     handleDelete,
-    handleGenerateView
+    handleGenerateView,
   } = useForm(selectedModule?.id);
 
   // 编辑表单
-  const handleEdit = async (updatedForm) => {
+  const handleEdit = async updatedForm => {
     try {
       await handleUpdate(updatedForm.id, updatedForm);
     } catch (error) {
@@ -38,7 +42,7 @@ export const ModuleDetailPanel = ({ selectedModule }) => {
   };
 
   // 保存表单
-  const handleSave = async (key) => {
+  const handleSave = async key => {
     try {
       await handleUpdate(key);
       setEditingKey('');
@@ -69,9 +73,9 @@ export const ModuleDetailPanel = ({ selectedModule }) => {
         activeKey={activeTab}
         onChange={setActiveTab}
         tabBarExtraContent={
-          <Button 
-            type="primary" 
-            icon={<PlusOutlined />} 
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
             onClick={() => setIsModalOpen(true)}
           >
             {activeTab === 'forms' ? '新建表单' : '新建视图'}
@@ -80,12 +84,8 @@ export const ModuleDetailPanel = ({ selectedModule }) => {
         items={[
           {
             key: 'forms',
-            label: (
-              <Space>
-                <ProfileOutlined />
-                表单
-              </Space>
-            ),
+            label: <FormTabLabel />,
+            // == form table & its modals ==
             children: (
               <FormTable
                 forms={forms}
@@ -101,17 +101,14 @@ export const ModuleDetailPanel = ({ selectedModule }) => {
           },
           {
             key: 'views',
-            label: (
-              <Space>
-                <TableOutlined />
-                视图
-              </Space>
-            ),
+            label: <ViewTabLabel />,
+            // == view table & its modals ==
             children: <ViewTable moduleId={selectedModule?.id} />,
           },
         ]}
       />
-      
+
+      {/* == create new form from module detail page == */}
       <FormCreateModel
         visible={isModalOpen}
         onCancel={() => setIsModalOpen(false)}

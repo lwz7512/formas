@@ -2,12 +2,7 @@
 import { Form, Modal, Input, InputNumber } from 'antd';
 import { useEffect } from 'react';
 
-export const DataviewEditModel = ({
-  visible,
-  record,
-  onSave,
-  onCancel,
-}) => {
+export const DataviewEditModel = ({ visible, record, onSave, onCancel }) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -54,10 +49,7 @@ export const DataviewEditModel = ({
         >
           <Input />
         </Form.Item>
-        <Form.Item
-          name="note"
-          label="备注"
-        >
+        <Form.Item name="note" label="备注">
           <Input.TextArea />
         </Form.Item>
       </Form>

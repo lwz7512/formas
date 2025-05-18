@@ -8,6 +8,10 @@ import { useDataviewTemplate } from '../hooks/use-dataview-template';
 import ViewDesignerModal from '../modals/dataview-designer';
 import { useDataviewColumn } from '../hooks/use-dataview-column';
 
+/**
+ * View tab content for module detail page
+ * @date 2025-05-18
+ */
 export const ViewTable = ({ moduleId }) => {
   const { views, loading, handleDelete, handleUpdate } = useView(moduleId);
   const [editingView, setEditingView] = useState(null);

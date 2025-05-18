@@ -7,34 +7,14 @@ import { useModuleTree } from './hooks/use-module-tree';
 import { ModuleCreateModel } from './modals/module-create';
 import { ModuleTree } from './components/module-tree';
 import { ModuleDetailPanel } from './components/module-detail';
+
 import { ROOT_BIZ_TREE_ID } from '@/config';
+import { findModuleById, getParentKeys } from '@/utils';
 
-// == NO NEED TO PUT IT IN HOOKS, OR PRODUCE UNNECESSARY RERENDERS INSIDE HOOKS ==
-// 辅助函数：根据ID查找模块
-const findModuleById = (id, treeData) => {
-  for (const node of treeData) {
-    if (node.id === id) return node;
-    if (node.children) {
-      const found = findModuleById(id, node.children);
-      if (found) return found;
-    }
-  }
-  return null;
-};
-
-// == NO NEED TO PUT IT IN HOOKS, OR PRODUCE UNNECESSARY RERENDERS INSIDE HOOKS ==
-// 获取一个节点的所有父级key（递归实现）
-const getParentKeys = (targetId, treeData, keys = []) => {
-  for (const node of treeData) {
-    if (node.id === targetId) return keys;
-    if (node.children) {
-      const found = getParentKeys(targetId, node.children, [...keys, node.id]);
-      if (found) return found;
-    }
-  }
-  return null;
-};
-
+/**
+ * Module management page
+ * @date 2025-05-18
+ */
 export const ModuleManagement = () => {
   const { message } = App.useApp();
   const {
@@ -137,6 +117,7 @@ export const ModuleManagement = () => {
   return (
     <div className="module-management">
       <Row gutter={16}>
+        {/* left side: module tree */}
         <Col xs={24} sm={24} md={12} lg={8} xl={6}>
           <ModuleTree
             modules={modules}
@@ -151,12 +132,13 @@ export const ModuleManagement = () => {
             onOpenCreateModal={() => setIsCreateModalOpen(true)}
           />
         </Col>
-
+        {/* right side: module detail panel */}
         <Col xs={24} sm={24} md={12} lg={16} xl={18}>
+          {/* tabs for: form_tab | view_tab */}
           <ModuleDetailPanel selectedModule={selectedModule} />
         </Col>
       </Row>
-
+      {/* == create new module from module page == */}
       <ModuleCreateModel
         open={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
