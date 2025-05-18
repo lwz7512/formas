@@ -1,21 +1,39 @@
 // modals/dataview-designer.jsx
-import React, { useState } from 'react';
-import { Button, Divider, Modal, Space, message } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Badge, Button, Divider, Modal, Space, Tabs, message } from 'antd';
+import { SyncOutlined, EyeOutlined, SettingOutlined } from '@ant-design/icons';
 import ViewDesignerColumnManager from '../components/column-manager';
+import { PreviewDataTable } from '../components/preview-table';
 
-const ViewDesignerModal = ({ 
-  visible, 
-  initialColumns, 
-  onSave, 
-  onCancel 
+const ViewDesignerModal = ({
+  visible,
+  initialColumns,
+  onSave,
+  onCancel,
+  loading,
+  viewId,
+  previewData = [],
+  previewLoading = false,
+  onLoadPreviewData,
 }) => {
   const [columns, setColumns] = useState(initialColumns || []);
   const [selectedColumns, setSelectedColumns] = useState([]);
+  const [activeKey, setActiveKey] = useState('config');
+  const [hasChanges, setHasChanges] = useState(false);
 
-  // 初始化数据
-  React.useEffect(() => {
-    setColumns(initialColumns || []);
-  }, [initialColumns]);
+  useEffect(() => {
+    if (visible && initialColumns) {
+      setColumns(initialColumns);
+      setSelectedColumns(initialColumns.filter(col => col.visible));
+      setHasChanges(false);
+    }
+  }, [visible, initialColumns]);
+
+  // 处理配置变化
+  const handleColumnsChange = newColumns => {
+    setColumns(newColumns);
+    setHasChanges(true);
+  };
 
   const handleOk = () => {
     if (selectedColumns.length === 0) {
@@ -25,53 +43,92 @@ const ViewDesignerModal = ({
     onSave?.(columns, selectedColumns);
   };
 
+  // Tab配置项
+  const tabItems = [
+    {
+      key: 'config',
+      label: (
+        <Space>
+          <SettingOutlined />
+          <span>列配置</span>
+          {hasChanges && <SyncOutlined spin style={{ color: '#1890ff' }} />}
+        </Space>
+      ),
+      children: (
+        <ViewDesignerColumnManager
+          dataSource={columns}
+          onColumnsChange={setColumns}
+          onSelectedColumnsChange={setSelectedColumns}
+        />
+      ),
+    },
+    {
+      key: 'preview',
+      label: (
+        <Space>
+          <EyeOutlined />
+          <span>数据预览</span>
+          <Badge
+            count={previewData.length}
+            style={{ backgroundColor: '#1890ff' }}
+          />
+        </Space>
+      ),
+      children: (
+        <PreviewDataTable
+          columnsConfig={columns}
+          selectedColumns={selectedColumns}
+          data={previewData}
+          loading={previewLoading}
+        />
+      ),
+    },
+  ];
+
   return (
     <Modal
-      title="视图设计器"
+      title={`视图设计器 - ${viewId || '新建视图'}`}
       open={visible}
       onOk={handleOk}
       onCancel={onCancel}
-      width={1000}
+      width={1200}
       styles={{
         body: {
-          padding: '16px 24px'
-        }
+          padding: '16px 24px',
+          height: '70vh',
+          display: 'flex',
+          flexDirection: 'column',
+        },
       }}
       footer={
         <Space>
           <Button onClick={onCancel}>取消</Button>
-          <Button type="primary" onClick={handleOk}>
+          <Button
+            type="primary"
+            onClick={() => onSave(columns, selectedColumns)}
+            loading={loading}
+          >
             保存配置
+          </Button>
+          <Button
+            icon={<SyncOutlined />}
+            onClick={() => {
+              setActiveKey(activeKey === 'config' ? 'preview' : 'config');
+              onLoadPreviewData();
+            }}
+          >
+            切换{activeKey === 'config' ? '预览' : '配置'}
           </Button>
         </Space>
       }
     >
-      <div style={{ marginBottom: 16 }}>
-        <p>拖拽可调整列顺序，配置列显示属性</p>
-      </div>
-      
-      <ViewDesignerColumnManager
-        dataSource={columns}
-        onColumnsChange={setColumns}
-        onSelectedColumnsChange={setSelectedColumns}
+      <Tabs
+        activeKey={activeKey}
+        onChange={setActiveKey}
+        items={tabItems}
+        style={{ height: '100%' }}
+        destroyInactiveTabPane={false}
       />
-      
-      <Divider />
-      
-      <div>
-        <h4>当前选中列：</h4>
-        {selectedColumns.length > 0 ? (
-          <ul>
-            {selectedColumns.map(col => (
-              <li key={col.dataIndex}>
-                {col.title} ({col.dataIndex}, {col.width ? `${col.width}px` : '自动宽度'})
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>未选择任何列</p>
-        )}
-      </div>
     </Modal>
   );
 };

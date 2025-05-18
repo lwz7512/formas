@@ -48,7 +48,7 @@ export const DataviewTemplateModal = forwardRef(
         onOk={handleSave}
         onCancel={onCancel}
         confirmLoading={loading}
-        width={800}
+        width={1000}
         footer={[
           <Button key="cancel" onClick={onCancel}>
             取消
