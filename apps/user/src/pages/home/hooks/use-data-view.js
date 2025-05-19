@@ -14,6 +14,8 @@ export const useDataView = () => {
   const [rows, setRows] = useState([]);
   const [schema, setSchema] = useState(null);
 
+  const { formId } = dataview || {};
+
   /**
    * 树节点选择处理
    * @param {Object} _ - 事件对象
@@ -61,6 +63,7 @@ export const useDataView = () => {
     dataview,
     rows,
     schema,
+    formId,
     treeNodeSelectHandler,
     refreshTable: refreshFormInstanceTable,
   };

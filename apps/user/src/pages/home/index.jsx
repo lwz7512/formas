@@ -15,8 +15,6 @@ import { CreateFormInstanceModal } from './modals/create-form-instance';
  */
 
 export const HomePage = () => {
-  // const { message } = App.useApp();
-
   // handle tree date fetching!
   const { treeSelectData } = useMenuTreeQuery();
 
@@ -25,8 +23,17 @@ export const HomePage = () => {
     useDataView();
 
   // handle create form instance!
-  const { isModalOpen, handleOk, handleCancel, openModal } =
-    useFormInstance(refreshTable);
+  const {
+    isModalOpen,
+    isEditOpen,
+    formInstance,
+    handleOk,
+    handleCancel,
+    openModal,
+    openEditModal,
+    closeEditModal,
+    handleEditOk,
+  } = useFormInstance(refreshTable);
 
   return (
     <div className="home-page-user">
@@ -65,16 +72,33 @@ export const HomePage = () => {
               </Space>
             }
           >
-            <ViewInstanceTable columns={dataview?.columns} rows={rows} />
+            <ViewInstanceTable
+              columns={dataview?.columns}
+              rows={rows}
+              openDataviewEditModal={row => openEditModal(row)}
+              openDataviewDeleteModal={row => console.log('to delete', row)}
+            />
           </Card>
         </Col>
       </Row>
+      {/* create form instance modal */}
       <CreateFormInstanceModal
+        action="Create"
         visible={isModalOpen}
         dataview={dataview}
         schema={schema}
         onOk={handleOk}
         onCancel={handleCancel}
+      />
+      {/* edit form instance modal */}
+      <CreateFormInstanceModal
+        action="Edit"
+        visible={isEditOpen}
+        dataview={dataview}
+        schema={schema}
+        formInstance={formInstance}
+        onOk={handleEditOk}
+        onCancel={closeEditModal}
       />
     </div>
   );

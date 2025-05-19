@@ -2,7 +2,7 @@
 import httpClient from '@/lib/http-client';
 
 /**
- * 获取数据视图实例的列表
+ * 获取数据视图实例(aka, form instance)的列表
  * @param {string} dataviewId 数据视图ID, from menu tree node
  * @returns {Promise} 数据视图实例列表
  */

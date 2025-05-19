@@ -3,14 +3,30 @@ import { Modal } from 'antd';
 // @2025-05-18
 import FormRender, { useForm } from '@formas/form-render';
 
+/**
+ * Create or Edit Form Instance Modal
+ *
+ * @param {string} action - 'Create' or 'Edit'
+ * @param {boolean} visible - whether the modal is visible
+ * @param {function} onOk - callback when the form is submitted
+ * @param {function} onCancel - callback when the modal is closed
+ * @param {object} dataview - the dataview object
+ * @param {object} schema - the schema object
+ * @param {object | null} formInstance - the form instance object
+ */
 export const CreateFormInstanceModal = ({
+  action = 'Create',
   visible,
   onOk,
   onCancel,
   dataview,
   schema,
+  formInstance,
 }) => {
-  const form = useForm();
+  // use form-render to render the form with schema and formInstance
+  const form = useForm({
+    formData: formInstance,
+  });
 
   const emptyDataview = { columns: [], formId: '' };
   const { formId } = dataview || emptyDataview;
@@ -23,7 +39,7 @@ export const CreateFormInstanceModal = ({
 
   return (
     <Modal
-      title="Create Form Instance"
+      title={`${action} Form Instance`}
       closable={{ 'aria-label': 'Custom Close Button' }}
       open={visible}
       onOk={handleSubmit}
