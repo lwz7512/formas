@@ -34,7 +34,7 @@ export const HomePage = () => {
         <Col xs={24} sm={24} md={12} lg={8} xl={6}>
           <Card
             title={
-              <Space align="center" className="flex gap-12">
+              <Space>
                 <MenuOutlined />
                 <Typography.Text strong>用户菜单</Typography.Text>
               </Space>
@@ -49,16 +49,23 @@ export const HomePage = () => {
             />
           </Card>
         </Col>
-        <Col xs={24} sm={24} md={12} lg={8} xl={16}>
-          <div className="flex justify-end">
-            {dataview && (
-              <Button type="primary" onClick={openModal}>
-                <PlusOutlined />
-                新增 form instance
-              </Button>
-            )}
-          </div>
-          <ViewInstanceTable columns={dataview?.columns} rows={rows} />
+        <Col xs={24} sm={24} md={12} lg={16} xl={18}>
+          <Card
+            title={dataview?.note}
+            extra={
+              <Space>
+                <Button
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={openModal}
+                >
+                  新增
+                </Button>
+              </Space>
+            }
+          >
+            <ViewInstanceTable columns={dataview?.columns} rows={rows} />
+          </Card>
         </Col>
       </Row>
       <CreateFormInstanceModal
