@@ -15,6 +15,12 @@ const dumyColumns = [
   },
 ];
 
+/**
+ * TODO: add `Edit` and `Delete` actions ....
+ * @param {*} columns
+ * @param {*} rows
+ * @returns
+ */
 export const ViewInstanceTable = ({ columns, rows }) => {
   if (!columns) {
     return <Table columns={dumyColumns} dataSource={dumyDataSource} />;

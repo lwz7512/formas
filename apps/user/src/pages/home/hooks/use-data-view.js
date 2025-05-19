@@ -36,6 +36,8 @@ export const useDataView = () => {
       const { data: dataviewDetail } = await fetchDataviewDetail(node.value);
       setDataview(dataviewDetail);
 
+      console.log('dataviewDetail', dataviewDetail);
+
       // get form `schema` definition(from form designer) by form id
       const {
         data: { schema },

@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@ant-design/icons": "^5.3.0",
+    "@ant-design/icons": "^5.5.1",
     "@formas/form-render": "workspace:*",
     "@reduxjs/toolkit": "^2.2.3",
     "@tanem/react-nprogress": "^5.0.51",

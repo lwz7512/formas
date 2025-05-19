@@ -1,7 +1,7 @@
 // components/module-detail.jsx
 import { useState } from 'react';
 import { Button, Empty, Tabs, Typography } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useView } from '../hooks/use-dataview';
 import { useForm } from '../hooks/use-form';
 import { ViewTable } from './view-table';
@@ -12,11 +12,11 @@ import { FormTabLabel, ViewTabLabel } from './widget';
 /**
  * Tabs content for form_tab | view_tab
  */
-export const ModuleDetailPanel = ({ selectedModule }) => {
+export const ModuleDetailPanel = ({ selectedModule, toast }) => {
   const [activeTab, setActiveTab] = useState('forms');
 
   // 视图相关逻辑
-  const view = useView(selectedModule?.id);
+  const { refreshViews } = useView(selectedModule?.id, toast);
 
   // 表单相关逻辑
   const {
@@ -73,13 +73,24 @@ export const ModuleDetailPanel = ({ selectedModule }) => {
         activeKey={activeTab}
         onChange={setActiveTab}
         tabBarExtraContent={
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => setIsModalOpen(true)}
-          >
-            {activeTab === 'forms' ? '新建表单' : '新建视图'}
-          </Button>
+          activeTab === 'forms' ? (
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => setIsModalOpen(true)}
+            >
+              新建表单
+            </Button>
+          ) : (
+            <Button
+              type="primary"
+              icon={<ReloadOutlined />}
+              danger
+              onClick={refreshViews}
+            >
+              视图
+            </Button>
+          )
         }
         items={[
           {

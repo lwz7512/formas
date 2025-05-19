@@ -55,8 +55,9 @@ export const HomePage = () => {
             extra={
               <Space>
                 <Button
+                  disabled={!dataview}
                   type="primary"
-                  icon={<PlusOutlined />}
+                  icon={<PlusOutlined className="inline" />}
                   onClick={openModal}
                 >
                   新增

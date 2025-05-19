@@ -1,14 +1,18 @@
 // hooks/use-view.js
 import { useState, useEffect } from 'react';
 import { notification } from 'antd';
-import { fetchDataviewList, deleteDataview, updateDataview } from '@/api/dataview';
+import {
+  fetchDataviewList,
+  deleteDataview,
+  updateDataview,
+} from '@/api/dataview';
 
-export const useView = (moduleId) => {
+export const useView = (moduleId, toast) => {
   const [loading, setLoading] = useState(false);
   const [views, setViews] = useState([]);
 
   // 获取视图列表
-  const fetchViews = async (id) => {
+  const fetchViews = async id => {
     try {
       setLoading(true);
       const response = await fetchDataviewList(id);
@@ -23,7 +27,7 @@ export const useView = (moduleId) => {
   };
 
   // 删除视图
-  const handleDelete = async (viewId) => {
+  const handleDelete = async viewId => {
     try {
       setLoading(true);
       await deleteDataview(viewId);
@@ -54,6 +58,11 @@ export const useView = (moduleId) => {
     }
   };
 
+  const refreshViews = async () => {
+    await fetchViews(moduleId);
+    toast.success('视图刷新成功');
+  };
+
   // 初始化加载数据
   useEffect(() => {
     if (moduleId) {
@@ -66,6 +75,6 @@ export const useView = (moduleId) => {
     loading,
     handleDelete,
     handleUpdate,
-    refreshViews: fetchViews,
+    refreshViews,
   };
 };

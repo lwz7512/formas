@@ -1,11 +1,11 @@
 @import './assets/styles/app.css';
 @import './assets/styles/table.css';
 @import './assets/styles/tree.css';
+@import './assets/styles/ant-fix.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 
 :root {
   --primary-color: #fff;

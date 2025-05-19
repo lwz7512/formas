@@ -1,0 +1,11 @@
+/* FIX: 按钮图标内联 - 解决图标与文字之间 not align horizontally */
+/* @2025/05/19 */
+/* <Button
+    type="primary"
+    icon={<PlusOutlined className="inline" />}
+    onClick={openModal}
+    >新增</Button> 
+*/
+.ant-btn > span.inline {
+  display: inline-flex;
+}
