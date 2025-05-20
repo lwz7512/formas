@@ -1,39 +1,42 @@
+// components/table.jsx
 import { Table, Space, Button } from 'antd';
 
-const dumyDataSource = [
-  {
-    key: '1',
-    name: 'select tree node from left side...',
-  },
-];
-
-const dumyColumns = [
-  {
-    title: 'Next Step',
-    dataIndex: 'name',
-    key: 'name',
-  },
-];
-
-/**
- * Dynamic table for form instance allow user to edit and delete
- * @param {*} columns
- * @param {*} rows form instance list
- * @param {function} openDataviewEditModal - open the edit modal
- * @param {function} openDataviewDeleteModal - open the delete modal
- * @returns
- */
 export const ViewInstanceTable = ({
   columns,
   rows,
+  pagination,
+  loading,
+  onChange,
   openDataviewEditModal,
   openDataviewDeleteModal,
 }) => {
+  // 默认列（当没有列数据时显示）
+  const defaultColumns = [
+    {
+      title: 'Next Step',
+      dataIndex: 'name',
+      key: 'name',
+    },
+  ];
+
+  const defaultData = [
+    {
+      key: '1',
+      name: 'select tree node from left side...',
+    },
+  ];
+
   if (!columns) {
-    return <Table columns={dumyColumns} dataSource={dumyDataSource} />;
+    return (
+      <Table
+        columns={defaultColumns}
+        dataSource={defaultData}
+        pagination={false}
+      />
+    );
   }
-  // make a copy of columns and reverse it to looks better
-  const reOrderedColumns = [...columns].reverse();
+
+  // 创建操作列
   const actionColumn = {
     title: 'Action',
     key: 'action',
@@ -52,7 +55,23 @@ export const ViewInstanceTable = ({
       </Space>
     ),
   };
-  // add action column
-  reOrderedColumns.push(actionColumn);
-  return <Table columns={reOrderedColumns} dataSource={rows} />;
+
+  // 复制列并添加操作列
+  const tableColumns = [...columns, actionColumn];
+
+  return (
+    <Table
+      columns={tableColumns}
+      dataSource={rows}
+      rowKey="id"
+      loading={loading}
+      pagination={{
+        ...pagination,
+        showSizeChanger: true,
+        showTotal: total => `共 ${total} 条`,
+        pageSizeOptions: ['10', '20', '50', '100'],
+      }}
+      onChange={onChange}
+    />
+  );
 };

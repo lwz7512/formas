@@ -19,8 +19,15 @@ export const HomePage = () => {
   const { treeSelectData } = useMenuTreeQuery();
 
   // handle tree node select and data view/form schema fetching!
-  const { dataview, rows, schema, treeNodeSelectHandler, refreshTable } =
-    useDataView();
+  const {
+    dataview,
+    rows,
+    schema,
+    pagination,
+    loading,
+    treeNodeSelectHandler,
+    refreshTable,
+  } = useDataView();
 
   // handle create form instance!
   const {
@@ -34,6 +41,16 @@ export const HomePage = () => {
     closeEditModal,
     handleEditOk,
   } = useFormInstance(refreshTable);
+
+  // 处理表格分页、排序变化
+  const handleTableChange = (pagination, filters, sorter) => {
+    refreshTable(dataview.id, pagination.current, pagination.pageSize);
+  };
+
+  // 获取列配置，优先使用 columnConfig.columns，不存在则使用 columns
+  const getColumns = () => {
+    return dataview?.columnConfig?.columns || dataview?.columns;
+  };
 
   return (
     <div className="home-page-user">
@@ -73,8 +90,11 @@ export const HomePage = () => {
             }
           >
             <ViewInstanceTable
-              columns={dataview?.columns}
+              columns={getColumns()}
               rows={rows}
+              pagination={pagination}
+              loading={loading}
+              onChange={handleTableChange}
               openDataviewEditModal={row => openEditModal(row)}
               openDataviewDeleteModal={row => console.log('to delete', row)}
             />

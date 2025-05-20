@@ -14,6 +14,29 @@ export const fetchDataviewInstanceList = async dataviewId => {
   return response;
 };
 
+/*
+      orders: [{ column: 'sequence', dir: 'asc' }],
+      searchs: [{ column: 'moduleId', op: 'eq', value: moduleId }],
+*/
+export const fetchDataviewInstanceListByFilter = async (
+  dataviewId,
+  currPage=1,
+  pageSize=20,
+  orders=[],
+  searchs=[]
+) => {
+  const response = await httpClient.post(
+    `/formas/dataviews/${dataviewId}/instances/filter`,
+    {
+      currPage: currPage,
+      pageSize: pageSize,
+      orders: orders,
+      searchs: searchs,
+    }
+  );
+  return response;
+};
+
 /**
  * 获取数据视图实例的详情, which includes form id
  * @param {string} dataviewId 数据视图ID, from menu tree node

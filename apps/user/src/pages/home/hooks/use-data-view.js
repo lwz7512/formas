@@ -1,69 +1,71 @@
-/**
- * 数据视图的钩子
- */
-
 import { useState } from 'react';
 import {
-  fetchDataviewInstanceList,
   fetchDataviewDetail,
   fetchFormSchema,
+  fetchDataviewInstanceListByFilter,
 } from '@/api/dataview-instance';
 
 export const useDataView = () => {
   const [dataview, setDataview] = useState(null);
   const [rows, setRows] = useState([]);
   const [schema, setSchema] = useState(null);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
+  const [loading, setLoading] = useState(false);
 
-  const { formId } = dataview || {};
-
-  /**
-   * 树节点选择处理
-   * @param {Object} _ - 事件对象
-   * @param {Object} node - 选中的节点
-   */
   const treeNodeSelectHandler = async (_, { node }) => {
     if (node.type === 'dataview') {
-      // get dataview instance list by dataview id, mainly for table view rows
-      const { datas: rows } = await fetchDataviewInstanceList(node.value);
-      const validRows = rows.map(row => ({
-        key: row.id,
-        ...row,
-      }));
-      setRows(validRows);
-      // toast.success(`load rows: ${validRows.length}`);
+      setLoading(true);
+      try {
+        // 获取数据视图详情
+        const { data: dataviewDetail } = await fetchDataviewDetail(node.value);
+        console.log(dataviewDetail);
+        setDataview(dataviewDetail);
 
-      // get dataview detail by dataview id, mainly for table view columns
-      // dataviewDetail 中包含 `formId`!
-      // TODO: 这里需要优化，因为 dataviewDetail 和 formSchema 是同时获取的，可以合并成一个请求
-      const { data: dataviewDetail } = await fetchDataviewDetail(node.value);
-      setDataview(dataviewDetail);
+        // 获取表单schema
+        const {
+          data: { schema },
+        } = await fetchFormSchema(dataviewDetail.formId);
+        setSchema(JSON.parse(schema));
 
-      console.log('dataviewDetail', dataviewDetail);
-
-      // get form `schema` definition(from form designer) by form id
-      const {
-        data: { schema },
-      } = await fetchFormSchema(dataviewDetail.formId);
-      setSchema(JSON.parse(schema));
-    } else {
-      // toast.warning(`Click on: ${node.type}`);
+        // 获取第一页数据
+        await refreshFormInstanceTable(node.value, 1, pagination.pageSize);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
-  const refreshFormInstanceTable = async () => {
-    const { datas: rows } = await fetchDataviewInstanceList(dataview.id);
-    const validRows = rows.map(row => ({
-      key: row.id,
-      ...row,
-    }));
-    setRows(validRows);
+  const refreshFormInstanceTable = async (dataviewId, current = pagination.current, pageSize = pagination.pageSize) => {
+    setLoading(true);
+    try {
+      const response = await fetchDataviewInstanceListByFilter(
+        dataviewId,
+        current,
+        pageSize
+      );
+      
+      setRows(response.datas);
+      setPagination(prev => ({
+        ...prev,
+        current,
+        pageSize,
+        total: response.totalNum || 0,
+      }));
+    } finally {
+      setLoading(false);
+    }
   };
 
   return {
     dataview,
     rows,
     schema,
-    formId,
+    pagination,
+    loading,
     treeNodeSelectHandler,
     refreshTable: refreshFormInstanceTable,
   };
