@@ -25,6 +25,7 @@ export const useDataView = () => {
         // 获取数据视图详情
         const { data: dataviewDetail } = await fetchDataviewDetail(node.value);
         setDataview(dataviewDetail);
+        console.log(dataviewDetail);
 
         // 获取表单schema
         const {
@@ -44,12 +45,21 @@ export const useDataView = () => {
     dataviewId,
     current = pagination.current,
     pageSize = pagination.pageSize,
-    searchs = [],
+    filters = {},
     sorterParams = {}
   ) => {
     setLoading(true);
     try {
-      // 转换排序参数为API需要的格式
+      // 转换筛选条件为API需要的格式
+      const searchs = Object.entries(filters)
+        .filter(([_, value]) => value?.value)
+        .map(([column, { value, operator }]) => ({
+          column,
+          op: operator,
+          value: operator === 'like' ? `%${value}%` : value
+        }));
+  
+      // 转换排序参数
       const orders = [];
       if (sorterParams.field && sorterParams.order) {
         orders.push({
@@ -57,7 +67,7 @@ export const useDataView = () => {
           dir: sorterParams.order === 'ascend' ? 'asc' : 'desc'
         });
       }
-
+  
       const response = await fetchDataviewInstanceListByFilter(
         dataviewId,
         current,
@@ -65,7 +75,7 @@ export const useDataView = () => {
         orders,
         searchs
       );
-
+  
       setRows(response.datas);
       setPagination(prev => ({
         ...prev,
@@ -73,7 +83,7 @@ export const useDataView = () => {
         pageSize,
         total: response.totalNum || 0,
       }));
-      setSorter(sorterParams); // 保存当前排序状态
+      setSorter(sorterParams);
     } finally {
       setLoading(false);
     }

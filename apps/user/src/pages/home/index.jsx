@@ -1,12 +1,9 @@
 import { Button, Card, Col, Row, Space, Typography, Tree } from 'antd';
 import { MenuOutlined, PlusOutlined } from '@ant-design/icons';
-
 import { ViewInstanceTable } from './components/table';
-
 import { useMenuTreeQuery } from './hooks/use-user-tree';
 import { useDataView } from './hooks/use-data-view';
 import { useFormInstance } from './hooks/use-form-instance';
-
 import { CreateFormInstanceModal } from './modals/create-form-instance';
 
 /**
@@ -49,14 +46,9 @@ export const HomePage = () => {
       dataview.id,
       pagination.current,
       pagination.pageSize,
-      [], // 可以添加筛选条件
+      filters, // 可以添加筛选条件
       sorter // 传递排序参数
     );
-  };
-
-  // 获取列配置，优先使用 columnConfig.columns，不存在则使用 columns
-  const getColumns = () => {
-    return dataview?.columnConfig?.columns || dataview?.columns;
   };
 
   return (
