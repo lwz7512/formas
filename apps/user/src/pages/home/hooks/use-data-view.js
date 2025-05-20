@@ -16,7 +16,8 @@ export const useDataView = () => {
     total: 0,
   });
   const [loading, setLoading] = useState(false);
-  const [sorter, setSorter] = useState({}); // 新增排序状态
+  const [sorter, setSorter] = useState({});
+  const [filters, setFilters] = useState({}); // 新增filters状态
 
   const treeNodeSelectHandler = async (_, { node }) => {
     if (node.type === 'dataview') {
@@ -25,7 +26,6 @@ export const useDataView = () => {
         // 获取数据视图详情
         const { data: dataviewDetail } = await fetchDataviewDetail(node.value);
         setDataview(dataviewDetail);
-        console.log(dataviewDetail);
 
         // 获取表单schema
         const {
@@ -33,13 +33,13 @@ export const useDataView = () => {
         } = await fetchFormSchema(dataviewDetail.formId);
         setSchema(JSON.parse(schema));
 
-        // 获取第一页数据（重置排序状态）
+        // 获取第一页数据（重置状态）
         await refreshFormInstanceTable(
           node.value,
           1,
           pagination.pageSize,
-          [],
-          {}
+          {}, // 重置filters
+          {} // 重置sorter
         );
       } finally {
         setLoading(false);
@@ -51,13 +51,17 @@ export const useDataView = () => {
     dataviewId,
     current = pagination.current,
     pageSize = pagination.pageSize,
-    filters = {},
-    sorterParams = {}
+    newFilters = filters, // 默认使用当前filters
+    newSorter = sorter // 默认使用当前sorter
   ) => {
     setLoading(true);
     try {
-      // 转换筛选条件为API需要的格式
-      const searchs = Object.entries(filters)
+      // 更新状态
+      setFilters(newFilters);
+      setSorter(newSorter);
+
+      // 转换筛选条件
+      const searchs = Object.entries(newFilters)
         .filter(([_, value]) => value?.value)
         .map(([column, { value, operator = 'eq' }]) => ({
           column,
@@ -65,32 +69,20 @@ export const useDataView = () => {
           value: operator === 'like' ? `%${value}%` : value,
         }));
 
-      console.log('API请求参数:', {
-        currPage: current,
-        pageSize,
-        orders: sorterParams.field
-          ? [
-              {
-                column: sorterParams.field,
-                dir: sorterParams.order === 'ascend' ? 'asc' : 'desc',
-              },
-            ]
-          : [],
-        searchs,
-      });
+      // 转换排序参数
+      const orders = [];
+      if (newSorter.field && newSorter.order) {
+        orders.push({
+          column: newSorter.field,
+          dir: newSorter.order === 'ascend' ? 'asc' : 'desc',
+        });
+      }
 
       const response = await fetchDataviewInstanceListByFilter(
         dataviewId,
         current,
         pageSize,
-        sorterParams.field
-          ? [
-              {
-                column: sorterParams.field,
-                dir: sorterParams.order === 'ascend' ? 'asc' : 'desc',
-              },
-            ]
-          : [],
+        orders,
         searchs
       );
 
@@ -101,10 +93,15 @@ export const useDataView = () => {
         pageSize,
         total: response.totalNum || 0,
       }));
-      setSorter(sorterParams);
     } finally {
       setLoading(false);
     }
+  };
+
+  // 重置方法
+  const resetFilters = () => {
+    setFilters({});
+    return {}; // 返回空filters
   };
 
   return {
@@ -114,7 +111,9 @@ export const useDataView = () => {
     pagination,
     loading,
     sorter,
+    filters, // 暴露filters
     treeNodeSelectHandler,
     refreshTable: refreshFormInstanceTable,
+    resetFilters, // 暴露重置方法
   };
 };

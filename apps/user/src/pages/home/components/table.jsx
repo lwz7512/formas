@@ -1,7 +1,11 @@
 // components/table.jsx
-import "./style.css";
+import './style.css';
 import { Table, Space, Button, Tooltip, Input, Select } from 'antd';
-import { EditOutlined, DeleteOutlined, FilterOutlined } from '@ant-design/icons';
+import {
+  EditOutlined,
+  DeleteOutlined,
+  FilterOutlined,
+} from '@ant-design/icons';
 import { useState } from 'react';
 
 export const ViewInstanceTable = ({
@@ -61,14 +65,30 @@ export const ViewInstanceTable = ({
 
   // 重置查询
   const handleReset = (dataIndex, clearFilters, confirm) => {
+    // 清除本地UI状态
     clearFilters();
-    confirm(null); // 传递null表示重置
-    setSearchTypes(prev => ({ ...prev, [dataIndex]: 'eq' })); // 重置操作符
+
+    // 更新父组件状态
+    const newFilters = { ...filters };
+    delete newFilters[dataIndex];
+
+    onChange(
+      pagination,
+      newFilters, // 传递更新后的filters
+      sorter
+    );
+
+    confirm(); // 必须调用confirm关闭下拉框
   };
 
   // 生成列查询组件
   const getColumnSearchProps = (dataIndex, title, columnType) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => {
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => {
       // 初始化操作符类型
       if (!searchTypes[dataIndex]) {
         setSearchTypes(prev => ({ ...prev, [dataIndex]: 'eq' }));
@@ -81,14 +101,14 @@ export const ViewInstanceTable = ({
               style={{ width: '100%' }}
               placeholder="选择查询方式"
               value={searchTypes[dataIndex]}
-              onChange={(value) => {
+              onChange={value => {
                 setSearchTypes(prev => ({ ...prev, [dataIndex]: value }));
                 if (selectedKeys.length > 0) {
                   setSelectedKeys([{ ...selectedKeys[0], operator: value }]);
                 }
               }}
-              options={OPERATORS.filter(op => 
-                columnType === 'number' 
+              options={OPERATORS.filter(op =>
+                columnType === 'number'
                   ? ['eq', 'gt', 'lt', 'ne'].includes(op.value)
                   : ['eq', 'like', 'ne'].includes(op.value)
               )}
@@ -97,27 +117,40 @@ export const ViewInstanceTable = ({
           <Input
             placeholder={`输入${title}`}
             value={selectedKeys?.[0]?.value || ''}
-            onChange={(e) => {
+            onChange={e => {
               const value = e.target.value;
-              setSelectedKeys(value ? [{ 
-                value,
-                operator: searchTypes[dataIndex] || 'eq'
-              }] : []);
+              setSelectedKeys(
+                value
+                  ? [
+                      {
+                        value,
+                        operator: searchTypes[dataIndex] || 'eq',
+                      },
+                    ]
+                  : []
+              );
             }}
-            onPressEnter={() => handleSearchConfirm(dataIndex, selectedKeys, confirm)}
+            onPressEnter={() =>
+              handleSearchConfirm(dataIndex, selectedKeys, confirm)
+            }
             style={{ marginBottom: 8, display: 'block' }}
           />
           <Space>
             <Button
               type="primary"
-              onClick={() => handleSearchConfirm(dataIndex, selectedKeys, confirm)}
+              onClick={() =>
+                handleSearchConfirm(dataIndex, selectedKeys, confirm)
+              }
               size="small"
               style={{ width: 80 }}
             >
               查询
             </Button>
             <Button
-              onClick={() => handleReset(dataIndex, clearFilters, confirm)}
+              onClick={() => {
+                setSelectedKeys([]);
+                handleReset(dataIndex, clearFilters, confirm);
+              }}
               size="small"
               style={{ width: 80 }}
             >
@@ -127,24 +160,30 @@ export const ViewInstanceTable = ({
         </div>
       );
     },
-    filterIcon: (filtered) => (
+    filterIcon: filtered => (
       <FilterOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
     ),
     onFilter: (value, record) => {
       // 前端筛选逻辑（可选，如果后端已处理可以移除）
       const filterValue = filters[dataIndex]?.value;
       if (!filterValue) return true;
-      
+
       const operator = filters[dataIndex]?.operator || 'eq';
       const recordValue = record[dataIndex];
-      
+
       switch (operator) {
-        case 'eq': return String(recordValue) === String(filterValue);
-        case 'like': return String(recordValue).includes(filterValue);
-        case 'gt': return Number(recordValue) > Number(filterValue);
-        case 'lt': return Number(recordValue) < Number(filterValue);
-        case 'ne': return String(recordValue) !== String(filterValue);
-        default: return true;
+        case 'eq':
+          return String(recordValue) === String(filterValue);
+        case 'like':
+          return String(recordValue).includes(filterValue);
+        case 'gt':
+          return Number(recordValue) > Number(filterValue);
+        case 'lt':
+          return Number(recordValue) < Number(filterValue);
+        case 'ne':
+          return String(recordValue) !== String(filterValue);
+        default:
+          return true;
       }
     },
   });
@@ -163,9 +202,14 @@ export const ViewInstanceTable = ({
             sortOrder: sorter.field === col.dataIndex ? sorter.order : null,
           }),
           ...(col.filter && {
-            ...getColumnSearchProps(col.dataIndex, col.title, col.type || 'text'),
-            // 添加filteredValue确保受控
-            filteredValue: col.filteredValue || null,
+            ...getColumnSearchProps(
+              col.dataIndex,
+              col.title,
+              col.type || 'text'
+            ),
+            filteredValue: filters[col.dataIndex]
+              ? [filters[col.dataIndex]]
+              : null, // 使用来自hook的filters
           }),
           ellipsis: true,
         })),
