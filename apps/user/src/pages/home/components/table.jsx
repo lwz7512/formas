@@ -1,5 +1,7 @@
 // components/table.jsx
-import { Table, Space, Button } from 'antd';
+import { Table, Space, Button, Tooltip } from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import "./style.css"
 
 export const ViewInstanceTable = ({
   columns,
@@ -9,25 +11,35 @@ export const ViewInstanceTable = ({
   onChange,
   openDataviewEditModal,
   openDataviewDeleteModal,
-  sorter, // 接收排序状态
+  sorter,
 }) => {
-  // 创建操作列
+  // 创建操作列 - 重构样式
   const actionColumn = {
     title: '操作',
     key: 'action',
     fixed: 'right',
+    width: 120,
     render: (_, record) => (
-      <Space size="middle">
-        <Button
-          type="primary"
-          ghost
-          onClick={() => openDataviewEditModal(record)}
-        >
-          编辑
-        </Button>
-        <Button danger onClick={() => openDataviewDeleteModal(record)}>
-          删除
-        </Button>
+      <Space size={0} className="action-buttons">
+        <Tooltip title="编辑">
+          <Button
+            type="text"
+            size="small"
+            icon={<EditOutlined />}
+            onClick={() => openDataviewEditModal(record)}
+            className="action-btn edit-btn"
+          />
+        </Tooltip>
+        <Tooltip title="删除">
+          <Button
+            type="text"
+            size="small"
+            danger
+            icon={<DeleteOutlined />}
+            onClick={() => openDataviewDeleteModal(record)}
+            className="action-btn delete-btn"
+          />
+        </Tooltip>
       </Space>
     ),
   };
@@ -39,18 +51,15 @@ export const ViewInstanceTable = ({
     return [
       ...columns
         .filter(col => col.visible !== false)
-        .map(col => {
-          const columnDef = { ...col };
-          
-          // 如果配置了 sorter: true，则添加排序配置
-          if (col.sorter) {
-            columnDef.sorter = true;
-            columnDef.sortOrder = sorter.field === col.dataIndex ? sorter.order : null;
-          }
-          
-          return columnDef;
-        }),
-      actionColumn
+        .map(col => ({
+          ...col,
+          ...(col.sorter && {
+            sorter: true,
+            sortOrder: sorter.field === col.dataIndex ? sorter.order : null,
+          }),
+          ellipsis: true, // 添加文本溢出省略号
+        })),
+      actionColumn,
     ];
   };
 
@@ -70,8 +79,9 @@ export const ViewInstanceTable = ({
       }
       onChange={onChange}
       locale={{
-        emptyText: '请从左侧选择数据视图'
+        emptyText: '请从左侧选择数据视图',
       }}
+      className="custom-table"
     />
   );
 };

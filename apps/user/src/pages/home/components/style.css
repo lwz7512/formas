@@ -1,0 +1,38 @@
+/* 操作按钮样式 */
+.action-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.action-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.action-btn:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.edit-btn:hover {
+  color: #1890ff;
+  background-color: rgba(24, 144, 255, 0.1);
+}
+
+.delete-btn:hover {
+  background-color: rgba(255, 77, 79, 0.1);
+}
+
+/* 表格整体样式 */
+.custom-table .ant-table-cell {
+  padding: 12px 8px !important;
+}
+
+.custom-table .ant-table-thead .ant-table-cell {
+  background-color: #fafafa;
+  font-weight: 500;
+}
