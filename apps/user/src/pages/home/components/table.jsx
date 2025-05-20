@@ -56,23 +56,14 @@ export const ViewInstanceTable = ({
 
   // 处理查询确认
   const handleSearchConfirm = (dataIndex, selectedKeys, confirm) => {
-    if (selectedKeys.length > 0) {
-      const { value, operator } = selectedKeys[0];
-      const newFilters = { ...filters, [dataIndex]: { value, operator } };
-      setFilters(newFilters);
-      onChange(pagination, newFilters, sorter);
-    }
-    confirm();
+    confirm(selectedKeys); // 直接传递selectedKeys给Table
   };
 
   // 重置查询
   const handleReset = (dataIndex, clearFilters, confirm) => {
-    const newFilters = { ...filters };
-    delete newFilters[dataIndex];
-    setFilters(newFilters);
     clearFilters();
-    onChange(pagination, newFilters, sorter);
-    confirm();
+    confirm(null); // 传递null表示重置
+    setSearchTypes(prev => ({ ...prev, [dataIndex]: 'eq' })); // 重置操作符
   };
 
   // 生成列查询组件
@@ -171,11 +162,11 @@ export const ViewInstanceTable = ({
             sorter: true,
             sortOrder: sorter.field === col.dataIndex ? sorter.order : null,
           }),
-          ...(col.filter && getColumnSearchProps(
-            col.dataIndex, 
-            col.title,
-            col.type || 'text'
-          )),
+          ...(col.filter && {
+            ...getColumnSearchProps(col.dataIndex, col.title, col.type || 'text'),
+            // 添加filteredValue确保受控
+            filteredValue: col.filteredValue || null,
+          }),
           ellipsis: true,
         })),
       actionColumn,

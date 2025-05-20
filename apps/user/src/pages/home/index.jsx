@@ -1,3 +1,4 @@
+// index.jsx
 import { Button, Card, Col, Row, Space, Typography, Tree } from 'antd';
 import { MenuOutlined, PlusOutlined } from '@ant-design/icons';
 import { ViewInstanceTable } from './components/table';
@@ -41,15 +42,28 @@ export const HomePage = () => {
   } = useFormInstance(refreshTable);
 
   // 处理表格变化（分页、排序、筛选）
-  const handleTableChange = (pagination, filters, sorter) => {
-    refreshTable(
-      dataview.id,
-      pagination.current,
-      pagination.pageSize,
-      filters, // 可以添加筛选条件
-      sorter // 传递排序参数
-    );
-  };
+// index.jsx
+const handleTableChange = (tablePagination, tableFilters, tableSorter) => {
+  // 转换Ant Design的filter格式
+  const convertedFilters = {};
+  Object.entries(tableFilters).forEach(([key, value]) => {
+    if (value) {
+      // value可能是数组（来自filterDropdown）或对象（来自其他filter）
+      const filterValue = Array.isArray(value) ? value[0] : value;
+      if (filterValue?.value) {
+        convertedFilters[key] = filterValue;
+      }
+    }
+  });
+
+  refreshTable(
+    dataview.id,
+    tablePagination.current,
+    tablePagination.pageSize,
+    convertedFilters,
+    tableSorter
+  );
+};
 
   return (
     <div className="home-page-user">

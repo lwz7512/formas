@@ -34,7 +34,13 @@ export const useDataView = () => {
         setSchema(JSON.parse(schema));
 
         // 获取第一页数据（重置排序状态）
-        await refreshFormInstanceTable(node.value, 1, pagination.pageSize, [], {});
+        await refreshFormInstanceTable(
+          node.value,
+          1,
+          pagination.pageSize,
+          [],
+          {}
+        );
       } finally {
         setLoading(false);
       }
@@ -53,29 +59,41 @@ export const useDataView = () => {
       // 转换筛选条件为API需要的格式
       const searchs = Object.entries(filters)
         .filter(([_, value]) => value?.value)
-        .map(([column, { value, operator }]) => ({
+        .map(([column, { value, operator = 'eq' }]) => ({
           column,
           op: operator,
-          value: operator === 'like' ? `%${value}%` : value
+          value: operator === 'like' ? `%${value}%` : value,
         }));
-  
-      // 转换排序参数
-      const orders = [];
-      if (sorterParams.field && sorterParams.order) {
-        orders.push({
-          column: sorterParams.field,
-          dir: sorterParams.order === 'ascend' ? 'asc' : 'desc'
-        });
-      }
-  
+
+      console.log('API请求参数:', {
+        currPage: current,
+        pageSize,
+        orders: sorterParams.field
+          ? [
+              {
+                column: sorterParams.field,
+                dir: sorterParams.order === 'ascend' ? 'asc' : 'desc',
+              },
+            ]
+          : [],
+        searchs,
+      });
+
       const response = await fetchDataviewInstanceListByFilter(
         dataviewId,
         current,
         pageSize,
-        orders,
+        sorterParams.field
+          ? [
+              {
+                column: sorterParams.field,
+                dir: sorterParams.order === 'ascend' ? 'asc' : 'desc',
+              },
+            ]
+          : [],
         searchs
       );
-  
+
       setRows(response.datas);
       setPagination(prev => ({
         ...prev,
