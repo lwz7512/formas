@@ -25,6 +25,7 @@ export const HomePage = () => {
     schema,
     pagination,
     loading,
+    sorter,
     treeNodeSelectHandler,
     refreshTable,
   } = useDataView();
@@ -42,9 +43,15 @@ export const HomePage = () => {
     handleEditOk,
   } = useFormInstance(refreshTable);
 
-  // 处理表格分页、排序变化
+  // 处理表格变化（分页、排序、筛选）
   const handleTableChange = (pagination, filters, sorter) => {
-    refreshTable(dataview.id, pagination.current, pagination.pageSize);
+    refreshTable(
+      dataview.id,
+      pagination.current,
+      pagination.pageSize,
+      [], // 可以添加筛选条件
+      sorter // 传递排序参数
+    );
   };
 
   // 获取列配置，优先使用 columnConfig.columns，不存在则使用 columns
@@ -90,13 +97,14 @@ export const HomePage = () => {
             }
           >
             <ViewInstanceTable
-              columns={getColumns()}
+              columns={dataview?.columnConfig?.columns || dataview?.columns}
               rows={rows}
               pagination={pagination}
               loading={loading}
               onChange={handleTableChange}
               openDataviewEditModal={row => openEditModal(row)}
               openDataviewDeleteModal={row => console.log('to delete', row)}
+              sorter={sorter} // 传递排序状态
             />
           </Card>
         </Col>

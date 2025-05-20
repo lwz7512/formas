@@ -9,12 +9,13 @@ export const ViewInstanceTable = ({
   onChange,
   openDataviewEditModal,
   openDataviewDeleteModal,
+  sorter, // 接收排序状态
 }) => {
   // 创建操作列
   const actionColumn = {
-    title: 'Action',
+    title: '操作',
     key: 'action',
-    fixed: 'right', // 固定在最右侧
+    fixed: 'right',
     render: (_, record) => (
       <Space size="middle">
         <Button
@@ -22,25 +23,33 @@ export const ViewInstanceTable = ({
           ghost
           onClick={() => openDataviewEditModal(record)}
         >
-          Edit
+          编辑
         </Button>
         <Button danger onClick={() => openDataviewDeleteModal(record)}>
-          Delete
+          删除
         </Button>
       </Space>
     ),
   };
 
-  // 处理列显示逻辑
+  // 处理列显示和排序配置
   const getTableColumns = () => {
-    if (!columns) return [actionColumn]; // 如果没有列数据，只显示操作列
+    if (!columns) return [actionColumn];
 
     return [
-      // 过滤并处理原始列
       ...columns
         .filter(col => col.visible !== false)
-        .map(col => ({ ...col })), // 浅拷贝避免修改原始数据
-      // 添加操作列
+        .map(col => {
+          const columnDef = { ...col };
+          
+          // 如果配置了 sorter: true，则添加排序配置
+          if (col.sorter) {
+            columnDef.sorter = true;
+            columnDef.sortOrder = sorter.field === col.dataIndex ? sorter.order : null;
+          }
+          
+          return columnDef;
+        }),
       actionColumn
     ];
   };
@@ -61,7 +70,7 @@ export const ViewInstanceTable = ({
       }
       onChange={onChange}
       locale={{
-        emptyText: '请从左侧选择数据视图' // 自定义空数据提示
+        emptyText: '请从左侧选择数据视图'
       }}
     />
   );
