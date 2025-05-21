@@ -20,8 +20,8 @@ export const ViewInstanceTable = ({
   filters,
   addFilter,
   removeFilter,
+  dataview,
 }) => {
-  // const [filters, setFilters] = useState({});
   const [searchTypes, setSearchTypes] = useState({});
 
   const OPERATORS = [
@@ -65,22 +65,16 @@ export const ViewInstanceTable = ({
   const handleSearchConfirm = (dataIndex, selectedKeys, confirm) => {
     if (selectedKeys.length > 0) {
       const { value, operator } = selectedKeys[0];
-      // 确保传递的是简单值，不是对象
-      addFilter(dataIndex, typeof value === 'object' ? value.value : value, operator);
-    } else {
-      removeFilter(dataIndex);
+      addFilter(dataIndex, value, operator, dataview.id, pagination);
     }
-    confirm(); // 必须调用confirm关闭下拉框
+    confirm();
   };
 
-  // 重置查询
+  // 处理重置
   const handleReset = (dataIndex, clearFilters, confirm) => {
-    removeFilter(dataIndex);
-
-    // 清除本地UI状态
     clearFilters();
-
-    confirm(); // 必须调用confirm关闭下拉框
+    removeFilter(dataIndex, dataview.id, pagination);
+    confirm();
   };
 
   // 生成列查询组件
@@ -149,10 +143,7 @@ export const ViewInstanceTable = ({
               查询
             </Button>
             <Button
-              onClick={() => {
-                setSelectedKeys([]);
-                handleReset(dataIndex, clearFilters, confirm);
-              }}
+              onClick={() => handleReset(dataIndex, clearFilters, confirm)}
               size="small"
               style={{ width: 80 }}
             >

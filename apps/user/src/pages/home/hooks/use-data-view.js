@@ -17,7 +17,108 @@ export const useDataView = () => {
   });
   const [loading, setLoading] = useState(false);
   const [sorter, setSorter] = useState({});
-  const [filters, setFilters] = useState({}); // 新增filters状态
+  /* 存储结构示例
+    const filters = {
+      name: { value: "项目", operator: "like" },
+      status: { value: 1, operator: "eq" }
+    };
+  */
+  const [filters, setFilters] = useState({}); // 可以存储多个过滤条件
+
+  // 添加过滤条件并刷新
+  const addFilterAndRefresh = async (field, value, operator = 'eq') => {
+    console.log('addFilterAndRefresh', field, value, operator);
+    if (!dataview?.id) return;
+
+    const newFilters = { ...filters, [field]: { value, operator } };
+    setFilters(newFilters);
+    await refreshWithFilters(newFilters);
+  };
+
+  // 移除过滤条件并刷新
+  const removeFilterAndRefresh = async field => {
+    console.log('removeFilterAndRefresh', field);
+    if (!dataview?.id) return;
+
+    const newFilters = { ...filters };
+    delete newFilters[field];
+    setFilters(newFilters);
+    await refreshWithFilters(newFilters);
+  };
+
+  // 统一刷新方法
+  const refreshWithFilters = async (
+    currentFilters = filters,
+    sorterParams = sorter,
+    pageInfo = pagination
+  ) => {
+    // 加强空值检查
+    if (!dataview?.id || !pageInfo) {
+      console.warn('刷新数据被跳过：缺少必要参数');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      console.log('refreshWithFilters', currentFilters);
+      const searchs = toAPISearchParams(currentFilters);
+      console.log('refreshWithFilters', searchs);
+      const orders = toAPIOrderParams(sorterParams);
+
+      // Only make the API call if we have the minimum required data
+      const response = await fetchDataviewInstanceListByFilter(
+        dataview.id,
+        pageInfo.current,
+        pageInfo.pageSize,
+        orders,
+        searchs
+      );
+
+      // 检查响应数据
+      if (!response?.datas) {
+        throw new Error('无效的表格数据响应');
+      }
+
+      setRows(response.datas || []);
+      setPagination(prev => ({
+        ...prev,
+        total: response.totalNum || 0,
+      }));
+    } catch (error) {
+      console.error('刷新表格数据失败:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 转换过滤条件为API格式
+  const toAPISearchParams = (filters) => {
+    return Object.entries(filters)
+      .filter(([_, value]) => value && value.value !== undefined)
+      .map(([column, filterObj]) => {
+        // 统一处理value格式
+        const value = typeof filterObj.value === 'object' 
+          ? filterObj.value.value 
+          : filterObj.value;
+        
+        return {
+          column,
+          op: filterObj.operator || 'eq',
+          value: filterObj.operator === 'like' ? `%${value}%` : value
+        };
+      });
+  };
+
+  // 转换排序参数为API格式
+  const toAPIOrderParams = sorter => {
+    if (!sorter?.field) return [];
+    return [
+      {
+        column: sorter.field,
+        dir: sorter.order === 'ascend' ? 'asc' : 'desc',
+      },
+    ];
+  };
 
   const treeNodeSelectHandler = async (_, { node }) => {
     if (node.type === 'dataview') {
@@ -112,6 +213,8 @@ export const useDataView = () => {
     loading,
     sorter,
     filters, // 暴露filters
+    addFilter: addFilterAndRefresh,
+    removeFilter: removeFilterAndRefresh,
     treeNodeSelectHandler,
     refreshTable: refreshFormInstanceTable,
     resetFilters, // 暴露重置方法

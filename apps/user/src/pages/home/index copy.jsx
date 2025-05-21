@@ -1,5 +1,4 @@
 // index.jsx
-import React, {useEffect, useState} from 'react';
 import { Button, Card, Col, Row, Space, Typography, Tree } from 'antd';
 import { MenuOutlined, PlusOutlined } from '@ant-design/icons';
 import { ViewInstanceTable } from './components/table';
@@ -24,12 +23,12 @@ export const HomePage = () => {
     schema,
     pagination,
     loading,
-    sorter,
-    treeNodeSelectHandler,
-    refreshTable,
     filters,
     addFilter,
     removeFilter,
+    sorter,
+    treeNodeSelectHandler,
+    refreshTable,
   } = useDataView();
 
   // handle create form instance!
@@ -46,26 +45,13 @@ export const HomePage = () => {
   } = useFormInstance(refreshTable);
 
   // 处理表格变化（分页、排序、筛选）
-  const handleTableChange = (tablePagination, tableFilters, tableSorter) => {
-    // 转换Ant Design的filter格式
-    const convertedFilters = {};
-    
-    Object.entries(tableFilters).forEach(([key, value]) => {
-      if (value) {
-        // 统一处理value格式
-        const filterValue = Array.isArray(value) ? value[0] : value;
-        convertedFilters[key] = {
-          value: filterValue?.value || filterValue,
-          operator: filterValue?.operator || 'eq'
-        };
-      }
-    });
-  
+  const handleTableChange = (tablePagination, _, tableSorter) => {
+    // 只处理分页和排序，过滤通过专用方法处理
     refreshTable(
       dataview.id,
       tablePagination.current,
       tablePagination.pageSize,
-      convertedFilters,
+      filters, // 使用当前filters
       tableSorter
     );
   };
@@ -116,9 +102,10 @@ export const HomePage = () => {
               openDataviewEditModal={row => openEditModal(row)}
               openDataviewDeleteModal={row => console.log('to delete', row)}
               sorter={sorter} // 传递排序状态
+              addFilter={addFilter} // 添加过滤条件
+              removeFilter={removeFilter} // 删除过滤条件
+              dataview={dataview}
               filters={filters}
-              addFilter={addFilter}
-              removeFilter={removeFilter}
             />
           </Card>
         </Col>
