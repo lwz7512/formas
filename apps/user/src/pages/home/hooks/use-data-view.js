@@ -27,7 +27,6 @@ export const useDataView = () => {
 
   // 添加过滤条件并刷新
   const addFilterAndRefresh = async (field, value, operator = 'eq') => {
-    console.log('addFilterAndRefresh', field, value, operator);
     if (!dataview?.id) return;
 
     const newFilters = { ...filters, [field]: { value, operator } };
@@ -37,7 +36,6 @@ export const useDataView = () => {
 
   // 移除过滤条件并刷新
   const removeFilterAndRefresh = async field => {
-    console.log('removeFilterAndRefresh', field);
     if (!dataview?.id) return;
 
     const newFilters = { ...filters };
@@ -60,9 +58,7 @@ export const useDataView = () => {
 
     setLoading(true);
     try {
-      console.log('refreshWithFilters', currentFilters);
       const searchs = toAPISearchParams(currentFilters);
-      console.log('refreshWithFilters', searchs);
       const orders = toAPIOrderParams(sorterParams);
 
       // Only make the API call if we have the minimum required data
@@ -199,12 +195,6 @@ export const useDataView = () => {
     }
   };
 
-  // 重置方法
-  const resetFilters = () => {
-    setFilters({});
-    return {}; // 返回空filters
-  };
-
   return {
     dataview,
     rows,
@@ -217,6 +207,5 @@ export const useDataView = () => {
     removeFilter: removeFilterAndRefresh,
     treeNodeSelectHandler,
     refreshTable: refreshFormInstanceTable,
-    resetFilters, // 暴露重置方法
   };
 };

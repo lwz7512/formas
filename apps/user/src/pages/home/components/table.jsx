@@ -21,7 +21,6 @@ export const ViewInstanceTable = ({
   addFilter,
   removeFilter,
 }) => {
-  // const [filters, setFilters] = useState({});
   const [searchTypes, setSearchTypes] = useState({});
 
   const OPERATORS = [
