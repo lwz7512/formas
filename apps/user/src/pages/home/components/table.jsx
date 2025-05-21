@@ -1,6 +1,6 @@
 // components/table.jsx
 import './style.css';
-import { Table, Space, Button, Tooltip, Input, Select } from 'antd';
+import { Table, Space, Button, Tooltip, Input, Select, Popconfirm } from 'antd';
 import {
   EditOutlined,
   DeleteOutlined,
@@ -47,15 +47,17 @@ export const ViewInstanceTable = ({
             onClick={() => openDataviewEditModal(record)}
           />
         </Tooltip>
-        <Tooltip title="删除">
-          <Button
-            type="text"
-            size="small"
-            danger
-            icon={<DeleteOutlined />}
-            onClick={() => openDataviewDeleteModal(record)}
-          />
-        </Tooltip>
+        <Popconfirm
+          title="Are you sure to delete this row?"
+          onConfirm={() => openDataviewDeleteModal(record)}
+          onCancel={() => {}}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Tooltip title="删除">
+            <Button type="text" size="small" danger icon={<DeleteOutlined />} />
+          </Tooltip>
+        </Popconfirm>
       </Space>
     ),
   };
@@ -65,7 +67,11 @@ export const ViewInstanceTable = ({
     if (selectedKeys.length > 0) {
       const { value, operator } = selectedKeys[0];
       // 确保传递的是简单值，不是对象
-      addFilter(dataIndex, typeof value === 'object' ? value.value : value, operator);
+      addFilter(
+        dataIndex,
+        typeof value === 'object' ? value.value : value,
+        operator
+      );
     } else {
       removeFilter(dataIndex);
     }

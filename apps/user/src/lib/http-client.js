@@ -31,15 +31,15 @@ httpClient.interceptors.response.use(
   },
   error => {
     // 网络或服务器错误
-    const errorMessage = error.response?.data?.message || 
-                        error.message || 
-                        'Network Error';
-    
-    console.error('HTTP Error:', {  // 结构化日志
+    const errorMessage =
+      error.response?.data?.message || error.message || 'Network Error';
+
+    console.error('HTTP Error:', {
+      // 结构化日志
       config: error.config,
       status: error.response?.status,
       data: error.response?.data,
-      message: errorMessage
+      message: errorMessage,
     });
 
     message.error(errorMessage);

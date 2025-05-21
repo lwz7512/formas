@@ -88,19 +88,20 @@ export const useDataView = () => {
   };
 
   // 转换过滤条件为API格式
-  const toAPISearchParams = (filters) => {
+  const toAPISearchParams = filters => {
     return Object.entries(filters)
       .filter(([_, value]) => value && value.value !== undefined)
       .map(([column, filterObj]) => {
         // 统一处理value格式
-        const value = typeof filterObj.value === 'object' 
-          ? filterObj.value.value 
-          : filterObj.value;
-        
+        const value =
+          typeof filterObj.value === 'object'
+            ? filterObj.value.value
+            : filterObj.value;
+
         return {
           column,
           op: filterObj.operator || 'eq',
-          value: filterObj.operator === 'like' ? `%${value}%` : value
+          value: filterObj.operator === 'like' ? `%${value}%` : value,
         };
       });
   };
@@ -145,7 +146,7 @@ export const useDataView = () => {
   };
 
   const refreshFormInstanceTable = async (
-    dataviewId,
+    dataviewId = dataview?.id,
     current = pagination.current,
     pageSize = pagination.pageSize,
     newFilters = filters, // 默认使用当前filters

@@ -42,6 +42,11 @@ export const useFormInstance = refreshTable => {
     refreshTable();
   };
 
+  const handleDelete = async (formId, instanceId) => {
+    await deleteFormInstance(formId, instanceId);
+    refreshTable();
+  };
+
   return {
     isModalOpen,
     isEditOpen,
@@ -52,5 +57,6 @@ export const useFormInstance = refreshTable => {
     openEditModal,
     closeEditModal,
     handleEditOk,
+    handleDelete,
   };
 };

@@ -1,5 +1,5 @@
 // index.jsx
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, Row, Space, Typography, Tree } from 'antd';
 import { MenuOutlined, PlusOutlined } from '@ant-design/icons';
 import { ViewInstanceTable } from './components/table';
@@ -43,24 +43,25 @@ export const HomePage = () => {
     openEditModal,
     closeEditModal,
     handleEditOk,
+    handleDelete,
   } = useFormInstance(refreshTable);
 
   // 处理表格变化（分页、排序、筛选）
   const handleTableChange = (tablePagination, tableFilters, tableSorter) => {
     // 转换Ant Design的filter格式
     const convertedFilters = {};
-    
+
     Object.entries(tableFilters).forEach(([key, value]) => {
       if (value) {
         // 统一处理value格式
         const filterValue = Array.isArray(value) ? value[0] : value;
         convertedFilters[key] = {
           value: filterValue?.value || filterValue,
-          operator: filterValue?.operator || 'eq'
+          operator: filterValue?.operator || 'eq',
         };
       }
     });
-  
+
     refreshTable(
       dataview.id,
       tablePagination.current,
@@ -114,7 +115,9 @@ export const HomePage = () => {
               loading={loading}
               onChange={handleTableChange}
               openDataviewEditModal={row => openEditModal(row)}
-              openDataviewDeleteModal={row => console.log('to delete', row)}
+              openDataviewDeleteModal={row =>
+                handleDelete(dataview.formId, row.id)
+              }
               sorter={sorter} // 传递排序状态
               filters={filters}
               addFilter={addFilter}
