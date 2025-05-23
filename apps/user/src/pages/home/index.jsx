@@ -1,12 +1,11 @@
 // index.jsx
-import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, Row, Space, Typography, Tree } from 'antd';
 import { MenuOutlined, PlusOutlined } from '@ant-design/icons';
 import { ViewInstanceTable } from './components/table';
 import { useMenuTreeQuery } from './hooks/use-user-tree';
 import { useDataView } from './hooks/use-data-view';
 import { useFormInstance } from './hooks/use-form-instance';
-import { CreateFormInstanceModal } from './modals/create-form-instance';
+import { CreateFormInstanceModal, UpdateFormInstanceModal } from './modals';
 
 /**
  * 首页 of user
@@ -128,7 +127,6 @@ export const HomePage = () => {
       </Row>
       {/* create form instance modal */}
       <CreateFormInstanceModal
-        action="Create"
         visible={isModalOpen}
         dataview={dataview}
         schema={schema}
@@ -136,8 +134,7 @@ export const HomePage = () => {
         onCancel={handleCancel}
       />
       {/* edit form instance modal */}
-      <CreateFormInstanceModal
-        action="Edit"
+      <UpdateFormInstanceModal
         visible={isEditOpen}
         dataview={dataview}
         schema={schema}

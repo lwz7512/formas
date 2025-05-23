@@ -4,7 +4,7 @@ import { Modal } from 'antd';
 import FormRender, { useForm } from '@formas/form-render';
 
 /**
- * Create Form Instance Modal
+ * Edit Form Instance Modal
  *
  * @param {string} action - 'Create' or 'Edit'
  * @param {boolean} visible - whether the modal is visible
@@ -14,7 +14,7 @@ import FormRender, { useForm } from '@formas/form-render';
  * @param {object} schema - the schema object
  * @param {object | null} formInstance - the form instance object
  */
-export const CreateFormInstanceModal = ({
+export const UpdateFormInstanceModal = ({
   visible,
   onOk,
   onCancel,
@@ -38,7 +38,7 @@ export const CreateFormInstanceModal = ({
 
   return (
     <Modal
-      title="Create Form Instance"
+      title="Edit Form Instance"
       closable={{ 'aria-label': 'Custom Close Button' }}
       open={visible}
       onOk={handleSubmit}
