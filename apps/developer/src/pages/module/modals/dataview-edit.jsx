@@ -42,6 +42,7 @@ export const DataviewEditModel = ({ visible, record, onSave, onCancel }) => {
         >
           <InputNumber style={{ width: '100%' }} />
         </Form.Item>
+        {/* allow to edit title! */}
         <Form.Item
           name="title"
           label="标题"

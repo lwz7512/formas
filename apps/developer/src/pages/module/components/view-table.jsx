@@ -1,7 +1,7 @@
 // components/view-table.jsx
 import { useState } from 'react';
 import { Table, Button, Popconfirm, Space } from 'antd';
-import { useView } from '../hooks/use-dataview';
+
 import { DataviewEditModel } from '../modals/dataview-edit';
 import { DataviewTemplateModal } from '../modals/dataview-template';
 import { useDataviewTemplate } from '../hooks/use-dataview-template';
@@ -12,15 +12,20 @@ import { useDataviewColumn } from '../hooks/use-dataview-column';
  * View tab content for module detail page
  * @date 2025-05-18
  */
-export const ViewTable = ({ moduleId }) => {
-  const { views, loading, handleDelete, handleUpdate } = useView(moduleId);
+export const ViewTable = ({
+  moduleId,
+  handleUpdate,
+  handleDelete,
+  views,
+  loading,
+}) => {
   const [editingView, setEditingView] = useState(null);
 
-  const handleEdit = record => {
+  const handleViewEdit = record => {
     setEditingView(record);
   };
 
-  const handleSave = async values => {
+  const handleViewSave = async values => {
     try {
       await handleUpdate(editingView.id, values);
       setEditingView(null);
@@ -86,7 +91,7 @@ export const ViewTable = ({ moduleId }) => {
           <Button
             type="link"
             size="small"
-            onClick={() => handleEdit(record)}
+            onClick={() => handleViewEdit(record)}
             style={{ padding: '0 4px' }}
           >
             编辑
@@ -150,7 +155,7 @@ export const ViewTable = ({ moduleId }) => {
       <DataviewEditModel
         visible={!!editingView}
         record={editingView}
-        onSave={handleSave}
+        onSave={handleViewSave}
         onCancel={() => setEditingView(null)}
       />
 

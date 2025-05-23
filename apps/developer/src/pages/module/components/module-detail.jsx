@@ -16,7 +16,13 @@ export const ModuleDetailPanel = ({ selectedModule, toast }) => {
   const [activeTab, setActiveTab] = useState('forms');
 
   // 视图相关逻辑
-  const { refreshViews } = useView(selectedModule?.id, toast);
+  const {
+    views,
+    loading: viewLoading,
+    handleDelete: handleViewDelete,
+    handleUpdate: handleViewUpdate,
+    refreshViews,
+  } = useView(selectedModule?.id, toast);
 
   // 表单相关逻辑
   const {
@@ -114,7 +120,15 @@ export const ModuleDetailPanel = ({ selectedModule, toast }) => {
             key: 'views',
             label: <ViewTabLabel />,
             // == view table & its modals ==
-            children: <ViewTable moduleId={selectedModule?.id} />,
+            children: (
+              <ViewTable
+                views={views}
+                loading={viewLoading}
+                moduleId={selectedModule?.id}
+                handleUpdate={handleViewUpdate}
+                handleDelete={handleViewDelete}
+              />
+            ),
           },
         ]}
       />
