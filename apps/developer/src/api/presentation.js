@@ -34,7 +34,7 @@ export const deletePresentation = async id => {
  * @param {string} [data.title] 呈现标题
  * @param {string} [data.note] 呈现描述
  * @param {number} [data.sequence] 排序序号
- * @param {number} [data.chartType] 呈现类型
+ * @param {string} [data.chartType] 呈现类型
  * @returns {Promise} 更新结果
  */
 export const updatePresentation = async (id, data) => {
