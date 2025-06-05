@@ -22,3 +22,12 @@ export const ViewTabLabel = () => {
     </Space>
   );
 };
+
+export const PresentationTabLabel = () => {
+  return (
+    <Space>
+      <ProfileOutlined />
+      展示
+    </Space>
+  );
+};

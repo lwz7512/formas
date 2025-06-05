@@ -134,7 +134,7 @@ export const ModuleManagement = () => {
         </Col>
         {/* right side: module detail panel */}
         <Col xs={24} sm={24} md={12} lg={16} xl={18}>
-          {/* tabs for: form_tab | view_tab */}
+          {/* tabs for: form_tab | view_tab | presentation_tab */}
           <ModuleDetailPanel selectedModule={selectedModule} toast={message} />
         </Col>
       </Row>

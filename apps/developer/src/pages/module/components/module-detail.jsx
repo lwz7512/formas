@@ -7,10 +7,10 @@ import { useForm } from '../hooks/use-form';
 import { ViewTable } from './view-table';
 import { FormTable } from './form-table';
 import { FormCreateModel } from '../modals/form-create';
-import { FormTabLabel, ViewTabLabel } from './widget';
+import { FormTabLabel, ViewTabLabel, PresentationTabLabel } from './widget';
 
 /**
- * Tabs content for form_tab | view_tab
+ * Tabs content for form_tab | view_tab | presentation_tab
  */
 export const ModuleDetailPanel = ({ selectedModule, toast }) => {
   const [activeTab, setActiveTab] = useState('forms');
@@ -73,31 +73,47 @@ export const ModuleDetailPanel = ({ selectedModule, toast }) => {
     );
   }
 
+  const tabBarExtraActions = () => {
+    const actionsByTab = {
+      forms: (
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => setIsModalOpen(true)}
+        >
+          新建表单
+        </Button>
+      ),
+      views: (
+        <Button
+          type="primary"
+          icon={<ReloadOutlined />}
+          danger
+          onClick={refreshViews}
+        >
+          视图
+        </Button>
+      ),
+      presentation: (
+        <Button
+          color="default"
+          variant="solid"
+          icon={<PlusOutlined />}
+          onClick={() => console.log('TODO: show presentation modal')}
+        >
+          新建展示
+        </Button>
+      ),
+    };
+    return actionsByTab[activeTab] || null;
+  };
+
   return (
     <>
       <Tabs
         activeKey={activeTab}
         onChange={setActiveTab}
-        tabBarExtraContent={
-          activeTab === 'forms' ? (
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={() => setIsModalOpen(true)}
-            >
-              新建表单
-            </Button>
-          ) : (
-            <Button
-              type="primary"
-              icon={<ReloadOutlined />}
-              danger
-              onClick={refreshViews}
-            >
-              视图
-            </Button>
-          )
-        }
+        tabBarExtraContent={tabBarExtraActions()}
         items={[
           {
             key: 'forms',
@@ -129,6 +145,11 @@ export const ModuleDetailPanel = ({ selectedModule, toast }) => {
                 handleDelete={handleViewDelete}
               />
             ),
+          },
+          {
+            key: 'presentation',
+            label: <PresentationTabLabel />,
+            children: <div>presentation</div>,
           },
         ]}
       />
