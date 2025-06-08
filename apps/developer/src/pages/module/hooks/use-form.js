@@ -1,21 +1,21 @@
 // hooks/use-form.js
 import { useEffect, useState } from 'react';
 import { notification } from 'antd';
-import { 
-  fetchFormList, 
-  createForm, 
-  updateForm, 
+import {
+  fetchFormList,
+  createForm,
+  updateForm,
   deleteForm,
-  generateDataview 
+  generateDataview,
 } from '@/api/form';
 
-export const useForm = (moduleId) => {
+export const useForm = moduleId => {
   const [loading, setLoading] = useState(false);
   const [forms, setForms] = useState([]);
   const [editingKey, setEditingKey] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const fetchForms = async (id) => {
+  const fetchForms = async id => {
     setLoading(true);
     try {
       const response = await fetchFormList(id);
@@ -27,7 +27,7 @@ export const useForm = (moduleId) => {
     }
   };
 
-  const handleCreate = async (values) => {
+  const handleCreate = async values => {
     try {
       setLoading(true);
       await createForm({ ...values, moduleId });
@@ -57,7 +57,7 @@ export const useForm = (moduleId) => {
     }
   };
 
-  const handleDelete = async (key) => {
+  const handleDelete = async key => {
     try {
       setLoading(true);
       await deleteForm(key);
@@ -72,7 +72,7 @@ export const useForm = (moduleId) => {
     }
   };
 
-  const handleGenerateView = async (formId) => {
+  const handleGenerateView = async formId => {
     try {
       setLoading(true);
       await generateDataview(formId);
@@ -86,6 +86,30 @@ export const useForm = (moduleId) => {
     }
   };
 
+  // 编辑表单
+  const handleEdit = async updatedForm => {
+    try {
+      await handleUpdate(updatedForm.id, updatedForm);
+    } catch (error) {
+      console.error('更新失败:', error);
+    }
+  };
+
+  // 保存表单
+  const handleSave = async key => {
+    try {
+      await handleUpdate(key);
+      setEditingKey('');
+    } catch (errInfo) {
+      console.log('保存失败:', errInfo);
+    }
+  };
+
+  // 取消编辑
+  const handleCancel = () => {
+    setEditingKey('');
+  };
+
   useEffect(() => {
     if (moduleId) {
       fetchForms(moduleId);
@@ -96,12 +120,14 @@ export const useForm = (moduleId) => {
     forms,
     loading,
     editingKey,
-    isModalOpen,
-    setEditingKey,
-    setIsModalOpen,
+    isCreateFormOpen: isModalOpen,
+    openCreateForm: () => setIsModalOpen(true),
+    closeCreateForm: () => setIsModalOpen(false),
     fetchForms,
     handleCreate,
-    handleUpdate,
+    handleEdit,
+    handleSave,
+    handleCancel,
     handleDelete,
     handleGenerateView,
   };

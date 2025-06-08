@@ -1,6 +1,23 @@
 // src/api/presentation.js
 import httpClient from '@/utils/http-client';
 
+/**
+ * 创建呈现, chartType: table, list, tree
+ * @param {{
+ *  moduleId: string,
+ *  dataviewId: string,
+ *  title: string,
+ *  note: string,
+ *  sequence: number,
+ *  chartType: string,
+ * }} data 呈现数据
+ * @returns {Promise} 创建结果
+ */
+export const createPresentation = async data => {
+  const response = await httpClient.post('/formas/presentations', data);
+  return response;
+};
+
 export const fetchPresentationList = async moduleId => {
   const response = await httpClient.post('/formas/presentations/filter', {
     currPage: 1,
@@ -18,7 +35,10 @@ export const fetchPresentation = async id => {
 
 // 获取数据呈现下拉树
 export const fetchPresentationTree = async () => {
-  const response = await httpClient.get('/formas/presentations/module-tree', {});
+  const response = await httpClient.get(
+    '/formas/presentations/module-tree',
+    {}
+  );
   return response;
 };
 

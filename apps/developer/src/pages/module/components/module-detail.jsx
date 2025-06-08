@@ -4,18 +4,24 @@ import { Button, Empty, Tabs, Typography } from 'antd';
 import { PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useView } from '../hooks/use-dataview';
 import { useForm } from '../hooks/use-form';
+import { usePresentation } from '../hooks/use-presentation';
 import { ViewTable } from './view-table';
 import { FormTable } from './form-table';
 import { FormCreateModel } from '../modals/form-create';
+import { PresentationCreateModel } from '../modals/presentation-create';
 import { FormTabLabel, ViewTabLabel, PresentationTabLabel } from './widget';
+import { PresentationTable } from './presentation-table';
 
 /**
- * Tabs content for form_tab | view_tab | presentation_tab
+ * Tabs content for:
+ * | form_tab | view_tab | presentation_tab |
  */
 export const ModuleDetailPanel = ({ selectedModule, toast }) => {
   const [activeTab, setActiveTab] = useState('forms');
 
-  // 视图相关逻辑
+  const switchTab = tab => setActiveTab(tab);
+
+  // == view related logic ==
   const {
     views,
     loading: viewLoading,
@@ -24,43 +30,29 @@ export const ModuleDetailPanel = ({ selectedModule, toast }) => {
     refreshViews,
   } = useView(selectedModule?.id, toast);
 
-  // 表单相关逻辑
+  // == form related logic ==
   const {
     forms,
-    loading,
-    editingKey,
-    isModalOpen,
-    setEditingKey,
-    setIsModalOpen,
+    loading: formsLoading,
+    isCreateFormOpen,
+    openCreateForm,
+    closeCreateForm,
     handleCreate,
-    handleUpdate,
     handleDelete,
     handleGenerateView,
+    handleEdit,
   } = useForm(selectedModule?.id);
 
-  // 编辑表单
-  const handleEdit = async updatedForm => {
-    try {
-      await handleUpdate(updatedForm.id, updatedForm);
-    } catch (error) {
-      console.error('更新失败:', error);
-    }
-  };
-
-  // 保存表单
-  const handleSave = async key => {
-    try {
-      await handleUpdate(key);
-      setEditingKey('');
-    } catch (errInfo) {
-      console.log('保存失败:', errInfo);
-    }
-  };
-
-  // 取消编辑
-  const handleCancel = () => {
-    setEditingKey('');
-  };
+  // == presentation related logic ==
+  const {
+    presentations,
+    loading: presentsLoading,
+    isCreatePresentationOpen,
+    openCreatePresentation,
+    closeCreatePresentation,
+    handleCreatePresentation,
+    refreshPresentations,
+  } = usePresentation(selectedModule?.id, toast, switchTab);
 
   if (!selectedModule) {
     return (
@@ -76,11 +68,7 @@ export const ModuleDetailPanel = ({ selectedModule, toast }) => {
   const tabBarExtraActions = () => {
     const actionsByTab = {
       forms: (
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => setIsModalOpen(true)}
-        >
+        <Button type="primary" icon={<PlusOutlined />} onClick={openCreateForm}>
           新建表单
         </Button>
       ),
@@ -98,10 +86,10 @@ export const ModuleDetailPanel = ({ selectedModule, toast }) => {
         <Button
           color="default"
           variant="solid"
-          icon={<PlusOutlined />}
-          onClick={() => console.log('TODO: show presentation modal')}
+          icon={<ReloadOutlined />}
+          onClick={refreshPresentations}
         >
-          新建展示
+          展示
         </Button>
       ),
     };
@@ -122,11 +110,8 @@ export const ModuleDetailPanel = ({ selectedModule, toast }) => {
             children: (
               <FormTable
                 forms={forms}
-                loading={loading}
-                editingKey={editingKey}
+                loading={formsLoading}
                 onEdit={handleEdit}
-                onSave={handleSave}
-                onCancel={handleCancel}
                 onDelete={handleDelete}
                 onGenerateView={handleGenerateView}
               />
@@ -143,23 +128,36 @@ export const ModuleDetailPanel = ({ selectedModule, toast }) => {
                 moduleId={selectedModule?.id}
                 handleUpdate={handleViewUpdate}
                 handleDelete={handleViewDelete}
+                openCreatePresentation={openCreatePresentation}
               />
             ),
           },
           {
             key: 'presentation',
             label: <PresentationTabLabel />,
-            children: <div>presentation</div>,
+            children: (
+              <PresentationTable
+                presents={presentations}
+                loading={presentsLoading}
+                moduleId={selectedModule?.id}
+              />
+            ),
           },
         ]}
       />
 
-      {/* == create new form from module detail page == */}
+      {/* == create new `form` from module detail page == */}
       <FormCreateModel
-        visible={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
+        visible={isCreateFormOpen}
+        onCancel={closeCreateForm}
         onSubmit={handleCreate}
         moduleId={selectedModule?.id}
+      />
+      {/* == create new `presentation` from data view table == */}
+      <PresentationCreateModel
+        visible={isCreatePresentationOpen}
+        onCancel={closeCreatePresentation}
+        onSubmit={handleCreatePresentation}
       />
     </>
   );

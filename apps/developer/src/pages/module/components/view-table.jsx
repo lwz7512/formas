@@ -1,6 +1,7 @@
 // components/view-table.jsx
 import { useState } from 'react';
 import { Table, Button, Popconfirm, Space } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 
 import { DataviewEditModel } from '../modals/dataview-edit';
 import { DataviewTemplateModal } from '../modals/dataview-template';
@@ -18,6 +19,7 @@ export const ViewTable = ({
   handleDelete,
   views,
   loading,
+  openCreatePresentation,
 }) => {
   const [editingView, setEditingView] = useState(null);
 
@@ -55,7 +57,6 @@ export const ViewTable = ({
     designerVisible,
     loading: designerLoading,
     columnConfig,
-    openDesigner,
     closeDesigner,
     handleSaveColumnConfig,
     previewData,
@@ -100,9 +101,9 @@ export const ViewTable = ({
             size="small"
             type="primary"
             ghost // 半透明效果，降低视觉重量
-            onClick={() => openDesigner(record)} // 添加点击事件
+            onClick={() => openCreatePresentation(record.id)} // 添加点击事件
           >
-            设计
+            添加展示
           </Button>
           <Button
             size="small"

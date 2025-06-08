@@ -30,22 +30,24 @@ export const FormCreateModel = ({ visible, onCancel, onSubmit, moduleId }) => {
       <Form form={form} layout="vertical">
         <Form.Item
           name="title"
-          label="表单名称"
-          rules={[{ required: true, message: '请输入表单名称' }]}
+          label="表单英文名称(必填)"
+          rules={[
+            {
+              required: true,
+              message: '请输入表单英文名称',
+            },
+            {
+              pattern: /^[a-zA-Z_]+$/,
+              message: '请输入英文名称(仅支持字母和下划线)',
+            },
+          ]}
         >
-          <Input placeholder="请输入表单名称" />
+          <Input placeholder="请输入表单英文名称(仅支持字母和下划线)" />
         </Form.Item>
-        <Form.Item
-          name="sequence"
-          label="排序序号"
-          initialValue={0}
-        >
+        <Form.Item name="sequence" label="排序序号" initialValue={0}>
           <InputNumber style={{ width: '100%' }} />
         </Form.Item>
-        <Form.Item
-          name="note"
-          label="表单描述"
-        >
+        <Form.Item name="note" label="表单描述">
           <TextArea placeholder="请输入表单描述" rows={4} />
         </Form.Item>
       </Form>
