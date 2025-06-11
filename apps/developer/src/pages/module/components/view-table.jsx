@@ -52,17 +52,6 @@ export const ViewTable = ({
     }
   };
 
-  // 使用设计器hooks
-  const {
-    designerVisible,
-    loading: designerLoading,
-    columnConfig,
-    closeDesigner,
-    handleSaveColumnConfig,
-    previewData,
-    loadPreviewData,
-  } = useDataviewColumn();
-
   const columns = [
     {
       title: '序号',
@@ -132,16 +121,6 @@ export const ViewTable = ({
     },
   ];
 
-  // 保存列配置的处理函数
-  const onSaveColumnConfig = async (columns, selectedColumns) => {
-    try {
-      await handleSaveColumnConfig({ columns, selectedColumns });
-      // closeDesigner();
-    } catch (error) {
-      console.error('保存失败:', error);
-    }
-  };
-
   return (
     <>
       <Table
@@ -166,17 +145,6 @@ export const ViewTable = ({
         onSave={handleSaveDataviewTemplate}
         onCancel={closeDataviewTemplateModal}
         loading={dataviewTemplateLoading}
-      />
-
-      <ViewDesignerModal
-        visible={designerVisible}
-        initialColumns={columnConfig?.columns}
-        onSave={onSaveColumnConfig}
-        onCancel={closeDesigner}
-        viewId={editingView?.id}
-        loading={designerLoading}
-        previewData={previewData}
-        onLoadPreviewData={loadPreviewData}
       />
     </>
   );

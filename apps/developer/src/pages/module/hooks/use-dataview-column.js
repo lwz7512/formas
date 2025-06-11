@@ -15,59 +15,54 @@ export const useDataviewColumn = () => {
   const [previewData, setPreviewData] = useState([]);
 
   // 获取列配置信息
-  const loadPreviewData = useCallback(
-    async previewData => {
-      try {
-        if (!currentViewId) return;
-        setLoading(true);
-        const response = await fetchDataviewInstanceList(currentViewId);
-        setPreviewData(response.datas);
-        return response.datas;
-      } finally {
-        setLoading(false);
-      }
+  const loadPreviewData = async () => {
+    try {
+      if (!currentViewId) return;
+      setLoading(true);
+      const response = await fetchDataviewInstanceList(currentViewId);
+      setPreviewData(response.datas);
+      return response.datas;
+    } finally {
+      setLoading(false);
     }
-  );
+  };
 
   // 获取列配置信息
-  const loadColumnConfig = useCallback(
-    async currentViewId => {
-      try {
-        setLoading(true);
-        const response = await fetchDataview(currentViewId);
+  const loadColumnConfig = async currentViewId => {
+    try {
+      setLoading(true);
+      const response = await fetchDataview(currentViewId);
 
-        // 确保正确处理响应数据
-        const config = response.data?.columnConfig || {
-          columns: response.data?.columns || [], // 默认列
-          selectedColumns: response.data?.selectedColumns || [],
-        };
+      // 确保正确处理响应数据
+      const config = response.data?.columnConfig || {
+        columns: response.data?.columns || [], // 默认列
+        selectedColumns: response.data?.selectedColumns || [],
+      };
 
-        setColumnConfig(config);
-        return config;
-      } catch (error) {
-        console.error('加载列配置失败:', error);
-        // 返回默认配置
-        const defaultConfig = {
-          columns: [
-            {
-              dataIndex: 'id',
-              title: 'ID',
-              type: 'text',
-              visible: true,
-              width: 100,
-            },
-            // 其他默认列...
-          ],
-          selectedColumns: [],
-        };
-        setColumnConfig(defaultConfig);
-        return defaultConfig;
-      } finally {
-        setLoading(false);
-      }
-    },
-    [currentViewId]
-  );
+      setColumnConfig(config);
+      return config;
+    } catch (error) {
+      console.error('加载列配置失败:', error);
+      // 返回默认配置
+      const defaultConfig = {
+        columns: [
+          {
+            dataIndex: 'id',
+            title: 'ID',
+            type: 'text',
+            visible: true,
+            width: 100,
+          },
+          // 其他默认列...
+        ],
+        selectedColumns: [],
+      };
+      setColumnConfig(defaultConfig);
+      return defaultConfig;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // 保存视图列设计配置
   const handleSaveColumnConfig = useCallback(
@@ -80,14 +75,11 @@ export const useDataviewColumn = () => {
   );
 
   // 打开设计器并加载配置
-  const openDesigner = useCallback(
-    async view => {
-      setCurrentViewId(view.id); // 存储当前视图ID
-      setDesignerVisible(true);
-      await loadColumnConfig(view.id); // 使用视图ID加载配置
-    },
-    [loadColumnConfig]
-  );
+  const openDesigner = async dataviewId => {
+    setCurrentViewId(dataviewId); // 存储当前视图ID
+    setDesignerVisible(true);
+    await loadColumnConfig(dataviewId); // 使用视图ID加载配置
+  };
 
   // 关闭设计器
   const closeDesigner = () => {
@@ -95,6 +87,7 @@ export const useDataviewColumn = () => {
   };
 
   return {
+    currentViewId,
     designerVisible,
     loading,
     columnConfig, // 确保包含columns和selectedColumns

@@ -65,6 +65,36 @@ export const usePresentation = (moduleId, toast, switchTab) => {
     }
   };
 
+  const handleEditSubmit = async presentation => {
+    try {
+      setLoading(true);
+      await updatePresentation(presentation.id, presentation);
+      refreshPresentations();
+      return true;
+    } catch (error) {
+      notification.error({ message: '编辑呈现失败' });
+      console.error(error);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeletePresentation = async presentationId => {
+    try {
+      setLoading(true);
+      await deletePresentation(presentationId);
+      refreshPresentations();
+      return true;
+    } catch (error) {
+      notification.error({ message: '删除呈现失败' });
+      console.error(error);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!moduleId) return;
 
@@ -83,5 +113,7 @@ export const usePresentation = (moduleId, toast, switchTab) => {
     closeCreatePresentation,
     handleCreatePresentation,
     refreshPresentations,
+    handleEditSubmit,
+    handleDeletePresentation,
   };
 };

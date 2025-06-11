@@ -52,6 +52,8 @@ export const ModuleDetailPanel = ({ selectedModule, toast }) => {
     closeCreatePresentation,
     handleCreatePresentation,
     refreshPresentations,
+    handleDeletePresentation,
+    handleEditSubmit,
   } = usePresentation(selectedModule?.id, toast, switchTab);
 
   if (!selectedModule) {
@@ -139,7 +141,8 @@ export const ModuleDetailPanel = ({ selectedModule, toast }) => {
               <PresentationTable
                 presents={presentations}
                 loading={presentsLoading}
-                moduleId={selectedModule?.id}
+                handleEditSubmit={handleEditSubmit}
+                handleDelete={handleDeletePresentation}
               />
             ),
           },
