@@ -1,12 +1,12 @@
 // components/presentation-table.jsx
 import { useState } from 'react';
-
-import { Table, Button, Popconfirm, Space } from 'antd';
-import { EditOutlined, DeleteOutlined, TableOutlined } from '@ant-design/icons';
+import { Table, Button, Popconfirm, Space, Dropdown, Menu } from 'antd';
+import { EditOutlined, DeleteOutlined, TableOutlined, DownOutlined } from '@ant-design/icons';
 
 import ViewDesignerModal from '../modals/dataview-designer';
 import { PresentationEditModel } from '../modals/presentation-edit';
 import { useDataviewColumn } from '../hooks/use-dataview-column';
+import DropdownDesignerModal from '../modals/dropdown-designer';
 
 export const PresentationTable = ({
   loading,
@@ -16,6 +16,10 @@ export const PresentationTable = ({
 }) => {
   const [isEditPresentationOpen, setIsEditPresentationOpen] = useState(false);
   const [currentPresentation, setCurrentPresentation] = useState(null);
+
+  // 下拉列表设计器状态
+  const [dropdownDesignerVisible, setDropdownDesignerVisible] = useState(false);
+  const [currentDropdownConfig, setCurrentDropdownConfig] = useState(null);
 
   const handleEditOpen = presentation => {
     setCurrentPresentation(presentation);
@@ -44,10 +48,88 @@ export const PresentationTable = ({
   const onSaveColumnConfig = async (columns, selectedColumns) => {
     try {
       await handleSaveColumnConfig({ columns, selectedColumns });
-      // closeDesigner();
     } catch (error) {
       console.error('保存失败:', error);
     }
+  };
+
+  // 打开下拉列表设计器
+  const openDropdownDesigner = (presentation) => {
+    setCurrentDropdownConfig({
+      id: presentation.id,
+      options: presentation.dropdownOptions || [],
+      field: presentation.field
+    });
+    setDropdownDesignerVisible(true);
+  };
+
+  const closeDropdownDesigner = () => {
+    setDropdownDesignerVisible(false);
+    setCurrentDropdownConfig(null);
+  };
+
+  const handleSaveDropdownConfig = async (config) => {
+    try {
+      // 这里通常会调用API保存下拉列表配置
+      console.log('保存下拉列表配置:', config);
+      closeDropdownDesigner();
+    } catch (error) {
+      console.error('保存下拉列表配置失败:', error);
+    }
+  };
+
+  // 操作菜单
+  const getActionMenu = (record) => {
+    const items = [
+      {
+        key: 'edit',
+        label: (
+          <span>
+            <EditOutlined /> 编辑
+          </span>
+        ),
+        onClick: () => handleEditOpen(record),
+      },
+      {
+        key: 'delete',
+        label: (
+          <Popconfirm
+            title="确定删除吗？"
+            onConfirm={() => handleDelete(record.id)}
+          >
+            <span><DeleteOutlined /> 删除</span>
+          </Popconfirm>
+        ),
+      },
+    ];
+
+    // 表格类型显示表格设计器
+    if (record.chartType === 'table') {
+      items.push({
+        key: 'design-table',
+        label: (
+          <span>
+            <TableOutlined /> 设计表格
+          </span>
+        ),
+        onClick: () => openDesigner(record['dataviewId']),
+      });
+    }
+
+    // 列表类型显示下拉列表设计器
+    if (record.chartType === 'list') {
+      items.push({
+        key: 'design-dropdown',
+        label: (
+          <span>
+            <DownOutlined /> 设计下拉列表
+          </span>
+        ),
+        onClick: () => openDropdownDesigner(record),
+      });
+    }
+
+    return <Menu items={items} />;
   };
 
   const columns = [
@@ -83,37 +165,14 @@ export const PresentationTable = ({
     },
     {
       title: '操作',
-      width: 120,
+      width: 160,
       render: (_, record) => (
         <Space size="small">
-          {/* 编辑 */}
-          <Button
-            type="link"
-            size="small"
-            onClick={() => handleEditOpen(record)}
-          >
-            <EditOutlined />
-          </Button>
-          {/* 删除 */}
-          <Popconfirm
-            title="确定删除吗？"
-            onConfirm={() => handleDelete(record.id)}
-          >
+          <Dropdown overlay={getActionMenu(record)} trigger={['click']}>
             <Button type="link" size="small">
-              <DeleteOutlined />
+              操作 <DownOutlined />
             </Button>
-          </Popconfirm>
-          {/* 设计表格 */}
-          {record.chartType === 'table' && (
-            <Button
-              type="link"
-              size="small"
-              title="Design table"
-              onClick={() => openDesigner(record['dataviewId'])}
-            >
-              <TableOutlined />
-            </Button>
-          )}
+          </Dropdown>
         </Space>
       ),
     },
@@ -129,6 +188,7 @@ export const PresentationTable = ({
         size="middle"
         loading={loading}
       />
+      
       <ViewDesignerModal
         visible={designerVisible}
         initialColumns={columnConfig?.columns}
@@ -139,11 +199,20 @@ export const PresentationTable = ({
         onCancel={closeDesigner}
         onLoadPreviewData={loadPreviewData}
       />
+      
       <PresentationEditModel
         presentation={currentPresentation}
         visible={isEditPresentationOpen}
         onCancel={closeEditPresentation}
         onSubmit={handleEditSubmit}
+      />
+      
+      {/* 下拉列表设计器模态框，仅当chartType为list时显示 */}
+      <DropdownDesignerModal
+        visible={dropdownDesignerVisible}
+        config={currentDropdownConfig}
+        onSave={handleSaveDropdownConfig}
+        onCancel={closeDropdownDesigner}
       />
     </>
   );
