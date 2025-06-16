@@ -52,6 +52,11 @@ export const PresentationTable = ({
 
   const columns = [
     {
+      title: '序号',
+      dataIndex: 'sequence',
+      key: 'sequence',
+    },
+    {
       title: '标题',
       dataIndex: 'title',
       key: 'title',
@@ -62,14 +67,19 @@ export const PresentationTable = ({
       key: 'chartType',
     },
     {
+      title: '关联视图',
+      dataIndex: 'dataviewTitle',
+      key: 'dataviewTitle',
+    },
+    {
+      title: '关联表单',
+      dataIndex: 'formTitle',
+      key: 'formTitle',
+    },
+    {
       title: '备注',
       dataIndex: 'note',
       key: 'note',
-    },
-    {
-      title: '序号',
-      dataIndex: 'sequence',
-      key: 'sequence',
     },
     {
       title: '操作',
