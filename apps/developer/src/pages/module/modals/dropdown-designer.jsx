@@ -15,37 +15,26 @@ const DropdownDesignerModal = ({
   onSave,
   onCancel,
   viewId,
+  initialColumns = [],  // 直接从props接收列数据
   previewData = [],
   previewLoading = false,
   onLoadPreviewData,
-  // 新增从父组件传入的API相关props
-  fetchColumns, // 获取列信息的API函数
-  columnsLoading, // 列加载状态
-  initialColumns = [], // 初始列数据
 }) => {
   const [form] = Form.useForm();
   const [activeKey, setActiveKey] = useState('config');
   const [hasChanges, setHasChanges] = useState(false);
-  const [availableColumns, setAvailableColumns] = useState([]);
+  const [columns, setColumns] = useState(initialColumns || []);
   const [selectedKeyColumn, setSelectedKeyColumn] = useState(null);
   const [selectedValueColumn, setSelectedValueColumn] = useState(null);
+  const [columnsLoading, setColumnsLoading] = useState(false);
 
-  // 从API获取列信息
   useEffect(() => {
-    if (visible && fetchColumns) {
-      const loadColumns = async () => {
-        try {
-          const columns = await fetchColumns(viewId);
-          setAvailableColumns(columns || []);
-        } catch (error) {
-          message.error('获取列信息失败');
-          console.error('Failed to fetch columns:', error);
-        }
-      };
-      
-      loadColumns();
+    if (visible && initialColumns) {
+      setColumns(initialColumns);
+      // setSelectedColumns(initialColumns.filter(col => col.visible));
+      setHasChanges(false);
     }
-  }, [visible, viewId, fetchColumns]);
+  }, [visible, initialColumns]);
 
   // 初始化表单数据
   useEffect(() => {
@@ -96,11 +85,7 @@ const DropdownDesignerModal = ({
       style={{ width: '100%' }}
       dropdownRender={menu => (
         <>
-          {columnsLoading ? (
-            <div style={{ padding: '8px', textAlign: 'center' }}>
-              <Spin size="small" />
-            </div>
-          ) : availableColumns.length === 0 ? (
+          {initialColumns.length === 0 ? (
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="无可用列" />
           ) : (
             menu
@@ -108,7 +93,7 @@ const DropdownDesignerModal = ({
         </>
       )}
     >
-      {availableColumns.map(col => (
+      {columns.map(col => (
         <Select.Option 
           key={col.dataIndex} 
           value={col.dataIndex}

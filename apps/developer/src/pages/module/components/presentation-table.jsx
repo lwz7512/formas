@@ -210,6 +210,8 @@ export const PresentationTable = ({
       {/* 下拉列表设计器模态框，仅当chartType为list时显示 */}
       <DropdownDesignerModal
         visible={dropdownDesignerVisible}
+        initialColumns={columnConfig?.columns}
+        previewData={previewData}
         config={currentDropdownConfig}
         onSave={handleSaveDropdownConfig}
         onCancel={closeDropdownDesigner}
