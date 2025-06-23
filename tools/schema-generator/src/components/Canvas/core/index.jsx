@@ -50,6 +50,7 @@ const FR = ({ id = '#', preview, displaySchema }) => {
     schema.type === 'array' && schema.enum === undefined && !!schema.items;
   const isComplex = isObj || isList;
   const width = schema['width'];
+  // form input container class
   let containerClass = `fr-field w-100 ${isComplex ? 'fr-field-complex' : ''} ${
     schema.className || ''
   }`;
