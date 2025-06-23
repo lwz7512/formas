@@ -92,7 +92,7 @@ export const ViewTable = ({
             ghost // 半透明效果，降低视觉重量
             onClick={() => openCreatePresentation(record.id)} // 添加点击事件
           >
-            添加展示
+            生成展示
           </Button>
           <Button
             size="small"
