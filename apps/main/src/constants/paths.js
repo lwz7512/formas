@@ -24,6 +24,8 @@ const ROOTS_AUTH = '/auth';
 const ROOTS_ERRORS = '/errors';
 const ROOTS_ABOUT = '/about';
 
+export const HOME_AFTER_LOGIN = '/demos/default';
+
 export const DEMO_PATHS = {
   default: '/demos/default',
   demo1: '/demos/demo1',

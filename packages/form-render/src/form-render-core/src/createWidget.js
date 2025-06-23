@@ -1,5 +1,11 @@
 import { defaultGetValueFromEvent } from './utils';
 
+/**
+ * For form-render, a widget is a component that is used to render a form field.
+ * @param {*} mapProps - a function that maps the props to the component
+ * @param {*} extraSchema - extra schema to be merged with the schema
+ * @returns - a component that is used to render a form field
+ */
 export const createWidget = (mapProps, extraSchema) => Component => props => {
   const { schema, ...rest } = props;
   const _schema = { ...schema, ...extraSchema };

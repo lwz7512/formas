@@ -19,10 +19,17 @@ export const useLogin = (loginName, password) => {
   );
   const send = async () => {
     const result = await trigger();
+    if (!result) {
+      console.error('## login failed!');
+      return null;
+    }
     const { data } = result;
     // got token:
     if (data) {
       localStorage.setItem('formas.jwt', data);
+      // cache last login time, to enable auto-login after 3 days!
+      // @2025-06-22
+      localStorage.setItem('formas.lastLogin', new Date().toISOString());
     } else {
       console.warn(`## login failed, no token returned!`);
     }

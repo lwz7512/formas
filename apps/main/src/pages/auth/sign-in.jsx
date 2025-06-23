@@ -20,7 +20,7 @@ import {
 } from '@ant-design/icons';
 
 import { Logo } from '@/components';
-import { PATH_AUTH, DEMO_PATHS } from '@/constants';
+import { PATH_AUTH, HOME_AFTER_LOGIN } from '@/constants';
 
 import { useLogin } from '@/hooks/api-auth';
 
@@ -66,7 +66,8 @@ export const SignInPage = () => {
       return message.error('Ops, login failed!');
     }
     // to: /demos/default
-    navigate(DEMO_PATHS.default, { replace: true });
+    navigate(HOME_AFTER_LOGIN, { replace: true });
+
     message.open({
       type: 'success',
       content: 'Login successful',

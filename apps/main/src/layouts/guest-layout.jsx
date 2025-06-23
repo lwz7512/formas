@@ -1,4 +1,4 @@
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { Button, Drawer, Layout, Tooltip } from 'antd';
 import {
@@ -23,7 +23,10 @@ import {
   PATH_DOCS,
   PATH_GITHUB,
   PATH_LANDING,
+  HOME_AFTER_LOGIN,
 } from '@/constants';
+
+import { isLoggedInValid } from '@/utils';
 
 const { Header, Content, Footer } = Layout;
 
@@ -35,7 +38,7 @@ export const GuestLayout = () => {
   const [navFill, setNavFill] = useState(false);
   const [open, setOpen] = useState(false);
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const showDrawer = () => {
     setOpen(true);
@@ -54,6 +57,14 @@ export const GuestLayout = () => {
       }
     });
   }, []);
+
+  useEffect(() => {
+    const isLoggedIn = isLoggedInValid();
+    // console.log('isLoggedIn', isLoggedIn);
+    if (isLoggedIn) {
+      navigate(HOME_AFTER_LOGIN);
+    }
+  }, [navigate]);
 
   return (
     <>

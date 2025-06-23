@@ -12,6 +12,7 @@ export const FormDesigner = () => {
   return (
     <div style={{ height: '99vh' }}>
       <Generator
+        hideId={true}
         defaultValue={formSchema}
         extraButtons={extraButtons}
         onSchemaChange={schemaChangeHandler}
