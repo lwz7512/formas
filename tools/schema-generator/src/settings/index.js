@@ -17,6 +17,10 @@ export const baseCommonSettings = {
   },
 };
 
+/**
+ * 基础组件的默认配置，用于生成基础组件的 schema
+ * TODO: add one more setting for common ....
+ */
 export const defaultCommonSettings = {
   $id: {
     title: 'ID',
@@ -558,23 +562,16 @@ export const layouts = [
         title: '主题',
         type: 'string',
         enum: [
-          "collapse",
-          "collapse:pure",
-          "collapse:ghost",
-          "card",
-          "tile",
-          "flex",
+          'collapse',
+          'collapse:pure',
+          'collapse:ghost',
+          'card',
+          'tile',
+          'flex',
         ],
-        enumNames: [
-          "默认",
-          "无框",
-          "幽灵",
-          "卡片",
-          "平铺",
-          "弹性",
-        ],
+        enumNames: ['默认', '无框', '幽灵', '卡片', '平铺', '弹性'],
         default: 'collapse',
-        widget: "radio",
+        widget: 'radio',
       },
       props: {
         title: '弹性布局',
@@ -589,7 +586,7 @@ export const layouts = [
             props: {
               style: {
                 flexDirection: 'column',
-              }
+              },
             },
             properties: {
               height: {
@@ -602,34 +599,16 @@ export const layouts = [
                 title: '布局方向',
                 description: 'flex-direction',
                 type: 'string',
-                enum: [
-                  'row',
-                  'row-reverse',
-                  'column',
-                  'column-reverse',
-                ],
-                enumNames: [
-                  '横向',
-                  '横向反转',
-                  '纵向',
-                  '纵向反转',
-                ],
+                enum: ['row', 'row-reverse', 'column', 'column-reverse'],
+                enumNames: ['横向', '横向反转', '纵向', '纵向反转'],
                 widget: 'select',
               },
               flexWrap: {
                 title: '换行方式',
                 description: 'flex-wrap',
                 type: 'string',
-                enum: [
-                  'wrap',
-                  'nowrap',
-                  'wrap-reverse',
-                ],
-                enumNames: [
-                  '换行',
-                  '不换行',
-                  '反向换行',
-                ],
+                enum: ['wrap', 'nowrap', 'wrap-reverse'],
+                enumNames: ['换行', '不换行', '反向换行'],
                 widget: 'select',
               },
               justifyContent: {
@@ -694,9 +673,9 @@ export const layouts = [
                 ],
                 widget: 'select',
               },
-            }
+            },
           },
-        }
+        },
       },
       style: {
         title: '元素样式',
@@ -762,7 +741,7 @@ export const layouts = [
             type: 'string',
             widget: 'input',
           },
-        }
+        },
       },
     },
   },

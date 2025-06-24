@@ -1,6 +1,15 @@
-import Generator from '@formas/fr-generator';
+import Generator, { defaultCommonSettings } from '@formas/fr-generator';
 
 import { useFormDesigner } from '@/hooks/use-form-designer';
+
+const commonSettings = {
+  /** database table column name */
+  name: {
+    type: 'string',
+    title: '英文名称(字段名)',
+  },
+  ...defaultCommonSettings,
+};
 
 /**
  * FIXME: waiting for formal official release!
@@ -16,6 +25,7 @@ export const FormDesigner = () => {
         defaultValue={formSchema}
         extraButtons={extraButtons}
         onSchemaChange={schemaChangeHandler}
+        commonSettings={commonSettings}
       />
     </div>
   );
