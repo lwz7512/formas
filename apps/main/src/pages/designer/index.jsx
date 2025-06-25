@@ -6,7 +6,8 @@ const commonSettings = {
   /** database table column name */
   name: {
     type: 'string',
-    title: '英文名称(字段名)',
+    title: 'English Name(字段名)',
+    placeholder: 'English name and no space',
   },
   ...defaultCommonSettings,
 };

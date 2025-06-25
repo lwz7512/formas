@@ -7,6 +7,7 @@
   "scripts": {
     "beta": "npm publish --tag beta",
     "build": "father-build",
+    "dev": "father-build --watch",
     "prepare": "npm run build",
     "prettier": "prettier --write \"**/*.{js,jsx,tsx,ts,less,md,json}\"",
     "postpublish": "git push --tags",
