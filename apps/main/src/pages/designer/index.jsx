@@ -1,4 +1,7 @@
-import Generator, { defaultCommonSettings } from '@formas/fr-generator';
+import Generator, {
+  defaultCommonSettings,
+  defaultSettings,
+} from '@formas/fr-generator';
 
 import { useFormDesigner } from '@/hooks/use-form-designer';
 
@@ -11,6 +14,26 @@ const commonSettings = {
   },
   ...defaultCommonSettings,
 };
+
+const settings = [
+  ...defaultSettings,
+  {
+    title: 'Formas组件',
+    widgets: [
+      {
+        text: 'Presentation列表',
+        name: 'presentionList',
+        schema: {
+          title: 'PresentationTitle',
+          type: 'string',
+          format: 'color',
+        },
+        setting: {},
+        show: true,
+      },
+    ],
+  },
+];
 
 /**
  * FIXME: waiting for formal official release!
@@ -27,6 +50,7 @@ export const FormDesigner = () => {
         extraButtons={extraButtons}
         onSchemaChange={schemaChangeHandler}
         commonSettings={commonSettings}
+        settings={settings}
       />
     </div>
   );

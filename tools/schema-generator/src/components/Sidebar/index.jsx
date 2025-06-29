@@ -19,8 +19,10 @@ const Sidebar = props => {
             return null;
           }
           return (
-            <div key={idx}>
-              <p className="f6 b">{t(item.title, {ns: 'components'})}</p>
+            <div key={idx} className="frg-sidebar-item">
+              <p className="f6 b widget-group-title">
+                {t(item.title, { ns: 'components' })}
+              </p>
               <ul className="pl0">
                 {Array.isArray(item.widgets) ? (
                   item.widgets

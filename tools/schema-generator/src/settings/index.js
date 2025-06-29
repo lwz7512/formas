@@ -1010,7 +1010,6 @@ export const defaultSettings = [
     title: '基础组件',
     widgets: elements,
     show: true,
-    useCommon: true, // TODO: 是否将common
   },
   {
     title: '高级组件',
