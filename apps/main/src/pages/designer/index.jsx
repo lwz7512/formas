@@ -1,39 +1,7 @@
-import Generator, {
-  defaultCommonSettings,
-  defaultSettings,
-} from '@formas/fr-generator';
+import Generator from '@formas/fr-generator';
 
 import { useFormDesigner } from '@/hooks/use-form-designer';
-
-const commonSettings = {
-  /** database table column name */
-  name: {
-    type: 'string',
-    title: 'English Name(字段名)',
-    placeholder: 'English name and no space',
-  },
-  ...defaultCommonSettings,
-};
-
-const settings = [
-  ...defaultSettings,
-  {
-    title: 'Formas组件',
-    widgets: [
-      {
-        text: 'Presentation列表',
-        name: 'presentionList',
-        schema: {
-          title: 'PresentationTitle',
-          type: 'string',
-          format: 'color',
-        },
-        setting: {},
-        show: true,
-      },
-    ],
-  },
-];
+import { commonSettings, settings } from './config';
 
 /**
  * FIXME: waiting for formal official release!
