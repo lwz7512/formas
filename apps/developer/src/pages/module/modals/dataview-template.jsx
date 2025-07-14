@@ -5,6 +5,9 @@ import { python } from '@codemirror/lang-python';
 import { githubDark } from '@uiw/codemirror-themes-all';
 import { useState, forwardRef, useImperativeHandle, useEffect } from 'react';
 
+/**
+ * 数据视图(自定义查询模版) - 编辑
+ */
 export const DataviewTemplateModal = forwardRef(
   ({ visible, record, onSave, onCancel, loading }, ref) => {
     const [pythonCode, setPythonCode] = useState(
@@ -27,7 +30,10 @@ export const DataviewTemplateModal = forwardRef(
     }));
 
     const handleSave = async () => {
-      if (!pythonCode.trim() || pythonCode.trim() === '# 请输入Python查询代码') {
+      if (
+        !pythonCode.trim() ||
+        pythonCode.trim() === '# 请输入Python查询代码'
+      ) {
         message.error('请输入有效的Python代码');
         return;
       }
@@ -98,3 +104,5 @@ export const DataviewTemplateModal = forwardRef(
     );
   }
 );
+
+DataviewTemplateModal.displayName = 'DataviewTemplateModal';

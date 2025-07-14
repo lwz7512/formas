@@ -1,10 +1,15 @@
 // modals/form-template.jsx
+import { useState, forwardRef, useImperativeHandle, useEffect } from 'react';
+
 import { Modal, Button, message } from 'antd';
+
 import CodeMirror from '@uiw/react-codemirror';
 import { python } from '@codemirror/lang-python';
 import { githubDark } from '@uiw/codemirror-themes-all';
-import { useState, forwardRef, useImperativeHandle, useEffect } from 'react';
 
+/**
+ * 表单触发器模版 - 编辑
+ */
 export const FormTemplateModal = forwardRef(
   ({ visible, record, onSave, onCancel, loading }, ref) => {
     const [pythonCode, setPythonCode] = useState(
@@ -27,7 +32,10 @@ export const FormTemplateModal = forwardRef(
     }));
 
     const handleSave = async () => {
-      if (!pythonCode.trim() || pythonCode.trim() === '# 请输入Python查询代码') {
+      if (
+        !pythonCode.trim() ||
+        pythonCode.trim() === '# 请输入Python查询代码'
+      ) {
         message.error('请输入有效的Python代码');
         return;
       }
@@ -98,3 +106,5 @@ export const FormTemplateModal = forwardRef(
     );
   }
 );
+
+FormTemplateModal.displayName = 'FormTemplateModal';
